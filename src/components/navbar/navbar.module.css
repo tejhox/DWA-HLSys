@@ -1,0 +1,10 @@
+.navbar {
+  display: flex;
+  width: 100vw;
+  height: 40px;
+  padding-left: 10px;
+  align-items: center;
+  color: aliceblue;
+  background-color: rgb(43, 40, 40);
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
+}
