@@ -1,11 +1,17 @@
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { getFirestore, Firestore, doc, getDoc } from "firebase/firestore";
 import app from "./init";
 
-const firestore = getFirestore(app);
+const db: Firestore = getFirestore(app);
 
-export async function retrieveData(collectionName: string) {
-  const snapshot = await getDocs(collection(firestore, collectionName));
-  const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+const fetchData = async () => {
+  const docRef = doc(db, "users", "1");
+  const docSnap = await getDoc(docRef);
 
-  return data;
-}
+  if (docSnap.exists()) {
+    console.log("Document data:", docSnap.data());
+  } else {
+    console.log("No such document!");
+  }
+};
+
+fetchData();
