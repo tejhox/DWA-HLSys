@@ -1,17 +1,58 @@
-import { getFirestore, Firestore, doc, getDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDoc, getDocs, doc, query, where } from "firebase/firestore";
 import app from "./init";
+import bcrypt from "bcrypt";
 
-const db: Firestore = getFirestore(app);
+const firestore = getFirestore(app);
 
-const fetchData = async () => {
-  const docRef = doc(db, "users", "1");
-  const docSnap = await getDoc(docRef);
+export async function retrieveData(collectionName: string) {
+  const snapshot = await getDocs(collection(firestore, collectionName));
+  const data = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
 
-  if (docSnap.exists()) {
-    console.log("Document data:", docSnap.data());
+  return data;
+}
+
+export async function retrieveDataById(collectionName: string, id: string) {
+  const snapshot = await getDoc(doc(firestore, collectionName, id));
+  const data = snapshot.data();
+
+  return data;
+}
+
+export async function signUp(
+  userData: {
+    email: string;
+    fullname: string;
+    password: string;
+    phone: string;
+    role?: string;
+  },
+  callback: Function
+) {
+  const q = query(collection(firestore, "users"), where("email", "==", userData.email));
+
+  const snapshot = await getDocs(q);
+  const data = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+
+  if (data.length > 0) {
+    callback(false);
   } else {
-    console.log("No such document!");
+    if (!userData.role) {
+      userData.role = "member";
+    }
+    userData.password = await bcrypt.hash(userData.password, 10);
+    await addDoc(collection(firestore, "users"), userData)
+      .then(() => {
+        callback(true);
+      })
+      .catch((error) => {
+        callback(false);
+        console.log(error);
+      });
   }
-};
-
-fetchData();
+}
