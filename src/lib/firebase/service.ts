@@ -37,7 +37,6 @@ export async function signUp(
   }));
 
   if (data.length > 0) {
-    // Jika NIK sudah ada, update dokumen yang ada dengan menambahkan data password
     const userDoc = doc(firestore, "users", data[0].id);
     const hashedPassword = await bcrypt.hash(userData.password, 10);
     await updateDoc(userDoc, {
@@ -55,7 +54,7 @@ export async function signUp(
   }
 }
 
-export async function signIn(nik) {
+export async function signIn(nik: string) {
   const q = query(collection(firestore, "users"), where("nik", "==", nik));
 
   const snapshot = await getDocs(q);
