@@ -1,7 +1,9 @@
 import Link from "next/link";
 import style from "./navbar.module.css";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 const Navbar = () => {
+  const { data } = useSession();
   return (
     <div className={style.container}>
       <div className={style.brand}>
@@ -9,7 +11,9 @@ const Navbar = () => {
       </div>
       <div className={style.itemsWrapper}>
         <div className={style.items}>
-          <Link href="/auth/login">Sign In</Link>
+          <button onClick={() => (data ? signOut() : signIn())} className={style.button}>
+            {data ? "Sign Out" : "Sign In"}
+          </button>
         </div>
         <div className={style.items}>
           <Link href="/produksi">Laporan Produksi</Link>

@@ -1,4 +1,4 @@
-import { getFirestore, collection, addDoc, getDoc, getDocs, doc, query, where } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDoc, getDocs, doc, query, where, updateDoc } from "firebase/firestore";
 import app from "./init";
 import bcrypt from "bcrypt";
 
@@ -23,15 +23,12 @@ export async function retrieveDataById(collectionName: string, id: string) {
 
 export async function signUp(
   userData: {
-    email: string;
-    fullname: string;
+    nik: string;
     password: string;
-    phone: string;
-    role?: string;
   },
   callback: Function
 ) {
-  const q = query(collection(firestore, "users"), where("email", "==", userData.email));
+  const q = query(collection(firestore, "users"), where("nik", "==", userData.nik));
 
   const snapshot = await getDocs(q);
   const data = snapshot.docs.map((doc) => ({
@@ -40,13 +37,12 @@ export async function signUp(
   }));
 
   if (data.length > 0) {
-    callback(false);
-  } else {
-    if (!userData.role) {
-      userData.role = "member";
-    }
-    userData.password = await bcrypt.hash(userData.password, 10);
-    await addDoc(collection(firestore, "users"), userData)
+    // Jika NIK sudah ada, update dokumen yang ada dengan menambahkan data password
+    const userDoc = doc(firestore, "users", data[0].id);
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
+    await updateDoc(userDoc, {
+      password: hashedPassword,
+    })
       .then(() => {
         callback(true);
       })
@@ -54,5 +50,23 @@ export async function signUp(
         callback(false);
         console.log(error);
       });
+  } else {
+    callback(false);
+  }
+}
+
+export async function signIn(nik) {
+  const q = query(collection(firestore, "users"), where("nik", "==", nik));
+
+  const snapshot = await getDocs(q);
+  const data = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+
+  if (data) {
+    return data[0];
+  } else {
+    return null;
   }
 }
