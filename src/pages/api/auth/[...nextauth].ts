@@ -1,4 +1,4 @@
-import { signIn } from "@/lib/firebase/service";
+import { signIn } from "@/lib/services/auth/services";
 import { compare } from "bcrypt";
 import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
@@ -39,7 +39,9 @@ const authOption: NextAuthOptions = {
   callbacks: {
     async jwt({ token, account, profile, user }: any) {
       if (account?.provider === "credentials") {
-        (token.nik = user.nik), (token.nama = user.nama);
+        (token.nik = user.nik),
+          (token.nama = user.nama),
+          (token.role = user.role);
       }
       return token;
     },
@@ -50,6 +52,9 @@ const authOption: NextAuthOptions = {
       }
       if ("nama" in token) {
         session.user.nama = token.nama;
+      }
+      if ("role" in token) {
+        session.user.role = token.role;
       }
       return session;
     },

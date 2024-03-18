@@ -1,11 +1,8 @@
-import style from "./home.module.css";
-
-const HomePage = () => {
+const Home = () => {
   return (
-    <div>
-      <h1>User Data</h1>
+    <div className="container rounded-2 px-4 py-2">
+      <h1 className="text-3xl font-bold underline">Hello world!</h1>
     </div>
   );
 };
-
-export default HomePage;
+export default Home;

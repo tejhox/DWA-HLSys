@@ -1,7 +1,7 @@
 import Link from "next/link";
-import style from "./register.module.css";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
+import authServices from "@/lib/services/auth";
 
 const RegisterPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -18,13 +18,7 @@ const RegisterPage = () => {
       password: form.password.value,
     };
 
-    const result = await fetch("/api/user/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const result = await authServices.registerAccount(data);
 
     if (result.status === 200) {
       form.reset();
@@ -32,34 +26,28 @@ const RegisterPage = () => {
       push("/auth/login");
     } else {
       setIsLoading(false);
-      setError("NIK belum terdaftar");
+      setError("NIK Belum Terdaftar");
     }
   };
 
   return (
-    <div className={style.container}>
-      <div className={style.formWrapper}>
-        <div className={style.head}>Sign Up</div>
+    <div>
+      <div>
+        <div>Sign Up</div>
         {error && <div>{error}</div>}
-        <div className={style.registerForm}>
+        <div>
           <form onSubmit={handleSubmit}>
-            <label htmlFor="nik" className={style.label}>
-              NIK
-            </label>
-            <input type="text" name="nik" id="nik" className={style.input} />
-            <label htmlFor="password" className={style.label}>
-              Password
-            </label>
-            <input type="password" name="password" id="password" className={style.input} />
+            <label htmlFor="nik">NIK</label>
+            <input type="text" name="nik" id="nik" />
+            <label htmlFor="password">Password</label>
+            <input type="password" name="password" id="password" />
             <div>
-              <button type="submit" className={style.button}>
-                {isLoading ? "Loading..." : "Register"}
-              </button>
+              <button type="submit">{isLoading ? "Loading..." : "Register"}</button>
             </div>
           </form>
         </div>
       </div>
-      <p className={style.link}>
+      <p>
         Have an account? sign in <Link href="/auth/login">here</Link>
       </p>
     </div>

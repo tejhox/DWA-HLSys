@@ -1,5 +1,4 @@
 import { FormEvent, useState } from "react";
-import style from "./login.module.css";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 
@@ -8,7 +7,7 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const { push, query } = useRouter();
 
-  const callbackUrl: any = query.callbackUrl || "/";
+  const callbackUrl: any = query.callbackUrl || "/home";
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -38,23 +37,22 @@ const LoginPage = () => {
 
   return (
     <>
-      <div className={style.container}>
-        <div className={style.formWrapper}>
-          <div className={style.head}>Sign In</div>
+      <div>
+        <div>
+          <div>Sign In</div>
           {error && <div>{error}</div>}
-          <div className={style.loginForm}>
+          <div>
             <form onSubmit={handleSubmit}>
-              <label htmlFor="nik" className={style.label}>
-                NIK
-              </label>
-              <input type="text" id="nik" name="nik" className={style.input} />
-              <label htmlFor="nik" className={style.label}>
-                Password
-              </label>
-              <input type="password" id="password" name="password" className={style.input} />
-              <button type="submit" className={style.button}>
-                {isLoading ? "Loading..." : "Login"}
-              </button>
+              <label htmlFor="nik">NIK</label>
+              <input type="text" id="nik" name="nik" placeholder="Masukkan NIK" />
+              <label htmlFor="nik">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Masukkan Password"
+              />
+              <button type="submit">{isLoading ? "Loading..." : "Login"}</button>
             </form>
           </div>
         </div>
