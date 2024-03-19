@@ -1,13 +1,61 @@
 import { useState, FormEvent, useEffect } from "react";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 const Dekidaka = () => {
+  type SubDekidaka = {
+    plan: number;
+    actual: number;
+    deviasi: number;
+    lossTime: number;
+  };
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [plan, setPlan] = useState<number>(0);
   const [actual, setActual] = useState<number>(0);
   const [deviasi, setDeviasi] = useState<number>(0);
   const [lossTime, setLossTime] = useState<number>(0);
-  const [dekidakaData, setDekidakaData] = useState<any>(null);
+  const [userData, setUserData] = useState<any>(null);
+  const [subDekidaka, setSubDekidaka] = useState<SubDekidaka[]>();
+  const { data: session } = useSession<any>();
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      try {
+        if (session?.user) {
+          setUserData(session.user);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchSession();
+
+    const getDekidaka = async () => {
+      try {
+        const storedLastDocId = localStorage.getItem("lastDocId") || "";
+        if (storedLastDocId) {
+          const [username, id] = storedLastDocId.split("_");
+          if (session?.user && userData) {
+            if (username === userData.nama) {
+              const response = await axios.get(`/api/getDekidaka?id=${id}`);
+              if (response.data) {
+                setSubDekidaka(response.data);
+              }
+              console.log(subDekidaka);
+            } else {
+              console.log("Username tidak cocok");
+            }
+          }
+        } else {
+          console.log("Data tidak ditemukan");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    getDekidaka();
+  }, [session]);
 
   const openModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -16,14 +64,26 @@ const Dekidaka = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await axios.post("/api/addDekidaka", {
-        plan,
-        actual,
-        deviasi,
-        lossTime,
-      });
-      console.log("Data added successfully!");
-      setIsModalOpen(false);
+      const storedLastDocId = localStorage.getItem("lastDocId") || "";
+
+      if (storedLastDocId) {
+        const [username, id] = storedLastDocId.split("_");
+        if (username === userData.nama) {
+          const response = await axios.post(`/api/addDekidaka`, {
+            id,
+            plan,
+            actual,
+            deviasi,
+            lossTime,
+          });
+          const { subDekidakaId } = response.data;
+          localStorage.setItem(
+            "subDekidaka",
+            `${userData.nama}_${subDekidakaId}`
+          );
+          setIsModalOpen(false);
+        }
+      }
     } catch (error) {
       console.error("Error adding data:", error);
     }
@@ -83,8 +143,8 @@ const Dekidaka = () => {
   };
 
   return (
-    <div className="flex justify-center px-2 h-full w-full lg:w-1/3">
-      <div className="container w-full border rounded-lg px-1">
+    <div className="flex justify-center px-3 mt-1 h-full w-full lg:w-1/3">
+      <div className="container w-full border rounded-lg p-2">
         <table className="table table-sm text-center">
           <thead>
             <tr>
@@ -96,15 +156,15 @@ const Dekidaka = () => {
             </tr>
           </thead>
           <tbody>
-            <tr
-              onClick={openModal}
-              className="cursor-pointer hover:bg-slate-900">
-              <td>1</td>
-              <td>55</td>
-              <td>55</td>
-              <td>0</td>
-              <td>0</td>
-            </tr>
+            {subDekidaka?.map((item: SubDekidaka, index: number) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{item.plan}</td>
+                <td>{item.actual}</td>
+                <td>{item.deviasi}</td>
+                <td>{item.lossTime}</td>
+              </tr>
+            ))}
           </tbody>
           {isModalOpen && renderModal()}
         </table>

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getDekidakaData } from "@/lib/services/firebase/dekidakaServices";
+import { getProfileData } from "@/lib/services/firebase/dekidakaServices";
 
-export default async function handlerDekidakaData(
+export default async function handlerProfileData(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -11,11 +11,11 @@ export default async function handlerDekidakaData(
       if (!id || typeof id !== "string") {
         throw new Error("Invalid id parameter");
       }
-      const data = await getDekidakaData(id);
+      const data = await getProfileData(id);
       res.status(200).json(data);
     } catch (error) {
-      console.error("Error fetching Dekidaka data:", error);
-      res.status(500).json({ message: "Failed to fetch Dekidaka data" });
+      console.error("Error fetching profile data:", error);
+      res.status(500).json({ message: "Failed to fetch profile data" });
     }
   } else {
     res.status(405).json({ message: "Method Not Allowed" });

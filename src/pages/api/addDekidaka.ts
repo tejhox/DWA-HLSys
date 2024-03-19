@@ -9,11 +9,13 @@ export default async function handlerDekidaka(
     try {
       const { id, plan, actual, deviasi, lossTime } = req.body;
 
-      await addDekidaka(id, plan, actual, deviasi, lossTime);
+      const docRef = await addDekidaka(id, plan, actual, deviasi, lossTime);
+
+      const subDekidakaId = docRef.id;
 
       res.status(200).json({
         message: "Form data updated in Firestore successfully",
-        docId: id,
+        subDekidakaId,
       });
     } catch (error) {
       console.error("Error updating form data in Firestore:", error);

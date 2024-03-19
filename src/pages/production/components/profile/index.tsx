@@ -13,7 +13,7 @@ const Profile = () => {
   const { data: session } = useSession<any>();
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchSession = async () => {
       try {
         if (session?.user) {
           setUserData(session.user);
@@ -22,22 +22,35 @@ const Profile = () => {
         console.error("Error fetching data:", error);
       }
     };
-    fetchProfile();
-  }, [session]);
+    fetchSession();
 
-  const getDekidaka = async () => {
-    const lastDocId = localStorage.getItem("lastDocId") || "";
-    try {
-      const response = await axios.get(`/api/getDekidakaData?id=${lastDocId}`);
-      setLine(response.data.line);
-      setProduct(response.data.product);
-      setShift(response.data.shift);
-      setDate(response.data.date);
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+    const getProfile = async () => {
+      try {
+        const storedLastDocId = localStorage.getItem("lastDocId") || "";
+        if (storedLastDocId) {
+          const [username, id] = storedLastDocId.split("_");
+          if (session?.user && userData) {
+            if (username === userData.nama) {
+              const response = await axios.get(`/api/getProfileData?id=${id}`);
+              setLine(response.data.line);
+              setProduct(response.data.product);
+              setShift(response.data.shift);
+              setDate(response.data.date);
+              console.log(response.data);
+            } else {
+              console.log("Username tidak cocok");
+            }
+          }
+        } else {
+          console.log("Data tidak ditemukan");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    getProfile();
+  }, [session]);
 
   const addProfile = async () => {
     const leaderGroups = {
@@ -57,9 +70,10 @@ const Profile = () => {
           date,
         });
         const { docId } = response.data;
-        localStorage.setItem("lastDocId", docId);
+        localStorage.setItem("lastDocId", `${userData.nama}_${docId}`);
         const lastDocId = localStorage.getItem("lastDocId") || "";
         setDocId(lastDocId || "");
+
         console.log("Profile data submitted successfully with ID :", docId);
         setIsDisabled(true);
 
@@ -76,7 +90,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex justify-center px-2 py-1 h-full w-full lg:w-1/3">
+    <div className="flex justify-center px-3 mt-3 h-full w-full lg:w-1/3">
       <div className="container w-full">
         <div className="container w-full border rounded-lg px-1 py-1">
           <div className="container flex flex-row w-full ps-2 pe-2 py-1 ">
@@ -146,11 +160,6 @@ const Profile = () => {
               className="btn btn-sm btn-outline ms-2"
               disabled={isDisabled}>
               Submit
-            </button>
-            <button
-              onClick={getDekidaka}
-              className="btn btn-sm btn-outline ms-2">
-              GET
             </button>
           </div>
         </div>

@@ -13,7 +13,7 @@ import app from "./init";
 
 const firestore = getFirestore(app);
 
-export async function getDekidakaData(id: string) {
+export async function getProfileData(id: string) {
   try {
     const dekidakaDocRef = doc(firestore, "Dekidaka", id);
     const snapshot = await getDoc(dekidakaDocRef);
@@ -28,6 +28,22 @@ export async function getDekidakaData(id: string) {
   }
 }
 
+export async function getDekidaka(id: string) {
+  try {
+    const docRef = doc(firestore, "Dekidaka", id);
+    const subColRef = collection(docRef, "dekidaka");
+    const snapshot = await getDocs(subColRef);
+
+    const subDekidakaData: any[] = [];
+    snapshot.forEach((doc) => {
+      subDekidakaData.push(doc.data());
+    });
+    return subDekidakaData;
+  } catch (error) {
+    console.error("Error fetching Dekidaka data:", error);
+    throw new Error("Failed to fetch Dekidaka data from Firestore");
+  }
+}
 export async function getDekidakaId(id: string) {
   try {
     const dekidakaRef = doc(firestore, "Dekidaka", id);
@@ -77,15 +93,16 @@ export async function addDekidaka(
   lossTime: number
 ) {
   try {
-    const parentDocRef = doc(firestore, "dekidaka", id);
-    const dekidakaRef = collection(parentDocRef, "Dekidaka");
-    await addDoc(dekidakaRef, {
+    const parentDocRef = doc(firestore, "Dekidaka", id);
+    const dekidakaRef = collection(parentDocRef, "dekidaka");
+    const docRef = await addDoc(dekidakaRef, {
       plan: plan,
       actual: actual,
       deviasi: deviasi,
       lossTime: lossTime,
     });
     console.log("Dekidaka subcollection added to Firestore successfully!");
+    return docRef;
   } catch (error) {
     console.error("Error adding Dekidaka subcollection to Firestore:", error);
     throw new Error("Failed to add Dekidaka subcollection to Firestore");

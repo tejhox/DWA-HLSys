@@ -36,28 +36,40 @@ const LoginPage = () => {
   };
 
   return (
-    <>
-      <div>
-        <div>
-          <div>Sign In</div>
-          {error && <div>{error}</div>}
-          <div>
-            <form onSubmit={handleSubmit}>
-              <label htmlFor="nik">NIK</label>
-              <input type="text" id="nik" name="nik" placeholder="Masukkan NIK" />
-              <label htmlFor="nik">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="Masukkan Password"
-              />
-              <button type="submit">{isLoading ? "Loading..." : "Login"}</button>
-            </form>
+    <div className="container flex w-screen h-screen items-center justify-center -mt-10 sm:w-1/2 sm:mx-auto lg:w-1/3 lg:mx-auto">
+      <div className="container flex flex-col w-11/12 p-6 my-auto border rounded-lg border-slate-600 ">
+        <h1 className="text-xl text-center">Sign In</h1>
+        <div className="divider"></div>
+        {error && <div>{error}</div>}
+        <form onSubmit={handleSubmit} className="form-control">
+          <div className="flex flex-col">
+            <label htmlFor="nik">NIK</label>
+            <input
+              type="text"
+              id="nik"
+              name="nik"
+              placeholder="Masukkan NIK"
+              className="input input-sm input-bordered mt-1"
+            />
           </div>
-        </div>
+          <div className="flex flex-col mt-2">
+            <label htmlFor="nik">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Masukkan Password"
+              className="input input-sm input-bordered mt-1"
+            />
+          </div>
+          <div className="divider mt-10">
+            <button type="submit" className="btn btn-neutral btn-sm w-32">
+              {isLoading ? "Loading..." : "Login"}
+            </button>
+          </div>
+        </form>
       </div>
-    </>
+    </div>
   );
 };
 export default LoginPage;
