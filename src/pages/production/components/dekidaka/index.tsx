@@ -170,14 +170,16 @@ const Dekidaka = () => {
               <input
                 type="text"
                 className="input input-bordered input-sm w-full"
-                value={`${calcLossTime.lossTime}'`}
+                value={`${
+                  calcLossTime?.lossTime ? calcLossTime.lossTime : lossTime
+                }'`}
                 onChange={(e) => setLossTime(parseInt(e.target.value))}
                 disabled
               />
-              <button type="submit" className="btn btn-primary mt-2">
-                Submit
-              </button>
             </div>
+            <button type="submit" className="btn btn-sm btn-ghost mt-2 w-full">
+              Submit
+            </button>
           </form>
         </div>
       </dialog>
@@ -208,12 +210,12 @@ const Dekidaka = () => {
               </tr>
             ))}
           </tbody>
-          {isModalOpen && renderModal()}
         </table>
         <div className="p-1">
           <button onClick={openModal} className="btn btn-sm btn-outline w-full">
             +
           </button>
+          {isModalOpen && renderModal()}
         </div>
       </div>
     </div>
