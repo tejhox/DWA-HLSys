@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-unescaped-entities */
 import { useState, FormEvent, useEffect } from "react";
 import axios from "axios";
@@ -43,23 +42,6 @@ const Dekidaka = () => {
   const openModal = () => {
     setIsModalOpen(!isModalOpen);
   };
-
-  // let calcLossTime;
-  // const tableRowCount = dekidaka.length;
-
-  // if (tableRowCount === 3 || tableRowCount === 7) {
-  //   calcLossTime = ((plan - aktual) * (55 / plan)).toFixed(0);
-  // } else {
-  //   calcLossTime = ((plan - aktual) * (60 / plan)).toFixed(0);
-  // }
-
-  // let calcEditLossTime;
-
-  // if (currentIndex === 3 || currentIndex === 7) {
-  //   calcEditLossTime = ((plan - aktual) * (55 / plan)).toFixed(0);
-  // } else {
-  //   calcEditLossTime = ((plan - aktual) * (60 / plan)).toFixed(0);
-  // }
 
   const getDekidaka = async () => {
     try {
