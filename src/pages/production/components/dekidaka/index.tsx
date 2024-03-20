@@ -17,6 +17,7 @@ const Dekidaka = () => {
   const [lossTime, setLossTime] = useState<number>(0);
   const [userData, setUserData] = useState<any>(null);
   const [subDekidaka, setSubDekidaka] = useState<SubDekidaka[]>();
+  const [dateNow, setDateNow] = useState<any>("");
   const { data: session } = useSession<any>();
 
   useEffect(() => {
@@ -24,13 +25,16 @@ const Dekidaka = () => {
       try {
         if (session?.user) {
           setUserData(session.user);
+          setDateNow(Date.now());
         }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchSession();
+  }, [session]);
 
+  useEffect(() => {
     const getDekidaka = async () => {
       try {
         const storedLastDocId = localStorage.getItem("lastDocId") || "";
@@ -39,9 +43,7 @@ const Dekidaka = () => {
           if (session?.user && userData) {
             if (username === userData.nama) {
               const response = await axios.get(`/api/getDekidaka?id=${id}`);
-              if (response.data) {
-                setSubDekidaka(response.data);
-              }
+              setSubDekidaka(response.data);
               console.log(subDekidaka);
             } else {
               console.log("Username tidak cocok");
@@ -55,7 +57,7 @@ const Dekidaka = () => {
       }
     };
     getDekidaka();
-  }, [session]);
+  }, [dateNow]);
 
   const openModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -65,7 +67,6 @@ const Dekidaka = () => {
     e.preventDefault();
     try {
       const storedLastDocId = localStorage.getItem("lastDocId") || "";
-
       if (storedLastDocId) {
         const [username, id] = storedLastDocId.split("_");
         if (username === userData.nama) {

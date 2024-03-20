@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 const Navbar = () => {
   const { data } = useSession();
   const [showMenu, setShowMenu] = useState(false);
+  const router = useRouter();
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -21,7 +23,12 @@ const Navbar = () => {
         <div className="hidden md:block">
           <ul className="menu menu-horizontal px-1 align-middle">
             <li>
-              <Link href="/production">Laporan Produksi</Link>
+              <button
+                onClick={() => {
+                  router.push("/production");
+                }}>
+                Laporan Produksi
+              </button>
             </li>
             <li>
               <button

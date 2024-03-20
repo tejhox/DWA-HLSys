@@ -10,6 +10,7 @@ const Profile = () => {
   const [date, setDate] = useState<string>("");
   const [isDisabled, setIsDisabled] = useState(false);
   const [userData, setUserData] = useState<any>(null);
+  const [dateNow, setDateNow] = useState<any>("");
   const { data: session } = useSession<any>();
 
   useEffect(() => {
@@ -17,6 +18,7 @@ const Profile = () => {
       try {
         if (session?.user) {
           setUserData(session.user);
+          setDateNow(Date.now());
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -25,30 +27,33 @@ const Profile = () => {
     fetchSession();
   }, [session]);
 
-  const getProfile = async () => {
-    try {
-      const storedLastDocId = localStorage.getItem("lastDocId") || "";
-      if (storedLastDocId) {
-        const [username, id] = storedLastDocId.split("_");
-        if (session?.user && userData) {
-          if (username === userData.nama) {
-            const response = await axios.get(`/api/getProfileData?id=${id}`);
-            setLine(response.data.line);
-            setProduct(response.data.product);
-            setShift(response.data.shift);
-            setDate(response.data.date);
-            console.log(response.data);
-          } else {
-            console.log("Username tidak cocok");
+  useEffect(() => {
+    const getProfile = async () => {
+      try {
+        const storedLastDocId = localStorage.getItem("lastDocId") || "";
+        if (storedLastDocId) {
+          const [username, id] = storedLastDocId.split("_");
+          if (session?.user && userData) {
+            if (username === userData.nama) {
+              const response = await axios.get(`/api/getProfileData?id=${id}`);
+              setLine(response.data.line);
+              setProduct(response.data.product);
+              setShift(response.data.shift);
+              setDate(response.data.date);
+              console.log(response.data);
+            } else {
+              console.log("Username tidak cocok");
+            }
           }
+        } else {
+          console.log("Data tidak ditemukan");
         }
-      } else {
-        console.log("Data tidak ditemukan");
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+    };
+    getProfile();
+  }, [dateNow]);
 
   const addProfile = async () => {
     const leaderGroups = {
@@ -148,9 +153,6 @@ const Profile = () => {
             </div>
           </div>
           <div className="container flex justify-end w-full p-1">
-            <button onClick={getProfile} className="btn btn-sm btn-outline">
-              Refresh
-            </button>
             <button
               onClick={() => setIsDisabled(false)}
               className="btn btn-sm btn-outline">
