@@ -53,6 +53,7 @@ const Profile = () => {
       }
     };
     getProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateNow]);
 
   const addProfile = async () => {

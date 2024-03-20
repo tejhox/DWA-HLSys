@@ -37,6 +37,7 @@ const Dekidaka = () => {
 
   useEffect(() => {
     getDekidaka();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateNow]);
 
   const openModal = () => {
