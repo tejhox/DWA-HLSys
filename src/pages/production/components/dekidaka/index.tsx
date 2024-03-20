@@ -162,7 +162,7 @@ const Dekidaka = () => {
               <input
                 type="number"
                 className="input input-bordered input-sm w-full"
-                value={calcDeviasi.deviasi}
+                value={calcDeviasi?.deviasi ? calcDeviasi.deviasi : deviasi}
                 onChange={(e) => setDeviasi(parseInt(e.target.value))}
                 disabled
               />
