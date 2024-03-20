@@ -114,9 +114,15 @@ const Profile = () => {
                 value={line}
                 onChange={(e) => setLine(e.target.value)}
                 disabled={isDisabled}>
-                <option className="text-sm" value="">
-                  Line
-                </option>
+                {line ? (
+                  <option className="text-sm" value="">
+                    Line
+                  </option>
+                ) : (
+                  <option className="text-sm" value="">
+                    Loading...
+                  </option>
+                )}
                 <option value="ER 01">ER 01</option>
                 <option value="ER 02">ER 02</option>
                 <option value="ER 03">ER 03</option>
@@ -127,7 +133,11 @@ const Profile = () => {
                 value={product}
                 onChange={(e) => setProduct(e.target.value)}
                 disabled={isDisabled}>
-                <option value="">Produk</option>
+                {product ? (
+                  <option>Produk</option>
+                ) : (
+                  <option>Loading...</option>
+                )}
                 <option value="D14N">D14N</option>
                 <option value="KS Hyundai">KS Hyundai</option>
               </select>
@@ -138,7 +148,11 @@ const Profile = () => {
                 value={shift}
                 onChange={(e) => setShift(e.target.value)}
                 disabled={isDisabled}>
-                <option value="">Shift</option>
+                {shift ? (
+                  <option value="">Produk</option>
+                ) : (
+                  <option value="">Loading...</option>
+                )}
                 <option value="1">1</option>
                 <option value="2">2</option>
               </select>

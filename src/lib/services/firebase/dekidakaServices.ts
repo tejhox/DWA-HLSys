@@ -6,8 +6,6 @@ import {
   getDoc,
   getDocs,
   getFirestore,
-  query,
-  setDoc,
 } from "firebase/firestore";
 import app from "./init";
 
@@ -15,8 +13,8 @@ const firestore = getFirestore(app);
 
 export async function getProfileData(id: string) {
   try {
-    const dekidakaDocRef = doc(firestore, "Dekidaka", id);
-    const snapshot = await getDoc(dekidakaDocRef);
+    const docRef = doc(firestore, "Dekidaka", id);
+    const snapshot = await getDoc(docRef);
     if (snapshot.exists()) {
       return { id: snapshot.id, ...snapshot.data() };
     } else {
@@ -46,10 +44,10 @@ export async function getDekidaka(id: string) {
 }
 export async function getDekidakaId(id: string) {
   try {
-    const dekidakaRef = doc(firestore, "Dekidaka", id);
-    const dekidakaDoc = await getDoc(dekidakaRef);
-    if (dekidakaDoc.exists()) {
-      return dekidakaDoc.id;
+    const docRef = doc(firestore, "Dekidaka", id);
+    const snapshot = await getDoc(docRef);
+    if (snapshot.exists()) {
+      return snapshot.id;
     } else {
       throw new Error("Dekidaka document does not exist");
     }
@@ -68,8 +66,8 @@ export async function addProfileData(
   date: Timestamp
 ) {
   try {
-    const dekidakaRef = collection(firestore, "Dekidaka");
-    const docRef = await addDoc(dekidakaRef, {
+    const colRef = collection(firestore, "Dekidaka");
+    const snapshot = await addDoc(colRef, {
       line: line,
       group: group,
       leader: leader,
@@ -78,7 +76,7 @@ export async function addProfileData(
       date: date,
     });
     console.log("Form data added to Firestore successfully!");
-    return docRef;
+    return snapshot;
   } catch (error) {
     console.error("Error adding form data to Firestore:", error);
     throw new Error("Failed to add form data to Firestore");
@@ -93,16 +91,16 @@ export async function addDekidaka(
   lossTime: number
 ) {
   try {
-    const parentDocRef = doc(firestore, "Dekidaka", id);
-    const dekidakaRef = collection(parentDocRef, "dekidaka");
-    const docRef = await addDoc(dekidakaRef, {
+    const docRef = doc(firestore, "Dekidaka", id);
+    const subColRef = collection(docRef, "dekidaka");
+    const snapshot = await addDoc(subColRef, {
       plan: plan,
       actual: actual,
       deviasi: deviasi,
       lossTime: lossTime,
     });
     console.log("Dekidaka subcollection added to Firestore successfully!");
-    return docRef;
+    return snapshot;
   } catch (error) {
     console.error("Error adding Dekidaka subcollection to Firestore:", error);
     throw new Error("Failed to add Dekidaka subcollection to Firestore");

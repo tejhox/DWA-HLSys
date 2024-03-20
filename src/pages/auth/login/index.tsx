@@ -36,35 +36,52 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="container flex w-screen h-screen items-center justify-center -mt-10 sm:w-1/2 sm:mx-auto lg:w-1/3 lg:mx-auto">
+    <div className="container flex w-screen justify-center mt-14 sm:w-1/2 sm:mx-auto lg:w-1/3 lg:mx-auto">
       <div className="container flex flex-col w-11/12 p-6 my-auto border rounded-lg border-slate-600 ">
-        <h1 className="text-xl text-center">Sign In</h1>
+        <h1 className="text-xl text-center text-sky-600">SIGN IN</h1>
         <div className="divider"></div>
         {error && <div>{error}</div>}
         <form onSubmit={handleSubmit} className="form-control">
-          <div className="flex flex-col">
-            <label htmlFor="nik">NIK</label>
+          <label className="input input-bordered flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              className="w-4 h-4 opacity-70">
+              <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+            </svg>
             <input
               type="text"
-              id="nik"
+              className="grow rounded"
               name="nik"
-              placeholder="Masukkan NIK"
-              className="input input-sm input-bordered mt-1"
+              placeholder="NIK"
             />
-          </div>
-          <div className="flex flex-col mt-2">
-            <label htmlFor="nik">Password</label>
+          </label>
+          <label className="input input-bordered flex items-center gap-2 mt-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              className="w-4 h-4 opacity-70">
+              <path
+                fillRule="evenodd"
+                d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
+                clipRule="evenodd"
+              />
+            </svg>
             <input
               type="password"
-              id="password"
               name="password"
-              placeholder="Masukkan Password"
-              className="input input-sm input-bordered mt-1"
+              placeholder="Password"
+              className="grow rounded"
             />
-          </div>
+          </label>
+
           <div className="divider mt-10">
-            <button type="submit" className="btn btn-neutral btn-sm w-32">
-              {isLoading ? "Loading..." : "Login"}
+            <button
+              type="submit"
+              className="btn btn-outline btn-sm w-32 text-sky-600">
+              {isLoading ? "Loading..." : "LOGIN"}
             </button>
           </div>
         </form>
