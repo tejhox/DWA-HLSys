@@ -5,13 +5,17 @@ import { useState } from "react";
 const Navbar = () => {
   const { data } = useSession();
   const [showMenu, setShowMenu] = useState(false);
+  const [shadow, setShadow] = useState(true);
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
+    setShadow(false);
   };
+
   const closeMenu = () => {
     setShowMenu(false);
   };
+
   const handleSignInOut = async () => {
     if (data) {
       await signOut();
@@ -23,7 +27,12 @@ const Navbar = () => {
 
   return (
     <div>
-      <div className="navbar bg-content-content">
+      <div
+        className={
+          showMenu
+            ? "navbar bg-content-content"
+            : "navbar bg-content-content shadow-md"
+        }>
         <div className="flex-1 -ms-3">
           <Link
             href={"/"}
@@ -65,8 +74,8 @@ const Navbar = () => {
         </div>
       </div>
       <div className={showMenu === true ? "block" : "hidden"}>
-        <div className="container flex justify-end w-screen pe-2 mt-3 lg:hidden">
-          <ul className="flex flex-col w-1/2 rounded-lg shadow-md text-end px-4 py-2 sm:hidden">
+        <div className="container flex justify-end w-screen lg:hidden">
+          <ul className="flex flex-col w-full rounded-lg shadow-md text-end px-4 pb-3 sm:hidden">
             <li>
               <Link
                 href="/production"

@@ -1,7 +1,4 @@
-import {
-  ProfileProvider,
-  useProfileContext,
-} from "../../../../context/profileContext";
+import { useProfileContext } from "../../../../context/profileContext";
 
 const Profile = () => {
   const {
@@ -24,9 +21,9 @@ const Profile = () => {
   const { addProfile } = useProfileContext();
 
   return (
-    <div className="flex justify-center px-3 mt-3 h-full w-full lg:w-1/3">
+    <div className="flex justify-center px-3 mt-4 h-full w-full lg:w-1/3">
       <div className="container w-full">
-        <div className="container w-full border rounded-lg px-1 py-1">
+        <div className="container w-full border-2 border-gray-400 rounded-lg px-1 py-1">
           <div className="container flex flex-row w-full ps-2 pe-2 py-1 ">
             <p className="text-sm">Dekidaka</p>
             {userData ? (
@@ -39,7 +36,7 @@ const Profile = () => {
               <p className="text-sm text-primary ms-auto">Loading...</p>
             )}
           </div>
-          <hr />
+          <hr className=" border border-gray-400" />
           <div className="container flex w-full p-1 mt-1">
             <div className="container w-1/2">
               <select

@@ -34,7 +34,7 @@ const Dekidaka = () => {
 
   return (
     <div className="flex justify-center px-3 mt-1 h-full w-full lg:w-1/3">
-      <div className="container w-full border rounded-lg p-2">
+      <div className="container w-full border-2 border-gray-400 rounded-lg p-2">
         <table className="table table-sm text-center">
           <thead className="border-double border-4">
             <tr>
@@ -74,10 +74,17 @@ const Dekidaka = () => {
             ))}
           </tbody>
         </table>
-        <div className="p-1">
+        {!subDekidaka || subDekidaka.length === 0 ? (
+          <p className="text-center text-sm my-3">
+            -------- Belum ada data --------
+          </p>
+        ) : (
+          ""
+        )}
+        <div className="w-full mt-2">
           <button
             onClick={isFilled ? handleAddModal : () => showWarning()}
-            className="btn btn-sm btn-outline w-full">
+            className="btn btn-sm btn-neutral w-full">
             +
           </button>
           {isModalAddOpen && modalAddData()}

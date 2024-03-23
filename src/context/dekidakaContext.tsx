@@ -1,6 +1,6 @@
 import { FormEvent } from "react";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { useProfileContext } from "../profile/profileContext";
+import { useProfileContext } from "@/context/profileContext";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import Modal from "../pages/production/components/ui/modal";
