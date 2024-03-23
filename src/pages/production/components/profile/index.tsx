@@ -1,4 +1,7 @@
-import { ProfileProvider, useProfileContext } from "./profileContext";
+import {
+  ProfileProvider,
+  useProfileContext,
+} from "../../../../context/profileContext";
 
 const Profile = () => {
   const {

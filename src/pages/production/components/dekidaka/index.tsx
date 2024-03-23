@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { useProfileContext } from "../profile/profileContext";
-import { SubDekidaka, useDekidakaContext } from "./dekidakaContext";
+import { useProfileContext } from "../../../../context/profileContext";
+import {
+  SubDekidaka,
+  useDekidakaContext,
+} from "../../../../context/dekidakaContext";
 
 const Dekidaka = () => {
   const [userData, setUserData] = useState<any>(null);

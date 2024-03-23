@@ -3,7 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { useProfileContext } from "../profile/profileContext";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-import Modal from "../ui/modal";
+import Modal from "../pages/production/components/ui/modal";
 
 export type SubDekidaka = {
   id: string;
