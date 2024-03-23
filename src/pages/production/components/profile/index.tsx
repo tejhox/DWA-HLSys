@@ -1,3 +1,4 @@
+import { useSessionContext } from "@/context/sessionContext";
 import { useProfileContext } from "../../../../context/profileContext";
 
 const Profile = () => {
@@ -12,16 +13,15 @@ const Profile = () => {
     setShift,
     setDate,
     setIsDisabled,
-    userData,
-    userDataName,
-    userDataNik,
     isFilled,
   } = useProfileContext();
+
+  const { userData, userDataName, userDataNik } = useSessionContext();
 
   const { addProfile } = useProfileContext();
 
   return (
-    <div className="flex justify-center px-3 mt-4 h-full w-full lg:w-1/3">
+    <div className="flex justify-center px-1.5 mt-3 h-full w-full lg:w-1/3">
       <div className="container w-full">
         <div className="container w-full border-2 border-gray-400 rounded-lg px-1 py-1">
           <div className="container flex flex-row w-full ps-2 pe-2 py-1 ">
@@ -99,21 +99,23 @@ const Profile = () => {
                 <option value="2">2</option>
                 <option value="3">3</option>
               </select>
-              <input
-                type="date"
-                placeholder="Tanggal"
-                className="input input-bordered input-sm w-full"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                disabled={isDisabled}
-              />
+              <label className="input input-bordered input-sm w-full flex items-center gap-2">
+                <input
+                  type="date"
+                  placeholder="Tanggal"
+                  className="grow"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  disabled={isDisabled}
+                />
+              </label>
             </div>
           </div>
           <div className="container flex justify-between items-center w-full p-1">
             <div className="px-1">
               {!isFilled ? (
                 <p className="text-sm text-warning ms-auto text-center">
-                  Profil belum diisi !
+                  Isi form !
                 </p>
               ) : isFilled ? (
                 ""

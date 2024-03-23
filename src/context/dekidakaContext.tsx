@@ -1,9 +1,8 @@
 import { FormEvent } from "react";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { useProfileContext } from "@/context/profileContext";
-import { useSession } from "next-auth/react";
 import axios from "axios";
 import Modal from "../pages/production/components/ui/modal";
+import { useSessionContext } from "./sessionContext";
 
 export type SubDekidaka = {
   id: string;
@@ -48,34 +47,15 @@ export const DekidakaProvider = ({ children }: any) => {
   const [actual, setActual] = useState<number | undefined>();
   const [deviasi, setDeviasi] = useState<number | undefined>();
   const [lossTime, setLossTime] = useState<number | undefined>();
-  // const [userData, setUserData] = useState<any>(null);
   const [subDekidaka, setSubDekidaka] = useState<SubDekidaka[]>();
   const [subData, setSubData] = useState<SubData[]>();
-  const [dateNow, setDateNow] = useState<any>("");
-  const { data: session } = useSession<any>();
 
-  const { userData, userDataName, userDataNik, setUserData } =
-    useProfileContext();
+  const { userData, userDataName, dateNow } = useSessionContext();
 
   useEffect(() => {
     getDekidaka();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateNow]);
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      try {
-        if (session?.user) {
-          setUserData(session.user);
-          setDateNow(Date.now());
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchSession();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session]);
 
   const handleAddModal = () => {
     setIsModalAddOpen(!isModalAddOpen);
@@ -89,11 +69,10 @@ export const DekidakaProvider = ({ children }: any) => {
       const storedLastDocId = localStorage.getItem("lastDocId") || "";
       if (storedLastDocId) {
         const [username, id] = storedLastDocId.split("_");
-        if (session?.user && userData) {
-          if (username === userData.nama) {
+        if (userDataName && userData) {
+          if (username === userDataName) {
             const response = await axios.get(`/api/getDekidaka?id=${id}`);
             setSubDekidaka(response.data);
-            console.log(subDekidaka);
           } else {
             console.log("Username tidak cocok");
           }
@@ -106,14 +85,14 @@ export const DekidakaProvider = ({ children }: any) => {
     }
   };
 
-  type Data = {
+  type DekidakaData = {
     plan?: number;
     actual?: number;
     deviasi?: number;
     lossTime?: number;
   };
 
-  const data: Data = {
+  const data: DekidakaData = {
     plan: plan,
     actual: actual,
     deviasi: deviasi,
@@ -147,8 +126,8 @@ export const DekidakaProvider = ({ children }: any) => {
       const storedLastDocId = localStorage.getItem("lastDocId") || "";
       if (storedLastDocId) {
         const [username, docId] = storedLastDocId.split("_");
-        if (session?.user && userData) {
-          if (username === userData.nama) {
+        if (userDataName && userData) {
+          if (username === userDataName) {
             const response = await axios.get(
               `/api/getSubData?docId=${docId}&subDocId=${subDocId}`
             );
@@ -203,55 +182,61 @@ export const DekidakaProvider = ({ children }: any) => {
   const modalAddData = () => {
     return (
       <Modal
-        modalAction={<button onClick={handleAddModal}>Close</button>}
         modalBody={
-          <form onSubmit={addDekidaka}>
-            <div className="container w-full flex flex-col justify-start lg:px-7">
-              <label htmlFor="planInput" className="label">
-                Plan
-              </label>
-              <input
-                id="planInput"
-                type="number"
-                className="input input-bordered input-sm w-full"
-                placeholder="55"
-                value={plan}
-                onChange={(e) => setPlan(parseInt(e.target.value))}
-              />
-              <label htmlFor="actualInput" className="label">
-                Aktual
-              </label>
-              <input
-                id="actualInput"
-                type="number"
-                className="input input-bordered input-sm w-full"
-                placeholder="55"
-                value={actual}
-                onChange={(e) => setActual(parseInt(e.target.value))}
-              />
-              <label className="label">Deviasi</label>
-              <input
-                type="number"
-                className="input input-bordered input-sm w-full"
-                value={calcDeviasi?.deviasi ? calcDeviasi.deviasi : deviasi}
-                onChange={(e) => setDeviasi(parseInt(e.target.value))}
-                disabled
-              />
-              <label className="label">Loss Time</label>
-              <input
-                type="text"
-                className="input input-bordered input-sm w-full"
-                value={`${
-                  calcLossTime?.lossTime ? calcLossTime.lossTime : lossTime
-                }'`}
-                onChange={(e) => setLossTime(parseInt(e.target.value))}
-                disabled
-              />
+          <>
+            <div className="flex justify-end">
+              <button onClick={handleAddModal} className="me-1">
+                ✕
+              </button>
             </div>
-            <button type="submit" className="btn btn-sm btn-ghost mt-2 w-full">
-              Submit
-            </button>
-          </form>
+            <form onSubmit={addDekidaka}>
+              <div className="container w-full flex flex-col justify-start lg:px-7">
+                <label htmlFor="planInput" className="label">
+                  Plan
+                </label>
+                <input
+                  id="planInput"
+                  type="number"
+                  className="input input-bordered input-sm w-full"
+                  placeholder="55"
+                  value={plan}
+                  onChange={(e) => setPlan(parseInt(e.target.value))}
+                />
+                <label htmlFor="actualInput" className="label">
+                  Aktual
+                </label>
+                <input
+                  id="actualInput"
+                  type="number"
+                  className="input input-bordered input-sm w-full"
+                  placeholder="55"
+                  value={actual}
+                  onChange={(e) => setActual(parseInt(e.target.value))}
+                />
+                <label className="label">Deviasi</label>
+                <input
+                  type="number"
+                  className="input input-bordered input-sm w-full"
+                  value={calcDeviasi?.deviasi}
+                  onChange={(e) => setDeviasi(parseInt(e.target.value))}
+                  disabled
+                />
+                <label className="label">Loss Time</label>
+                <input
+                  type="text"
+                  className="input input-bordered input-sm w-full"
+                  value={`${calcLossTime?.lossTime}'`}
+                  onChange={(e) => setLossTime(parseInt(e.target.value))}
+                  disabled
+                />
+              </div>
+              <button
+                type="submit"
+                className="btn btn-sm btn-neutral mt-3 w-full">
+                Submit
+              </button>
+            </form>
+          </>
         }
       />
     );
@@ -259,58 +244,64 @@ export const DekidakaProvider = ({ children }: any) => {
 
   const modalUpdateData = () => {
     return (
-      <dialog className="modal modal-bottom lg:modal-middle" open>
-        <div className="modal-box">
-          <div className="modal-action">
-            <button onClick={handleUpdateModal}>Close</button>
-          </div>
-          <form onSubmit={updateDekidaka}>
-            <div className="container w-full flex flex-col justify-start lg:px-7">
-              <label htmlFor="planInput" className="label">
-                Plan
-              </label>
-              <input
-                id="planInput"
-                type="number"
-                className="input input-bordered input-sm w-full"
-                placeholder="55"
-                value={plan}
-                onChange={(e) => setPlan(parseInt(e.target.value))}
-              />
-              <label htmlFor="actualInput" className="label">
-                Aktual
-              </label>
-              <input
-                id="actualInput"
-                type="number"
-                className="input input-bordered input-sm w-full"
-                placeholder="55"
-                value={actual}
-                onChange={(e) => setActual(parseInt(e.target.value))}
-              />
-              <label className="label">Deviasi</label>
-              <input
-                type="number"
-                className="input input-bordered input-sm w-full"
-                value={deviasi}
-                onChange={(e) => setDeviasi(parseInt(e.target.value))}
-                readOnly
-              />
-              <label className="label">Loss Time</label>
-              <input
-                type="text"
-                className="input input-bordered input-sm w-full"
-                value={`${lossTime}'`}
-                onChange={(e) => setLossTime(parseInt(e.target.value))}
-                readOnly
-              />
+      <Modal
+        modalBody={
+          <>
+            <div className="flex justify-end">
+              <button onClick={handleUpdateModal} className="me-1">
+                ✕
+              </button>
             </div>
-            <button type="submit" className="btn btn-sm btn-ghost mt-2 w-full">
-              Submit
-            </button>
-          </form>
-        </div>
-      </dialog>
+            <form onSubmit={updateDekidaka}>
+              <div className="container w-full flex flex-col justify-start lg:px-7">
+                <label htmlFor="planInput" className="label">
+                  Plan
+                </label>
+                <input
+                  id="planInput"
+                  type="number"
+                  className="input input-bordered input-sm w-full"
+                  placeholder="55"
+                  value={plan}
+                  onChange={(e) => setPlan(parseInt(e.target.value))}
+                />
+                <label htmlFor="actualInput" className="label">
+                  Aktual
+                </label>
+                <input
+                  id="actualInput"
+                  type="number"
+                  className="input input-bordered input-sm w-full"
+                  placeholder="55"
+                  value={actual}
+                  onChange={(e) => setActual(parseInt(e.target.value))}
+                />
+                <label className="label">Deviasi</label>
+                <input
+                  type="number"
+                  className="input input-bordered input-sm w-full"
+                  value={calcDeviasi?.deviasi}
+                  onChange={(e) => setDeviasi(parseInt(e.target.value))}
+                  disabled
+                />
+                <label className="label">Loss Time</label>
+                <input
+                  type="text"
+                  className="input input-bordered input-sm w-full"
+                  value={`${lossTime}'`}
+                  onChange={(e) => setLossTime(parseInt(e.target.value))}
+                  disabled
+                />
+              </div>
+              <button
+                type="submit"
+                className="btn btn-sm btn-neutral mt-3 w-full">
+                Simpan
+              </button>
+            </form>
+          </>
+        }
+      />
     );
   };
 

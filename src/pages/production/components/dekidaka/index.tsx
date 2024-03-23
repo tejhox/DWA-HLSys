@@ -9,9 +9,9 @@ import {
 const Dekidaka = () => {
   const [userData, setUserData] = useState<any>(null);
   const [dateNow, setDateNow] = useState<any>("");
+  const { showWarning, isFilled } = useProfileContext();
   const { data: session } = useSession<any>();
 
-  const { showWarning, isFilled } = useProfileContext();
   const { getDekidakaById, modalAddData, modalUpdateData } =
     useDekidakaContext();
 
@@ -33,7 +33,7 @@ const Dekidaka = () => {
   }, [session]);
 
   return (
-    <div className="flex justify-center px-3 mt-1 h-full w-full lg:w-1/3">
+    <div className="flex justify-center px-1.5 mt-1 h-full w-full lg:w-1/3">
       <div className="container w-full border-2 border-gray-400 rounded-lg p-2">
         <table className="table table-sm text-center">
           <thead className="border-double border-4">

@@ -5,6 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import Navbar from "@/components/navbar/";
 import { ProfileProvider } from "@/context/profileContext";
 import { DekidakaProvider } from "@/context/dekidakaContext";
+import { SessionContextProvider } from "@/context/sessionContext";
 
 const lato = Lato({
   weight: ["100", "300", "400", "700", "900"],
@@ -19,14 +20,16 @@ export default function App({
 }: AppProps) {
   return (
     <SessionProvider session={session}>
-      <ProfileProvider>
-        <DekidakaProvider>
-          <div className={lato.className}>
-            <Navbar />
-            <Component {...pageProps} />
-          </div>
-        </DekidakaProvider>
-      </ProfileProvider>
+      <SessionContextProvider>
+        <ProfileProvider>
+          <DekidakaProvider>
+            <div className={lato.className}>
+              <Navbar />
+              <Component {...pageProps} />
+            </div>
+          </DekidakaProvider>
+        </ProfileProvider>
+      </SessionContextProvider>
     </SessionProvider>
   );
 }

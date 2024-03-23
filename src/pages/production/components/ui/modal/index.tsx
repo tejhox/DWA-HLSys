@@ -1,10 +1,12 @@
 const Modal = (props: any) => {
   return (
-    <dialog className="modal modal-bottom lg:modal-middle" open>
+    <dialog className="modal" open>
       <div className="modal-box">
-        <div className="modal-action">{props.modalAction}</div>
         <div>{props.modalBody}</div>
       </div>
+      <form method="dialog" className="modal-backdrop">
+        <button>✕</button>
+      </form>
     </dialog>
   );
 };

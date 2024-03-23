@@ -1,11 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
-import { useSession } from "next-auth/react";
-
-type UserData = {
-  nama: string;
-  nik: string;
-};
+import { useSessionContext } from "./sessionContext";
 
 type ProductionContextValue = {
   docId: string;
@@ -13,9 +8,6 @@ type ProductionContextValue = {
   product: string;
   shift: string;
   date: string;
-  userData: UserData | null;
-  userDataName: string;
-  userDataNik: string;
   isDisabled: boolean;
   isFilled: boolean;
   setDocId: (value: string) => void;
@@ -23,7 +15,6 @@ type ProductionContextValue = {
   setProduct: (value: string) => void;
   setShift: (value: string) => void;
   setDate: (value: string) => void;
-  setUserData: (value: any) => void;
   setIsDisabled: (value: boolean) => void;
   setIsFilled: (value: boolean) => void;
   addProfile: () => Promise<void>;
@@ -39,41 +30,23 @@ export const ProfileProvider = ({ children }: any) => {
   const [product, setProduct] = useState("");
   const [shift, setShift] = useState("");
   const [date, setDate] = useState("");
-  const [dateNow, setDateNow] = useState<any>("");
-  const [userData, setUserData] = useState<any>(null);
   const [docId, setDocId] = useState<string>("");
   const [isFilled, setIsFilled] = useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
-  const { data: session } = useSession<any>();
-
-  useEffect(() => {
-    fetchSession();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session]);
+  const { userData, userDataName, dateNow } = useSessionContext();
 
   useEffect(() => {
     getProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateNow]);
 
-  const fetchSession = async () => {
-    try {
-      if (session?.user) {
-        setUserData(session.user);
-        setDateNow(Date.now());
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
   const getProfile = async () => {
     try {
       const storedLastDocId = localStorage.getItem("lastDocId") || "";
       if (storedLastDocId) {
         const [username, id] = storedLastDocId.split("_");
-        if (session?.user && userData) {
-          if (username === userData.nama) {
+        if (userDataName && userData) {
+          if (username === userDataName) {
             const response = await axios.get(`/api/getProfileData?id=${id}`);
             setLine(response.data.line);
             setProduct(response.data.product);
@@ -98,20 +71,20 @@ export const ProfileProvider = ({ children }: any) => {
       "Bowo Dwi": "1",
       "Ocza Aurellia": "2",
     };
-    const group = leaderGroups[userData.nama as keyof typeof leaderGroups];
+    const group = leaderGroups[userDataName as keyof typeof leaderGroups];
 
     if (group) {
       try {
         const response = await axios.post("/api/addProfileData", {
           line,
           group,
-          leader: userData.nama,
+          leader: userDataName,
           product,
           shift,
           date,
         });
         const { docId } = response.data;
-        localStorage.setItem("lastDocId", `${userData.nama}_${docId}`);
+        localStorage.setItem("lastDocId", `${userDataName}_${docId}`);
         const lastDocId = localStorage.getItem("lastDocId") || "";
         setDocId(lastDocId || "");
 
@@ -144,12 +117,8 @@ export const ProfileProvider = ({ children }: any) => {
     setShift,
     date,
     setDate,
-    setUserData,
     isFilled,
     setIsFilled,
-    userData: userData,
-    userDataName: userData ? userData.nama : "",
-    userDataNik: userData ? userData.nik : "",
     docId,
     setDocId,
     isDisabled,
