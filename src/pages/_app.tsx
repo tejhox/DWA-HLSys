@@ -3,6 +3,8 @@ import { Lato } from "next/font/google";
 import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import Navbar from "@/components/navbar/";
+import { ProfileProvider } from "@/context/profileContext";
+import { DekidakaProvider } from "@/context/dekidakaContext";
 
 const lato = Lato({
   weight: ["100", "300", "400", "700", "900"],
@@ -17,10 +19,14 @@ export default function App({
 }: AppProps) {
   return (
     <SessionProvider session={session}>
-      <div className={lato.className}>
-        <Navbar />
-        <Component {...pageProps} />
-      </div>
+      <ProfileProvider>
+        <DekidakaProvider>
+          <div className={lato.className}>
+            <Navbar />
+            <Component {...pageProps} />
+          </div>
+        </DekidakaProvider>
+      </ProfileProvider>
     </SessionProvider>
   );
 }
