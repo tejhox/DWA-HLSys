@@ -5,14 +5,12 @@ import { DekidakaProvider } from "../../context/dekidakaContext";
 
 const ProductionPage = () => {
   return (
-    <>
-      <ProfileProvider>
+    <ProfileProvider>
+      <DekidakaProvider>
         <Profile />
-        <DekidakaProvider>
-          <Dekidaka />
-        </DekidakaProvider>
-      </ProfileProvider>
-    </>
+        <Dekidaka />
+      </DekidakaProvider>
+    </ProfileProvider>
   );
 };
 
