@@ -1,11 +1,17 @@
 import Profile from "./components/profile";
 import Dekidaka from "./components/dekidaka";
+import { ProfileProvider } from "./components/profile/profileContext";
+import { DekidakaProvider } from "./components/dekidaka/dekidakaContext";
 
 const ProductionPage = () => {
   return (
     <>
-      <Profile />
-      <Dekidaka />
+      <ProfileProvider>
+        <Profile />
+        <DekidakaProvider>
+          <Dekidaka />
+        </DekidakaProvider>
+      </ProfileProvider>
     </>
   );
 };

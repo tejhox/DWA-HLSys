@@ -6,6 +6,7 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  updateDoc,
 } from "firebase/firestore";
 import app from "./init";
 
@@ -34,7 +35,7 @@ export async function getDekidaka(id: string) {
 
     const subDekidakaData: any[] = [];
     snapshot.forEach((doc) => {
-      subDekidakaData.push(doc.data());
+      subDekidakaData.push({ id: doc.id, ...doc.data() });
     });
     return subDekidakaData;
   } catch (error) {
@@ -42,12 +43,14 @@ export async function getDekidaka(id: string) {
     throw new Error("Failed to fetch Dekidaka data from Firestore");
   }
 }
-export async function getDekidakaId(id: string) {
+
+export async function getSubData(docId: string, subDocId: string) {
   try {
-    const docRef = doc(firestore, "Dekidaka", id);
-    const snapshot = await getDoc(docRef);
+    const docRef = doc(firestore, "Dekidaka", docId);
+    const subDocRef = doc(docRef, "dekidaka", subDocId);
+    const snapshot = await getDoc(subDocRef);
     if (snapshot.exists()) {
-      return snapshot.id;
+      return { id: snapshot.id, ...snapshot.data() };
     } else {
       throw new Error("Dekidaka document does not exist");
     }
@@ -94,6 +97,35 @@ export async function addDekidaka(
     const docRef = doc(firestore, "Dekidaka", id);
     const subColRef = collection(docRef, "dekidaka");
     const snapshot = await addDoc(subColRef, {
+      plan: plan,
+      actual: actual,
+      deviasi: deviasi,
+      lossTime: lossTime,
+    });
+    const subDocId = snapshot.id;
+    console.log(
+      "Dekidaka subcollection added to Firestore successfully with ID : ",
+      subDocId
+    );
+    return snapshot;
+  } catch (error) {
+    console.error("Error adding Dekidaka subcollection to Firestore:", error);
+    throw new Error("Failed to add Dekidaka subcollection to Firestore");
+  }
+}
+
+export async function updateDekidaka(
+  id: string,
+  plan: number,
+  actual: number,
+  deviasi: number,
+  lossTime: number
+) {
+  try {
+    const docRef = doc(firestore, "Dekidaka", id);
+    const subColRef = collection(docRef, "dekidaka");
+    const subDocRef = doc(subColRef, id);
+    const snapshot = await updateDoc(subDocRef, {
       plan: plan,
       actual: actual,
       deviasi: deviasi,

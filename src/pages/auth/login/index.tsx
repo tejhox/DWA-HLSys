@@ -38,7 +38,7 @@ const LoginPage = () => {
   return (
     <div className="container flex w-screen justify-center mt-14 sm:w-1/2 sm:mx-auto lg:w-1/3 lg:mx-auto">
       <div className="container flex flex-col w-11/12 p-6 my-auto border rounded-lg border-slate-600 ">
-        <h1 className="text-xl text-center text-sky-600">SIGN IN</h1>
+        <h1 className="text-xl text-center">SIGN IN</h1>
         <div className="divider"></div>
         {error && <div>{error}</div>}
         <form onSubmit={handleSubmit} className="form-control">
@@ -78,9 +78,7 @@ const LoginPage = () => {
           </label>
 
           <div className="divider mt-10">
-            <button
-              type="submit"
-              className="btn btn-outline btn-sm w-32 text-sky-600">
+            <button type="submit" className="btn btn-outline btn-sm w-32">
               {isLoading ? "Loading..." : "LOGIN"}
             </button>
           </div>

@@ -23,7 +23,7 @@ const Navbar = () => {
 
   return (
     <div>
-      <div className="navbar bg-content-content shadow-md">
+      <div className="navbar bg-content-content">
         <div className="flex-1 -ms-3">
           <Link
             href={"/"}
