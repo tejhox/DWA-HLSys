@@ -4,9 +4,6 @@ const Modal = (props: any) => {
       <div className="modal-box">
         <div>{props.modalBody}</div>
       </div>
-      <form method="dialog" className="modal-backdrop">
-        <button>✕</button>
-      </form>
     </dialog>
   );
 };
