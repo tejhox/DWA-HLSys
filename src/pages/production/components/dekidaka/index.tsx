@@ -15,8 +15,14 @@ const Dekidaka = () => {
   const { getDekidakaById, modalAddData, modalUpdateData } =
     useDekidakaContext();
 
-  const { isModalAddOpen, isModalUpdateOpen, handleAddModal, subDekidaka } =
-    useDekidakaContext();
+  const {
+    isModalAddOpen,
+    isModalUpdateOpen,
+    isDeleteConfirmOpen,
+    handleAddModal,
+    subDekidaka,
+    modalDeleteConfirmation,
+  } = useDekidakaContext();
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -89,6 +95,7 @@ const Dekidaka = () => {
           </button>
           {isModalAddOpen && modalAddData()}
           {isModalUpdateOpen && modalUpdateData()}
+          {isDeleteConfirmOpen && modalDeleteConfirmation()}
         </div>
       </div>
     </div>

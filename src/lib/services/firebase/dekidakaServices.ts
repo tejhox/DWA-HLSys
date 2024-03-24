@@ -2,6 +2,7 @@ import {
   Timestamp,
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -157,6 +158,17 @@ export async function updateProfileData(
     });
     console.log("Pofile updated successfully!");
     return snapshot;
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    throw new Error("Failed to add Dekidaka subcollection to Firestore");
+  }
+}
+
+export async function deleteDekidaka(docId: string, subDocId: string) {
+  try {
+    const docRef = doc(firestore, "Dekidaka", docId);
+    const subDocRef = doc(docRef, "dekidaka", subDocId);
+    await deleteDoc(subDocRef);
   } catch (error) {
     console.error("Error updating profile:", error);
     throw new Error("Failed to add Dekidaka subcollection to Firestore");
