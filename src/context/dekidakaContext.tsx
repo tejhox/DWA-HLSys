@@ -55,7 +55,7 @@ export const DekidakaProvider = ({ children }: any) => {
   const [plan, setPlan] = useState<number | undefined>();
   const [actual, setActual] = useState<number | undefined>();
   const [deviasi, setDeviasi] = useState<number | undefined>();
-  const [lossTime, setLossTime] = useState<number>(0);
+  const [lossTime, setLossTime] = useState<number | undefined>(0);
   const [subDekidaka, setSubDekidaka] = useState<SubDekidaka[]>();
   const [subData, setSubData] = useState<SubData[]>();
   const [subDocId, setSubDocId] = useState<string>("");
