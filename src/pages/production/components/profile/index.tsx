@@ -65,10 +65,10 @@ const Profile = () => {
                     Loading...
                   </option>
                 )}
-                <option value="ER 01">ER 01</option>
-                <option value="ER 02">ER 02</option>
-                <option value="ER 03">ER 03</option>
-                <option value="ER 150">ER 150</option>
+                <option value="ER01">ER 01</option>
+                <option value="ER02">ER 02</option>
+                <option value="ER03">ER 03</option>
+                <option value="ER150">ER 150</option>
               </select>
               <select
                 className="select select-bordered select-sm w-full max-w-xs"
@@ -107,23 +107,21 @@ const Profile = () => {
                 <option value="2">2</option>
                 <option value="3">3</option>
               </select>
-              <label className="input input-bordered input-sm w-full flex items-center gap-2">
-                <input
-                  type="date"
-                  placeholder="Tanggal"
-                  className="grow"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  disabled={isDisabled}
-                />
-              </label>
+              <input
+                type="date"
+                placeholder="Tanggal"
+                className="input input-bordered input-sm w-full"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                disabled={isDisabled}
+              />
             </div>
           </div>
           <div className="container flex justify-between items-center w-full p-1">
             <div className="px-1">
               {!isFilled ? (
-                <p className="text-sm text-warning ms-auto text-center">
-                  Isi dulu dong formnya !
+                <p className="text-sm text-primary ms-auto text-center">
+                  Lengkapi Profile !
                 </p>
               ) : isFilled ? (
                 ""

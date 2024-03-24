@@ -7,7 +7,6 @@ import {
   getDoc,
   getDocs,
   getFirestore,
-  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import app from "./init";

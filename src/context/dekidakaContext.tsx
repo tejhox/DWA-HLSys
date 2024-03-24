@@ -42,6 +42,12 @@ export const DekidakaProvider = ({ children }: any) => {
     deviasi: number;
     lossTime: number;
   };
+  type DekidakaData = {
+    plan?: number;
+    actual?: number;
+    deviasi?: number;
+    lossTime?: number;
+  };
 
   const [isModalAddOpen, setIsModalAddOpen] = useState(false);
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
@@ -49,12 +55,39 @@ export const DekidakaProvider = ({ children }: any) => {
   const [plan, setPlan] = useState<number | undefined>();
   const [actual, setActual] = useState<number | undefined>();
   const [deviasi, setDeviasi] = useState<number | undefined>();
-  const [lossTime, setLossTime] = useState<number | undefined>();
+  const [lossTime, setLossTime] = useState<number>(0);
   const [subDekidaka, setSubDekidaka] = useState<SubDekidaka[]>();
   const [subData, setSubData] = useState<SubData[]>();
   const [subDocId, setSubDocId] = useState<string>("");
+  const [isBtnDisabled, setIsBtnDisabled] = useState<boolean>(false);
 
   const { userData, userDataName, dateNow } = useSessionContext();
+
+  const data: DekidakaData = {
+    plan: plan,
+    actual: actual,
+    deviasi: deviasi,
+    lossTime: lossTime,
+  };
+
+  const calcDeviasi = {
+    deviasi:
+      data.actual !== undefined && data.plan !== undefined
+        ? data.actual - data.plan
+        : undefined,
+  };
+
+  let calcLossTime: { lossTime: number };
+
+  if (subDekidaka && plan !== undefined && actual !== undefined) {
+    const tableRowCount = subDekidaka.length;
+
+    if (tableRowCount === 3 || tableRowCount === 7) {
+      calcLossTime = { lossTime: Math.round((plan - actual) * (55 / plan)) };
+    } else {
+      calcLossTime = { lossTime: Math.round((plan - actual) * (60 / plan)) };
+    }
+  }
 
   useEffect(() => {
     getDekidaka();
@@ -89,39 +122,6 @@ export const DekidakaProvider = ({ children }: any) => {
     }
   };
 
-  type DekidakaData = {
-    plan?: number;
-    actual?: number;
-    deviasi?: number;
-    lossTime?: number;
-  };
-
-  const data: DekidakaData = {
-    plan: plan,
-    actual: actual,
-    deviasi: deviasi,
-    lossTime: lossTime,
-  };
-
-  const calcDeviasi = {
-    deviasi:
-      data.actual !== undefined && data.plan !== undefined
-        ? data.actual - data.plan
-        : undefined,
-  };
-
-  let calcLossTime: { lossTime: number };
-
-  if (subDekidaka && plan !== undefined && actual !== undefined) {
-    const tableRowCount = subDekidaka.length;
-
-    if (tableRowCount === 3 || tableRowCount === 7) {
-      calcLossTime = { lossTime: Math.round((plan - actual) * (55 / plan)) };
-    } else {
-      calcLossTime = { lossTime: Math.round((plan - actual) * (60 / plan)) };
-    }
-  }
-
   const getDekidakaById = async (subDocId: string) => {
     try {
       setIsModalUpdateOpen(true);
@@ -154,24 +154,30 @@ export const DekidakaProvider = ({ children }: any) => {
   const addDekidaka = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      if (plan && actual) {
+        setIsBtnDisabled(true);
+      }
       const storedLastDocId = localStorage.getItem("lastDocId") || "";
       if (storedLastDocId) {
         const [username, id] = storedLastDocId.split("_");
         if (username === userDataName) {
-          const response = await axios.post(`/api/addDekidaka`, {
-            id,
-            plan,
-            actual,
-            deviasi: calcDeviasi.deviasi,
-            lossTime: calcLossTime.lossTime,
-          });
-          const { subDekidakaId } = response.data;
-          localStorage.setItem(
-            "subDekidaka",
-            `${userDataName}_${subDekidakaId}`
-          );
-          setIsModalAddOpen(false);
-          getDekidaka();
+          if (plan && actual) {
+            const response = await axios.post(`/api/addDekidaka`, {
+              id,
+              plan,
+              actual,
+              deviasi: calcDeviasi.deviasi,
+              lossTime: calcLossTime.lossTime,
+            });
+            const { subDekidakaId } = response.data;
+            localStorage.setItem(
+              "subDekidaka",
+              `${userDataName}_${subDekidakaId}`
+            );
+            setIsModalAddOpen(false);
+            setIsBtnDisabled(false);
+            getDekidaka();
+          }
         }
       }
     } catch (error) {
@@ -182,6 +188,7 @@ export const DekidakaProvider = ({ children }: any) => {
   const updateDekidaka = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      setIsBtnDisabled(true);
       const storedLastDocId = localStorage.getItem("lastDocId") || "";
       if (storedLastDocId) {
         const [username, docId] = storedLastDocId.split("_");
@@ -196,6 +203,7 @@ export const DekidakaProvider = ({ children }: any) => {
               lossTime: lossTime,
             });
             setIsModalUpdateOpen(false);
+            setIsBtnDisabled(false);
             getDekidaka();
           } else {
             console.log("Username Not Found");
@@ -254,7 +262,6 @@ export const DekidakaProvider = ({ children }: any) => {
                   id="planInput"
                   type="number"
                   className="input input-bordered input-sm w-full"
-                  placeholder="55"
                   value={plan}
                   onChange={(e) => setPlan(parseInt(e.target.value))}
                 />
@@ -265,7 +272,6 @@ export const DekidakaProvider = ({ children }: any) => {
                   id="actualInput"
                   type="number"
                   className="input input-bordered input-sm w-full"
-                  placeholder="55"
                   value={actual}
                   onChange={(e) => setActual(parseInt(e.target.value))}
                 />
@@ -281,14 +287,17 @@ export const DekidakaProvider = ({ children }: any) => {
                 <input
                   type="text"
                   className="input input-bordered input-sm w-full"
-                  value={`${calcLossTime?.lossTime}'`}
+                  value={
+                    calcLossTime.lossTime ? `${calcLossTime?.lossTime}` : "0"
+                  }
                   onChange={(e) => setLossTime(parseInt(e.target.value))}
                   disabled
                 />
               </div>
               <button
                 type="submit"
-                className="btn btn-sm btn-neutral mt-3 w-full">
+                className="btn btn-sm btn-neutral mt-3 w-full"
+                disabled={isBtnDisabled}>
                 Submit
               </button>
             </form>
@@ -364,8 +373,9 @@ export const DekidakaProvider = ({ children }: any) => {
               </div>
               <button
                 type="submit"
-                className="btn btn-sm btn-neutral mt-3 w-full">
-                Simpan
+                className="btn btn-sm btn-neutral mt-3 w-full"
+                disabled={isBtnDisabled}>
+                Submit
               </button>
             </form>
           </>

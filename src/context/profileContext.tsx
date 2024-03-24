@@ -74,34 +74,32 @@ export const ProfileProvider = ({ children }: any) => {
   };
 
   const addProfile = async () => {
-    const leaderGroups: Record<string, string> = {
+    if (line && product && shift && date) {
+      setIsDisabled(true);
+    }
+
+    const leaderGroups = {
       "Bowo Dwi": "1",
       "Ocza Aurellia": "2",
     };
     const group = leaderGroups[userDataName as keyof typeof leaderGroups];
-
     if (group) {
       try {
-        const response = await axios.post("/api/addProfileData", {
-          line,
-          group,
-          leader: userDataName,
-          product,
-          shift,
-          date,
-        });
-        const { docId } = response.data;
-        localStorage.setItem("lastDocId", `${userDataName}_${docId}`);
-        const lastDocId = localStorage.getItem("lastDocId") || "";
-        setDocId(lastDocId || "");
-
-        console.log("Profile data submitted successfully with ID :", docId);
-        setIsDisabled(true);
-        setIsFilled(true);
-
-        if (docId) {
-          const response = await axios.get(`/api/getDekidakaId?id=${docId}`);
-          console.log(response.data);
+        if (line && product && shift && date) {
+          const response = await axios.post("/api/addProfileData", {
+            line,
+            group,
+            leader: userDataName,
+            product,
+            shift,
+            date,
+          });
+          const { docId } = response.data;
+          localStorage.setItem("lastDocId", `${userDataName}_${docId}`);
+          const lastDocId = localStorage.getItem("lastDocId") || "";
+          setDocId(lastDocId || "");
+          console.log("Profile data submitted successfully with ID :", docId);
+          setIsFilled(true);
         }
       } catch (error) {
         console.error("Error submitting form data:", error);
@@ -112,6 +110,7 @@ export const ProfileProvider = ({ children }: any) => {
   };
 
   const updateProfile = async () => {
+    setIsDisabled(true);
     try {
       const storedLastDocId = localStorage.getItem("lastDocId") || "";
       if (storedLastDocId) {

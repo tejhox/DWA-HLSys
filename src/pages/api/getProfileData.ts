@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getProfileData } from "@/lib/services/firebase/dekidakaServices";
+import { getProfileData } from "@/lib/services/firebase/mainServices";
 
 export default async function handlerProfileData(
   req: NextApiRequest,
