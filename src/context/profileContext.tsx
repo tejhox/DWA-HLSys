@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  FormEvent,
+} from "react";
 import axios from "axios";
 import { useSessionContext } from "./sessionContext";
 
@@ -18,6 +24,7 @@ type ProductionContextValue = {
   setIsDisabled: (value: boolean) => void;
   setIsFilled: (value: boolean) => void;
   addProfile: () => Promise<void>;
+  updateProfile: () => Promise<void>;
   showWarning: () => void;
 };
 
@@ -104,6 +111,32 @@ export const ProfileProvider = ({ children }: any) => {
     }
   };
 
+  const updateProfile = async () => {
+    try {
+      const storedLastDocId = localStorage.getItem("lastDocId") || "";
+      if (storedLastDocId) {
+        const [username, id] = storedLastDocId.split("_");
+        if (userDataName && userData) {
+          if (username === userDataName) {
+            await axios.patch("/api/updateProfileData", {
+              id,
+              line,
+              product,
+              shift,
+              date,
+            });
+          } else {
+            console.log("Username Not Found");
+          }
+        } else {
+          console.log("Session Not Found");
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   const showWarning = () => {
     setIsFilled(false);
   };
@@ -123,6 +156,7 @@ export const ProfileProvider = ({ children }: any) => {
     setDocId,
     isDisabled,
     setIsDisabled,
+    updateProfile,
     addProfile,
     showWarning,
   };

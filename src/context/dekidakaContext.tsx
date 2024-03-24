@@ -49,6 +49,7 @@ export const DekidakaProvider = ({ children }: any) => {
   const [lossTime, setLossTime] = useState<number | undefined>();
   const [subDekidaka, setSubDekidaka] = useState<SubDekidaka[]>();
   const [subData, setSubData] = useState<SubData[]>();
+  const [subDocId, setSubDocId] = useState<string>("");
 
   const { userData, userDataName, dateNow } = useSessionContext();
 
@@ -116,8 +117,6 @@ export const DekidakaProvider = ({ children }: any) => {
     } else {
       calcLossTime = { lossTime: Math.round((plan - actual) * (60 / plan)) };
     }
-  } else {
-    calcLossTime = { lossTime: 0 };
   }
 
   const getDekidakaById = async (subDocId: string) => {
@@ -129,14 +128,14 @@ export const DekidakaProvider = ({ children }: any) => {
         if (userDataName && userData) {
           if (username === userDataName) {
             const response = await axios.get(
-              `/api/getSubData?docId=${docId}&subDocId=${subDocId}`
+              `/api/getDekidakaById?docId=${docId}&subDocId=${subDocId}`
             );
             setPlan(response.data.plan);
             setActual(response.data.actual);
             setDeviasi(response.data.deviasi);
             setLossTime(response.data.lossTime);
             setSubData(response.data);
-            console.log(subData);
+            setSubDocId(response.data.id);
           } else {
             console.log("Username Not Found");
           }
@@ -177,7 +176,35 @@ export const DekidakaProvider = ({ children }: any) => {
     }
   };
 
-  const updateDekidaka = async () => {};
+  const updateDekidaka = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const storedLastDocId = localStorage.getItem("lastDocId") || "";
+      if (storedLastDocId) {
+        const [username, docId] = storedLastDocId.split("_");
+        if (userDataName && userData) {
+          if (username === userDataName) {
+            await axios.patch("/api/updateDekidaka", {
+              docId: docId,
+              subDocId: subDocId,
+              plan: plan,
+              actual: actual,
+              deviasi: deviasi,
+              lossTime: lossTime,
+            });
+            setIsModalUpdateOpen(false);
+            getDekidaka();
+          } else {
+            console.log("Username Not Found");
+          }
+        } else {
+          console.log("Session Not Found");
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const modalAddData = () => {
     return (
@@ -288,7 +315,7 @@ export const DekidakaProvider = ({ children }: any) => {
                 <input
                   type="text"
                   className="input input-bordered input-sm w-full"
-                  value={`${lossTime}'`}
+                  value={`${calcLossTime?.lossTime}'`}
                   onChange={(e) => setLossTime(parseInt(e.target.value))}
                   disabled
                 />

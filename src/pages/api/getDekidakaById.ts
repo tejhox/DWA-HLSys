@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSubData } from "@/lib/services/firebase/dekidakaServices";
+import { getDekidakaById } from "@/lib/services/firebase/dekidakaServices";
 
 export default async function handlerSubData(
   req: NextApiRequest,
@@ -16,7 +16,7 @@ export default async function handlerSubData(
       ) {
         throw new Error("Invalid id parameter");
       }
-      const data = await getSubData(docId, subDocId);
+      const data = await getDekidakaById(docId, subDocId);
       res.status(200).json(data);
     } catch (error) {
       console.error("Error fetching subData:", error);

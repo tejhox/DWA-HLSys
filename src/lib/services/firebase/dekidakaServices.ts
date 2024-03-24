@@ -6,6 +6,7 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import app from "./init";
@@ -44,7 +45,7 @@ export async function getDekidaka(id: string) {
   }
 }
 
-export async function getSubData(docId: string, subDocId: string) {
+export async function getDekidakaById(docId: string, subDocId: string) {
   try {
     const docRef = doc(firestore, "Dekidaka", docId);
     const subDocRef = doc(docRef, "dekidaka", subDocId);
@@ -115,26 +116,49 @@ export async function addDekidaka(
 }
 
 export async function updateDekidaka(
-  id: string,
+  docId: string,
+  subDocId: string,
   plan: number,
   actual: number,
   deviasi: number,
   lossTime: number
 ) {
   try {
-    const docRef = doc(firestore, "Dekidaka", id);
-    const subColRef = collection(docRef, "dekidaka");
-    const subDocRef = doc(subColRef, id);
+    const docRef = doc(firestore, "Dekidaka", docId);
+    const subDocRef = doc(docRef, "dekidaka", subDocId);
     const snapshot = await updateDoc(subDocRef, {
       plan: plan,
       actual: actual,
       deviasi: deviasi,
       lossTime: lossTime,
     });
-    console.log("Dekidaka subcollection added to Firestore successfully!");
+    console.log("Dekidaka subcollection updated successfully!");
     return snapshot;
   } catch (error) {
-    console.error("Error adding Dekidaka subcollection to Firestore:", error);
+    console.error("Error updating Dekidaka:", error);
+    throw new Error("Failed to add Dekidaka subcollection to Firestore");
+  }
+}
+
+export async function updateProfileData(
+  id: string,
+  line: string,
+  product: string,
+  shift: string,
+  date: Timestamp
+) {
+  try {
+    const docRef = doc(firestore, "Dekidaka", id);
+    const snapshot = await updateDoc(docRef, {
+      line,
+      product,
+      shift,
+      date,
+    });
+    console.log("Pofile updated successfully!");
+    return snapshot;
+  } catch (error) {
+    console.error("Error updating profile:", error);
     throw new Error("Failed to add Dekidaka subcollection to Firestore");
   }
 }

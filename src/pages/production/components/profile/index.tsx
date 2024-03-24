@@ -1,7 +1,10 @@
 import { useSessionContext } from "@/context/sessionContext";
 import { useProfileContext } from "../../../../context/profileContext";
+import { useState } from "react";
 
 const Profile = () => {
+  const [editMode, setEditMode] = useState<boolean>(false);
+
   const {
     line,
     product,
@@ -18,7 +21,12 @@ const Profile = () => {
 
   const { userData, userDataName, userDataNik } = useSessionContext();
 
-  const { addProfile } = useProfileContext();
+  const { addProfile, updateProfile } = useProfileContext();
+
+  const handleEdit = () => {
+    setIsDisabled(false);
+    setEditMode(true);
+  };
 
   return (
     <div className="flex justify-center px-1.5 mt-3 h-full w-full lg:w-1/3">
@@ -115,7 +123,7 @@ const Profile = () => {
             <div className="px-1">
               {!isFilled ? (
                 <p className="text-sm text-warning ms-auto text-center">
-                  Isi form !
+                  Isi dulu dong formnya !
                 </p>
               ) : isFilled ? (
                 ""
@@ -125,16 +133,30 @@ const Profile = () => {
             </div>
             <div>
               <button
-                onClick={() => setIsDisabled(false)}
+                onClick={() => handleEdit()}
                 className="btn btn-sm btn-outline">
                 Edit
               </button>
-              <button
-                onClick={addProfile}
-                className="btn btn-sm btn-outline ms-2"
-                disabled={isDisabled}>
-                Submit
-              </button>
+              {!editMode ? (
+                <button
+                  onClick={addProfile}
+                  className="btn btn-sm btn-outline ms-2"
+                  disabled={isDisabled}>
+                  Submit
+                </button>
+              ) : (
+                ""
+              )}
+              {editMode ? (
+                <button
+                  onClick={updateProfile}
+                  className="btn btn-sm btn-outline ms-2"
+                  disabled={isDisabled}>
+                  Submit
+                </button>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </div>

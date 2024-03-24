@@ -1,4 +1,4 @@
-import { updateDekidaka } from "@/lib/services/firebase/dekidakaServices";
+import { updateProfileData } from "@/lib/services/firebase/dekidakaServices";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handlerUpdateDekidaka(
@@ -7,12 +7,12 @@ export default async function handlerUpdateDekidaka(
 ) {
   if (req.method === "PATCH") {
     try {
-      const { docId, subDocId, plan, actual, deviasi, lossTime } = req.body;
+      const { id, line, product, shift, date } = req.body;
 
-      await updateDekidaka(docId, subDocId, plan, actual, deviasi, lossTime);
+      await updateProfileData(id, line, product, shift, date);
 
       res.status(200).json({
-        message: "Form data updated in Firestore successfully",
+        message: "Profile updated in Firestore successfully",
       });
     } catch (error) {
       console.error("Error updating form data in Firestore:", error);
