@@ -55,7 +55,7 @@ export const DekidakaProvider = ({ children }: any) => {
   const [plan, setPlan] = useState<number | undefined>();
   const [actual, setActual] = useState<number | undefined>();
   const [deviasi, setDeviasi] = useState<number | undefined>();
-  const [lossTime, setLossTime] = useState<number | undefined>(0);
+  const [lossTime, setLossTime] = useState<number | undefined>();
   const [subDekidaka, setSubDekidaka] = useState<SubDekidaka[]>();
   const [subData, setSubData] = useState<SubData[]>();
   const [subDocId, setSubDocId] = useState<string>("");
@@ -287,9 +287,7 @@ export const DekidakaProvider = ({ children }: any) => {
                 <input
                   type="text"
                   className="input input-bordered input-sm w-full"
-                  value={
-                    calcLossTime.lossTime ? `${calcLossTime?.lossTime}` : "0"
-                  }
+                  value={`${calcLossTime?.lossTime}'`}
                   onChange={(e) => setLossTime(parseInt(e.target.value))}
                   disabled
                 />
