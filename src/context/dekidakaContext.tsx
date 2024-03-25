@@ -26,7 +26,8 @@ type DekidakaContextValue = {
   modalAddData: () => React.ReactNode;
   modalUpdateData: () => React.ReactNode;
   modalDeleteConfirmation: () => React.ReactNode;
-  getDekidakaById: (subDocId: string) => Promise<void>;
+  getDekidaka: () => Promise<void>;
+  getDekidakaById: (subDocId: string, index: number) => Promise<void>;
   handleAddModal: () => void;
   handleUpdateModal: () => void;
 };
@@ -37,10 +38,10 @@ const DekidakaContext = createContext<DekidakaContextValue | undefined>(
 
 export const DekidakaProvider = ({ children }: any) => {
   type SubData = {
-    plan: number;
+    plan?: number;
     actual?: number;
-    deviasi: number;
-    lossTime: number;
+    deviasi?: number;
+    lossTime?: number;
   };
   type DekidakaData = {
     plan?: number;
@@ -55,10 +56,11 @@ export const DekidakaProvider = ({ children }: any) => {
   const [plan, setPlan] = useState<number | undefined>();
   const [actual, setActual] = useState<number | undefined>();
   const [deviasi, setDeviasi] = useState<number | undefined>();
-  const [lossTime, setLossTime] = useState<number | undefined>();
+  const [lossTime, setLossTime] = useState<number | undefined>(0);
   const [subDekidaka, setSubDekidaka] = useState<SubDekidaka[]>();
   const [subData, setSubData] = useState<SubData[]>();
   const [subDocId, setSubDocId] = useState<string>("");
+  const [tableIndex, setTableIndex] = useState<number>(0);
   const [isBtnDisabled, setIsBtnDisabled] = useState<boolean>(false);
 
   const { userData, userDataName, dateNow } = useSessionContext();
@@ -89,6 +91,20 @@ export const DekidakaProvider = ({ children }: any) => {
     }
   }
 
+  let calcEditLossTime: { lossTime: number };
+
+  if (subDekidaka && plan !== undefined && actual !== undefined) {
+    if (tableIndex === 3 || tableIndex === 7) {
+      calcEditLossTime = {
+        lossTime: Math.round((plan - actual) * (55 / plan)),
+      };
+    } else {
+      calcEditLossTime = {
+        lossTime: Math.round((plan - actual) * (60 / plan)),
+      };
+    }
+  }
+
   useEffect(() => {
     getDekidaka();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -103,7 +119,7 @@ export const DekidakaProvider = ({ children }: any) => {
 
   const getDekidaka = async () => {
     try {
-      const storedLastDocId = localStorage.getItem("lastDocId") || "";
+      const storedLastDocId = localStorage.getItem("profileDocId") || "";
       if (storedLastDocId) {
         const [username, id] = storedLastDocId.split("_");
         if (userDataName && userData) {
@@ -122,10 +138,10 @@ export const DekidakaProvider = ({ children }: any) => {
     }
   };
 
-  const getDekidakaById = async (subDocId: string) => {
+  const getDekidakaById = async (subDocId: string, index: number) => {
     try {
       setIsModalUpdateOpen(true);
-      const storedLastDocId = localStorage.getItem("lastDocId") || "";
+      const storedLastDocId = localStorage.getItem("profileDocId") || "";
       if (storedLastDocId) {
         const [username, docId] = storedLastDocId.split("_");
         if (userDataName && userData) {
@@ -133,6 +149,7 @@ export const DekidakaProvider = ({ children }: any) => {
             const response = await axios.get(
               `/api/getDekidakaById?docId=${docId}&subDocId=${subDocId}`
             );
+            setTableIndex(index);
             setPlan(response.data.plan);
             setActual(response.data.actual);
             setDeviasi(response.data.deviasi);
@@ -157,7 +174,7 @@ export const DekidakaProvider = ({ children }: any) => {
       if (plan && actual) {
         setIsBtnDisabled(true);
       }
-      const storedLastDocId = localStorage.getItem("lastDocId") || "";
+      const storedLastDocId = localStorage.getItem("profileDocId") || "";
       if (storedLastDocId) {
         const [username, id] = storedLastDocId.split("_");
         if (username === userDataName) {
@@ -189,7 +206,7 @@ export const DekidakaProvider = ({ children }: any) => {
     e.preventDefault();
     try {
       setIsBtnDisabled(true);
-      const storedLastDocId = localStorage.getItem("lastDocId") || "";
+      const storedLastDocId = localStorage.getItem("profileDocId") || "";
       if (storedLastDocId) {
         const [username, docId] = storedLastDocId.split("_");
         if (userDataName && userData) {
@@ -199,8 +216,8 @@ export const DekidakaProvider = ({ children }: any) => {
               subDocId: subDocId,
               plan: plan,
               actual: actual,
-              deviasi: deviasi,
-              lossTime: lossTime,
+              deviasi: calcDeviasi.deviasi,
+              lossTime: calcEditLossTime.lossTime,
             });
             setIsModalUpdateOpen(false);
             setIsBtnDisabled(false);
@@ -220,7 +237,7 @@ export const DekidakaProvider = ({ children }: any) => {
   const deleteDekidaka = async () => {
     try {
       setIsModalUpdateOpen(true);
-      const storedLastDocId = localStorage.getItem("lastDocId") || "";
+      const storedLastDocId = localStorage.getItem("profileDocId") || "";
       if (storedLastDocId) {
         const [username, docId] = storedLastDocId.split("_");
         if (userDataName && userData) {
@@ -364,7 +381,7 @@ export const DekidakaProvider = ({ children }: any) => {
                 <input
                   type="text"
                   className="input input-bordered input-sm w-full"
-                  value={`${calcLossTime?.lossTime}'`}
+                  value={`${calcEditLossTime?.lossTime}'`}
                   onChange={(e) => setLossTime(parseInt(e.target.value))}
                   disabled
                 />
@@ -396,7 +413,7 @@ export const DekidakaProvider = ({ children }: any) => {
               </button>
               <button
                 onClick={deleteDekidaka}
-                className="btn btn-sm btn-neutral ms-3">
+                className="btn btn-sm btn-neutral ms-2">
                 Ya
               </button>
             </div>
@@ -418,6 +435,7 @@ export const DekidakaProvider = ({ children }: any) => {
     setIsModalAddOpen,
     setIsModalUpdateOpen,
     getDekidakaById,
+    getDekidaka,
     modalAddData,
     modalUpdateData,
     modalDeleteConfirmation,

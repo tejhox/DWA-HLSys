@@ -7,6 +7,9 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  orderBy,
+  query,
+  serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
 import app from "./init";
@@ -32,7 +35,9 @@ export async function getDekidaka(id: string) {
   try {
     const docRef = doc(firestore, "Dekidaka", id);
     const subColRef = collection(docRef, "dekidaka");
-    const snapshot = await getDocs(subColRef);
+    const q = query(subColRef, orderBy("timestamp", "desc"));
+
+    const snapshot = await getDocs(q);
 
     const subDekidakaData: any[] = [];
     snapshot.forEach((doc) => {
@@ -78,6 +83,7 @@ export async function addProfileData(
       product: product,
       shift: shift,
       date: date,
+      timestamp: serverTimestamp(),
     });
     console.log("Form data added to Firestore successfully!");
     return snapshot;
@@ -102,6 +108,7 @@ export async function addDekidaka(
       actual: actual,
       deviasi: deviasi,
       lossTime: lossTime,
+      timestamp: serverTimestamp(),
     });
     const subDocId = snapshot.id;
     console.log(

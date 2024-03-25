@@ -7,16 +7,18 @@ import React, {
 } from "react";
 import axios from "axios";
 import { useSessionContext } from "./sessionContext";
+import { getDekidaka } from "@/lib/services/firebase/dataServices";
+import { useDekidakaContext } from "./dekidakaContext";
 
 type ProductionContextValue = {
-  docId: string;
+  profileId: string;
   line: string;
   product: string;
   shift: string;
   date: string;
   isDisabled: boolean;
   isFilled: boolean;
-  setDocId: (value: string) => void;
+  setProfileId: (value: string) => void;
   setLine: (value: string) => void;
   setProduct: (value: string) => void;
   setShift: (value: string) => void;
@@ -37,10 +39,12 @@ export const ProfileProvider = ({ children }: any) => {
   const [product, setProduct] = useState("");
   const [shift, setShift] = useState("");
   const [date, setDate] = useState("");
-  const [docId, setDocId] = useState<string>("");
+  const [profileId, setProfileId] = useState<string>("");
   const [isFilled, setIsFilled] = useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
+
   const { userData, userDataName, dateNow } = useSessionContext();
+  const { getDekidaka } = useDekidakaContext();
 
   useEffect(() => {
     getProfile();
@@ -49,7 +53,7 @@ export const ProfileProvider = ({ children }: any) => {
 
   const getProfile = async () => {
     try {
-      const storedLastDocId = localStorage.getItem("lastDocId") || "";
+      const storedLastDocId = localStorage.getItem("profileDocId") || "";
       if (storedLastDocId) {
         const [username, id] = storedLastDocId.split("_");
         if (userDataName && userData) {
@@ -95,11 +99,11 @@ export const ProfileProvider = ({ children }: any) => {
             date,
           });
           const { docId } = response.data;
-          localStorage.setItem("lastDocId", `${userDataName}_${docId}`);
-          const lastDocId = localStorage.getItem("lastDocId") || "";
-          setDocId(lastDocId || "");
-          console.log("Profile data submitted successfully with ID :", docId);
+          localStorage.setItem("profileDocId", `${userDataName}_${docId}`);
+          const profileDocId = localStorage.getItem("profileDocId") || "";
+          setProfileId(profileDocId || "");
           setIsFilled(true);
+          getDekidaka();
         }
       } catch (error) {
         console.error("Error submitting form data:", error);
@@ -112,7 +116,7 @@ export const ProfileProvider = ({ children }: any) => {
   const updateProfile = async () => {
     setIsDisabled(true);
     try {
-      const storedLastDocId = localStorage.getItem("lastDocId") || "";
+      const storedLastDocId = localStorage.getItem("profileDocId") || "";
       if (storedLastDocId) {
         const [username, id] = storedLastDocId.split("_");
         if (userDataName && userData) {
@@ -151,8 +155,8 @@ export const ProfileProvider = ({ children }: any) => {
     setDate,
     isFilled,
     setIsFilled,
-    docId,
-    setDocId,
+    profileId,
+    setProfileId,
     isDisabled,
     setIsDisabled,
     updateProfile,

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { deleteDekidaka } from "@/lib/services/firebase/mainServices";
+import { deleteDekidaka } from "@/lib/services/firebase/dataServices";
 
 export default async function handlerSubDekidaka(
   req: NextApiRequest,

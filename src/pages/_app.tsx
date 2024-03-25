@@ -21,14 +21,14 @@ export default function App({
   return (
     <SessionProvider session={session}>
       <SessionContextProvider>
-        <ProfileProvider>
-          <DekidakaProvider>
+        <DekidakaProvider>
+          <ProfileProvider>
             <div className={lato.className}>
               <Navbar />
               <Component {...pageProps} />
             </div>
-          </DekidakaProvider>
-        </ProfileProvider>
+          </ProfileProvider>
+        </DekidakaProvider>
       </SessionContextProvider>
     </SessionProvider>
   );

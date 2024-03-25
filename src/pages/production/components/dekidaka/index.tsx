@@ -1,16 +1,14 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { useProfileContext } from "../../../../context/profileContext";
-import {
-  SubDekidaka,
-  useDekidakaContext,
-} from "../../../../context/dekidakaContext";
+import { useProfileContext } from "@/context/profileContext";
+import { SubDekidaka, useDekidakaContext } from "@/context/dekidakaContext";
 
 const Dekidaka = () => {
   const [userData, setUserData] = useState<any>(null);
   const [dateNow, setDateNow] = useState<any>("");
-  const { showWarning, isFilled } = useProfileContext();
   const { data: session } = useSession<any>();
+
+  const { showWarning, isFilled } = useProfileContext();
 
   const { getDekidakaById, modalAddData, modalUpdateData } =
     useDekidakaContext();
@@ -41,7 +39,7 @@ const Dekidaka = () => {
   return (
     <div className="flex justify-center px-1.5 mt-1 h-full w-full lg:w-1/3">
       <div className="container w-full border-2 border-gray-400 rounded-lg p-2">
-        <table className="table table-sm text-center">
+        <table className="table table-zebra table-sm text-center">
           <thead className="border-double border-4">
             <tr>
               <th className="border-double border-4 border-gray-700">Jam</th>
@@ -56,28 +54,31 @@ const Dekidaka = () => {
             </tr>
           </thead>
           <tbody>
-            {subDekidaka?.map((item: SubDekidaka, index: number) => (
-              <tr
-                onClick={() => getDekidakaById(item.id)}
-                className="hover"
-                key={item.id}>
-                <td className="border-double border-4 border-gray-700">
-                  {index + 1}
-                </td>
-                <td className="border-double border-4 border-gray-700">
-                  {item.plan}
-                </td>
-                <td className="border-double border-4 border-gray-700">
-                  {item.actual}
-                </td>
-                <td className="border-double border-4 border-gray-700">
-                  {item.deviasi}
-                </td>
-                <td className="border-double border-4 border-gray-700">
-                  {`${item.lossTime}'`}
-                </td>
-              </tr>
-            ))}
+            {subDekidaka
+              ?.slice()
+              .reverse()
+              .map((item: SubDekidaka, index: number) => (
+                <tr
+                  onClick={() => getDekidakaById(item.id, index)}
+                  className="hover"
+                  key={item.id}>
+                  <td className="border-double border-4 border-gray-700">
+                    {index + 1}
+                  </td>
+                  <td className="border-double border-4 border-gray-700">
+                    {item.plan}
+                  </td>
+                  <td className="border-double border-4 border-gray-700">
+                    {item.actual}
+                  </td>
+                  <td className="border-double border-4 border-gray-700">
+                    {item.deviasi}
+                  </td>
+                  <td className="border-double border-4 border-gray-700">
+                    {`${item.lossTime}'`}
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
         {!subDekidaka || subDekidaka.length === 0 ? (
