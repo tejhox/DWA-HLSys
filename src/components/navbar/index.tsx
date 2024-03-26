@@ -35,7 +35,7 @@ const Navbar = () => {
         }>
         <div className="flex-1 -ms-3">
           <Link
-            href={"/"}
+            href={"/home"}
             onClick={closeMenu}
             className="btn btn-ghost text-xl">
             HL PRO

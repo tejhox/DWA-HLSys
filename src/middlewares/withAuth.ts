@@ -27,10 +27,10 @@ export default function WithAuth(
       }
       if (token) {
         if (authPage.includes(pathname)) {
-          return NextResponse.redirect(new URL("/", req.url));
+          return NextResponse.redirect(new URL("/home", req.url));
         }
         if (token.role !== "admin" && authenticated.includes(pathname)) {
-          return NextResponse.redirect(new URL("/", req.url));
+          return NextResponse.redirect(new URL("/home", req.url));
         }
       }
     }

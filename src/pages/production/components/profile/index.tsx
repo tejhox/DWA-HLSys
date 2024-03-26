@@ -126,6 +126,7 @@ const Profile = () => {
                     target.type = "text";
                   }}
                   id="date"
+                  disabled={isDisabled}
                 />
               ) : (
                 <input
