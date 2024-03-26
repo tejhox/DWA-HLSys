@@ -33,7 +33,7 @@ const Home = () => {
             </div>
           ) : (
             <Link href={"/auth/login"} className="link mt-3">
-              Sign in here!
+              Sign in!
             </Link>
           )}
         </div>

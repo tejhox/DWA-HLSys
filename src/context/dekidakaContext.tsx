@@ -3,6 +3,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Modal from "../pages/production/components/ui/modal";
 import { useSessionContext } from "./sessionContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 export type SubDekidaka = {
   id: string;
@@ -309,12 +311,14 @@ export const DekidakaProvider = ({ children }: any) => {
                   disabled
                 />
               </div>
-              <button
-                type="submit"
-                className="btn btn-sm btn-neutral mt-3 w-full"
-                disabled={isBtnDisabled}>
-                Submit
-              </button>
+              <div className="lg:px-7">
+                <button
+                  type="submit"
+                  className="btn btn-sm btn-neutral mt-3 w-full"
+                  disabled={isBtnDisabled}>
+                  Submit
+                </button>
+              </div>
             </form>
           </>
         }
@@ -335,12 +339,7 @@ export const DekidakaProvider = ({ children }: any) => {
       <Modal
         modalBody={
           <>
-            <div className="flex justify-between">
-              <button
-                onClick={handleDeleteModal}
-                className="btn btn-sm btn-ghost">
-                DELETE
-              </button>
+            <div className="flex justify-end">
               <button onClick={handleUpdateModal} className="me-1">
                 ✕
               </button>
@@ -386,12 +385,19 @@ export const DekidakaProvider = ({ children }: any) => {
                   disabled
                 />
               </div>
-              <button
-                type="submit"
-                className="btn btn-sm btn-neutral mt-3 w-full"
-                disabled={isBtnDisabled}>
-                Submit
-              </button>
+              <div className="flex items-center justify-between lg:px-7">
+                <button
+                  onClick={handleDeleteModal}
+                  className="btn btn-sm btn-outline btn-error mt-2.5 ">
+                  <FontAwesomeIcon icon={faTrashCan} size="xl" />
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-sm btn-neutral mt-3 w-80"
+                  disabled={isBtnDisabled}>
+                  Submit
+                </button>
+              </div>
             </form>
           </>
         }

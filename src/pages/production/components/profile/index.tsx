@@ -1,6 +1,12 @@
 import { useSessionContext } from "@/context/sessionContext";
 import { useProfileContext } from "../../../../context/profileContext";
 import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCircleCheck,
+  faPenToSquare,
+} from "@fortawesome/free-regular-svg-icons";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 const Profile = () => {
   const [editMode, setEditMode] = useState<boolean>(false);
@@ -34,7 +40,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex justify-center px-1.5 mt-3 h-full w-full lg:w-1/3">
+    <div className="flex justify-center px-1.5 mt-2 h-full w-full lg:w-1/3">
       <div className="container w-full">
         <div className="container w-full border-2 border-gray-400 rounded-lg px-1 py-1">
           <div className="container flex flex-row w-full ps-2 pe-2 py-1 ">
@@ -112,7 +118,15 @@ const Profile = () => {
                 <option value="2">2</option>
                 <option value="3">3</option>
               </select>
-              {typeof window !== "undefined" && isMobile ? (
+              <input
+                type="date"
+                placeholder="Tanggal"
+                className="input input-bordered input-sm w-full"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                disabled={isDisabled}
+              />
+              {/* {typeof window !== "undefined" && isMobile ? (
                 <input
                   placeholder="Tanggal"
                   className="input input-bordered input-sm w-full"
@@ -137,7 +151,7 @@ const Profile = () => {
                   onChange={(e) => setDate(e.target.value)}
                   disabled={isDisabled}
                 />
-              )}
+              )} */}
             </div>
           </div>
           <div className="container flex justify-between items-center w-full p-1">
@@ -152,17 +166,17 @@ const Profile = () => {
                 ""
               )}
             </div>
-            <div>
+            <div className="flex items-center">
               <button
                 onClick={() => handleEdit()}
-                className="btn btn-sm btn-outline">
-                Edit
+                className="btn btn-ghost btn-sm me-2">
+                <FontAwesomeIcon icon={faPenToSquare} size="lg" />
               </button>
               {!editMode ? (
                 <button
                   onClick={addProfile}
-                  className="btn btn-sm btn-outline ms-2"
-                  disabled={isDisabled}>
+                  disabled={isDisabled}
+                  className="btn btn-outline btn-sm">
                   Submit
                 </button>
               ) : (
@@ -171,8 +185,8 @@ const Profile = () => {
               {editMode ? (
                 <button
                   onClick={updateProfile}
-                  className="btn btn-sm btn-outline ms-2"
-                  disabled={isDisabled}>
+                  disabled={isDisabled}
+                  className="btn btn-outline btn-sm">
                   Submit
                 </button>
               ) : (
