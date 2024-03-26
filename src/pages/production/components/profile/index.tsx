@@ -1,9 +1,14 @@
 import { useSessionContext } from "@/context/sessionContext";
 import { useProfileContext } from "../../../../context/profileContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Profile = () => {
   const [editMode, setEditMode] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsMobile(window.matchMedia("(max-width: 768px)").matches);
+  }, []);
 
   const {
     line,
@@ -107,14 +112,31 @@ const Profile = () => {
                 <option value="2">2</option>
                 <option value="3">3</option>
               </select>
-              <input
-                type="date"
-                placeholder="Tanggal"
-                className="input input-bordered input-sm w-full"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                disabled={isDisabled}
-              />
+              {typeof window !== "undefined" && isMobile ? (
+                <input
+                  placeholder="Date"
+                  className="textbox-n"
+                  type="text"
+                  onMouseOver={(event) => {
+                    const target = event.target as HTMLInputElement;
+                    target.type = "date";
+                  }}
+                  onMouseOut={(event) => {
+                    const target = event.target as HTMLInputElement;
+                    target.type = "text";
+                  }}
+                  id="date"
+                />
+              ) : (
+                <input
+                  type="date"
+                  placeholder="Tanggal"
+                  className="input input-bordered input-sm w-full"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  disabled={isDisabled}
+                />
+              )}
             </div>
           </div>
           <div className="container flex justify-between items-center w-full p-1">
