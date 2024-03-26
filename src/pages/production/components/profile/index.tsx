@@ -114,8 +114,8 @@ const Profile = () => {
               </select>
               {typeof window !== "undefined" && isMobile ? (
                 <input
-                  placeholder="Date"
-                  className="textbox-n"
+                  placeholder="Tanggal"
+                  className="input input-bordered input-sm w-full"
                   type="text"
                   onMouseOver={(event) => {
                     const target = event.target as HTMLInputElement;
