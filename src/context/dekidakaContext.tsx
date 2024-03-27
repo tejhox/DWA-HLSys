@@ -388,6 +388,7 @@ export const DekidakaProvider = ({ children }: any) => {
               </div>
               <div className="flex items-center justify-between lg:px-7">
                 <button
+                  type="button"
                   onClick={handleDeleteModal}
                   className="btn btn-sm btn-outline btn-error mt-2.5 ">
                   <FontAwesomeIcon icon={faTrashCan} size="lg" />

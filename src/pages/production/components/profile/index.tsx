@@ -3,11 +3,16 @@ import { useProfileContext } from "../../../../context/profileContext";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faEllipsis } from "@fortawesome/free-solid-svg-icons";
 
 const Profile = () => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   useEffect(() => {
     setIsMobile(window.matchMedia("(max-width: 768px)").matches);
@@ -44,18 +49,32 @@ const Profile = () => {
 
   return (
     <div className="flex justify-center px-1.5 mt-2 h-full w-full lg:w-1/3">
-      <div className="container w-full">
+      <div className="container w-full relative">
         <div className="container w-full border-2 border-gray-400 rounded-lg px-1 py-1">
-          <div className="container flex flex-row w-full ps-2 pe-2 py-1 ">
-            <p className="text-sm">Dekidaka</p>
+          <div className="container flex flex-row items-center w-full ps-2 pe-2 py-1 ">
             {userData ? (
-              <p className="text-sm text-primary ms-auto">
+              <p className="text-sm text-primary">
                 {userDataName} - {userDataNik}
               </p>
             ) : !userData ? (
               ""
             ) : (
-              <p className="text-sm text-primary ms-auto">Loading...</p>
+              <p className="text-sm text-primary">Loading...</p>
+            )}
+            <span className="ms-auto cursor-pointer" onClick={toggleMenu}>
+              <FontAwesomeIcon icon={faEllipsis} size="lg" />
+            </span>
+            {isMenuOpen && (
+              <div className="absolute h-30 right-1.5 top-7 bg-neutral mt-2 rounded-md shadow-md border border-gray-200 z-50">
+                <ul className="py-2">
+                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">
+                    New
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">
+                    Edit
+                  </li>
+                </ul>
+              </div>
             )}
           </div>
           <hr className=" border border-gray-400" />
@@ -158,18 +177,7 @@ const Profile = () => {
             </div>
           </div>
           <div className="container flex justify-between items-center w-full p-1">
-            <div className="px-1">
-              {!isFilled ? (
-                <p className="text-sm text-warning ms-auto text-center">
-                  Lengkapi Profile !
-                </p>
-              ) : isFilled ? (
-                ""
-              ) : (
-                ""
-              )}
-            </div>
-            <div className="flex items-center w-1/2 justify-between ps-1">
+            <div className="flex items-center w-full justify-between">
               <div>
                 <button
                   onClick={() => handleDeleteModal()}
@@ -182,11 +190,20 @@ const Profile = () => {
                   <FontAwesomeIcon icon={faPenToSquare} />
                 </button>
               </div>
+              <div>
+                {!isFilled ? (
+                  <p className="text-sm text-warning">Lengkapi Profile !</p>
+                ) : isFilled ? (
+                  ""
+                ) : (
+                  ""
+                )}
+              </div>
               {!editMode ? (
                 <button
                   onClick={addProfile}
                   disabled={isDisabled}
-                  className="btn btn-outline btn-success btn-sm w-1/2">
+                  className="btn btn-outline btn-success btn-sm w-1/5">
                   <FontAwesomeIcon icon={faCheck} size="lg" />
                 </button>
               ) : (
@@ -196,7 +213,7 @@ const Profile = () => {
                 <button
                   onClick={updateProfile}
                   disabled={isDisabled}
-                  className="btn btn-outline btn-success btn-sm w-1/2">
+                  className="btn btn-outline btn-success btn-sm">
                   <FontAwesomeIcon icon={faCheck} size="lg" />
                 </button>
               ) : (

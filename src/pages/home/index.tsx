@@ -10,14 +10,14 @@ const Home = () => {
     <div className="flex flex-col mt-24 h-screen">
       <div className="px-5 md:text-center">
         <div className="container md:mx-auto w-full md:w-96 md:flex md:flex-col">
-          <h1 className="text-4xl font-bold text-primary">Welcome!</h1>
-          <div className="divider divider-neutral pe-5 md:w-full md:mx-auto"></div>
-          <h2 className="text-2xl font-semibold mb-3">
+          <h1 className="text-4xl font-bold text-primary mb-8">HL-M</h1>
+          <h1 className="text-2xl font-semibold mb-3">
             Quick Reports, Easy Checks!
-          </h2>
-          <p className="text-lg text-gray-400 mb-7">
+          </h1>
+          <p className="text-lg text-gray-400">
             Create in a Snap, Monitor on the Fly!
           </p>
+          <div className="divider divider-neutral pe-5 md:w-full md:mx-auto"></div>
           {data ? (
             <div className="flex items-center md:justify-center">
               <Link

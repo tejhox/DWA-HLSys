@@ -182,7 +182,7 @@ export const ProfileProvider = ({ children }: any) => {
       <Modal
         modalBody={
           <div className="p-2">
-            <p>Anda yakin ingin menghapus data?</p>
+            <p>Hapus laporan ?</p>
             <div className="flex justify-end mt-4">
               <button
                 onClick={handleDeleteModal}

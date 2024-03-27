@@ -38,7 +38,7 @@ const Navbar = () => {
             href={"/home"}
             onClick={closeMenu}
             className="btn btn-ghost text-xl">
-            HL PRO
+            HL-M
           </Link>
         </div>
         <div className="hidden sm:block">

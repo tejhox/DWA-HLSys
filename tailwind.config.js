@@ -13,6 +13,18 @@ module.exports = {
   },
   plugins: [require("daisyui")],
   daisyui: {
-    themes: ["light", "dark", "synthwave", "fantasy", "business", "night"],
+    themes: [
+      "light",
+      "dark",
+      "synthwave",
+      "fantasy",
+      "business",
+      "night",
+      "retro",
+      "wireframe",
+      "acid",
+      "nord",
+      "winter",
+    ],
   },
 };
