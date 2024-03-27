@@ -2,10 +2,7 @@ import { useSessionContext } from "@/context/sessionContext";
 import { useProfileContext } from "../../../../context/profileContext";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleCheck,
-  faPenToSquare,
-} from "@fortawesome/free-regular-svg-icons";
+import { faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 const Profile = () => {
@@ -28,11 +25,17 @@ const Profile = () => {
     setDate,
     setIsDisabled,
     isFilled,
+    isDeleteConfirmOpen,
   } = useProfileContext();
 
   const { userData, userDataName, userDataNik } = useSessionContext();
 
-  const { addProfile, updateProfile } = useProfileContext();
+  const {
+    addProfile,
+    updateProfile,
+    handleDeleteModal,
+    modalDeleteConfirmation,
+  } = useProfileContext();
 
   const handleEdit = () => {
     setIsDisabled(false);
@@ -157,7 +160,7 @@ const Profile = () => {
           <div className="container flex justify-between items-center w-full p-1">
             <div className="px-1">
               {!isFilled ? (
-                <p className="text-sm text-primary ms-auto text-center">
+                <p className="text-sm text-warning ms-auto text-center">
                   Lengkapi Profile !
                 </p>
               ) : isFilled ? (
@@ -166,18 +169,25 @@ const Profile = () => {
                 ""
               )}
             </div>
-            <div className="flex items-center">
-              <button
-                onClick={() => handleEdit()}
-                className="btn btn-ghost btn-sm me-2">
-                <FontAwesomeIcon icon={faPenToSquare} size="lg" />
-              </button>
+            <div className="flex items-center w-1/2 justify-between ps-1">
+              <div>
+                <button
+                  onClick={() => handleDeleteModal()}
+                  className="btn btn-outline btn-error btn-sm">
+                  <FontAwesomeIcon icon={faTrashCan} />
+                </button>
+                <button
+                  onClick={() => handleEdit()}
+                  className="btn btn-outline btn-primary btn-sm ms-1">
+                  <FontAwesomeIcon icon={faPenToSquare} />
+                </button>
+              </div>
               {!editMode ? (
                 <button
                   onClick={addProfile}
                   disabled={isDisabled}
-                  className="btn btn-outline btn-sm">
-                  Submit
+                  className="btn btn-outline btn-success btn-sm w-1/2">
+                  <FontAwesomeIcon icon={faCheck} size="lg" />
                 </button>
               ) : (
                 ""
@@ -186,8 +196,8 @@ const Profile = () => {
                 <button
                   onClick={updateProfile}
                   disabled={isDisabled}
-                  className="btn btn-outline btn-sm">
-                  Submit
+                  className="btn btn-outline btn-success btn-sm w-1/2">
+                  <FontAwesomeIcon icon={faCheck} size="lg" />
                 </button>
               ) : (
                 ""
@@ -196,6 +206,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      {isDeleteConfirmOpen && modalDeleteConfirmation()}
     </div>
   );
 };

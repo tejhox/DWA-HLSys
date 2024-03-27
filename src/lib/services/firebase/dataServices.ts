@@ -93,6 +93,43 @@ export async function addProfileData(
   }
 }
 
+export async function updateProfileData(
+  id: string,
+  line: string,
+  product: string,
+  shift: string,
+  date: Timestamp
+) {
+  try {
+    const docRef = doc(firestore, "Dekidaka", id);
+    const snapshot = await updateDoc(docRef, {
+      line,
+      product,
+      shift,
+      date,
+    });
+    console.log("Pofile updated successfully!");
+    return snapshot;
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    throw new Error("Failed to add Dekidaka subcollection to Firestore");
+  }
+}
+
+export async function deleteProfile(docId: string) {
+  try {
+    const docRef = doc(firestore, "Dekidaka", docId);
+    const subColSnapshot = await getDocs(collection(docRef, "dekidaka"));
+    subColSnapshot.forEach(async (subDoc) => {
+      await deleteDoc(subDoc.ref);
+    });
+    await deleteDoc(docRef);
+  } catch (error) {
+    console.error("Error deleting profile:", error);
+    throw new Error("Failed to delete Dekidaka collection");
+  }
+}
+
 export async function addDekidaka(
   id: string,
   plan: number,
@@ -143,29 +180,6 @@ export async function updateDekidaka(
     return snapshot;
   } catch (error) {
     console.error("Error updating Dekidaka:", error);
-    throw new Error("Failed to add Dekidaka subcollection to Firestore");
-  }
-}
-
-export async function updateProfileData(
-  id: string,
-  line: string,
-  product: string,
-  shift: string,
-  date: Timestamp
-) {
-  try {
-    const docRef = doc(firestore, "Dekidaka", id);
-    const snapshot = await updateDoc(docRef, {
-      line,
-      product,
-      shift,
-      date,
-    });
-    console.log("Pofile updated successfully!");
-    return snapshot;
-  } catch (error) {
-    console.error("Error updating profile:", error);
     throw new Error("Failed to add Dekidaka subcollection to Firestore");
   }
 }

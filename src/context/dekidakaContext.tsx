@@ -23,8 +23,10 @@ type DekidakaContextValue = {
   isModalAddOpen: boolean;
   isDeleteConfirmOpen: boolean;
   isModalUpdateOpen: boolean;
+  isLoading: boolean;
   setIsModalAddOpen: (value: boolean) => void;
   setIsModalUpdateOpen: (value: boolean) => void;
+  setIsDeleteConfirmOpen: (value: boolean) => void;
   modalAddData: () => React.ReactNode;
   modalUpdateData: () => React.ReactNode;
   modalDeleteConfirmation: () => React.ReactNode;
@@ -32,6 +34,7 @@ type DekidakaContextValue = {
   getDekidakaById: (subDocId: string, index: number) => Promise<void>;
   handleAddModal: () => void;
   handleUpdateModal: () => void;
+  handleDeleteModal: () => void;
 };
 
 const DekidakaContext = createContext<DekidakaContextValue | undefined>(
@@ -64,6 +67,7 @@ export const DekidakaProvider = ({ children }: any) => {
   const [subDocId, setSubDocId] = useState<string>("");
   const [tableIndex, setTableIndex] = useState<number>(0);
   const [isBtnDisabled, setIsBtnDisabled] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { userData, userDataName, dateNow } = useSessionContext();
 
@@ -118,9 +122,13 @@ export const DekidakaProvider = ({ children }: any) => {
   const handleUpdateModal = () => {
     setIsModalUpdateOpen(!isModalUpdateOpen);
   };
+  const handleDeleteModal = () => {
+    setIsDeleteConfirmOpen(!isDeleteConfirmOpen);
+  };
 
   const getDekidaka = async () => {
     try {
+      setIsLoading(true);
       const storedLastDocId = localStorage.getItem("profileDocId") || "";
       if (storedLastDocId) {
         const [username, id] = storedLastDocId.split("_");
@@ -128,6 +136,7 @@ export const DekidakaProvider = ({ children }: any) => {
           if (username === userDataName) {
             const response = await axios.get(`/api/getDekidaka?id=${id}`);
             setSubDekidaka(response.data);
+            setIsLoading(false);
           } else {
             console.log("Username tidak cocok");
           }
@@ -136,6 +145,7 @@ export const DekidakaProvider = ({ children }: any) => {
         console.log("Data tidak ditemukan");
       }
     } catch (error) {
+      setIsLoading(false);
       console.error("Error fetching data:", error);
     }
   };
@@ -238,7 +248,6 @@ export const DekidakaProvider = ({ children }: any) => {
 
   const deleteDekidaka = async () => {
     try {
-      setIsModalUpdateOpen(true);
       const storedLastDocId = localStorage.getItem("profileDocId") || "";
       if (storedLastDocId) {
         const [username, docId] = storedLastDocId.split("_");
@@ -247,8 +256,8 @@ export const DekidakaProvider = ({ children }: any) => {
             await axios.delete(
               `/api/deleteDekidaka?docId=${docId}&subDocId=${subDocId}`
             );
-            setIsModalUpdateOpen(false);
             setIsDeleteConfirmOpen(false);
+            setIsModalUpdateOpen(false);
             getDekidaka();
           } else {
             console.log("Username Not Found");
@@ -326,14 +335,6 @@ export const DekidakaProvider = ({ children }: any) => {
     );
   };
 
-  const handleDeleteModal = () => {
-    setIsDeleteConfirmOpen(true);
-  };
-
-  const closeDeleteModal = () => {
-    setIsDeleteConfirmOpen(false);
-  };
-
   const modalUpdateData = () => {
     return (
       <Modal
@@ -389,13 +390,13 @@ export const DekidakaProvider = ({ children }: any) => {
                 <button
                   onClick={handleDeleteModal}
                   className="btn btn-sm btn-outline btn-error mt-2.5 ">
-                  <FontAwesomeIcon icon={faTrashCan} size="xl" />
+                  <FontAwesomeIcon icon={faTrashCan} size="lg" />
                 </button>
                 <button
                   type="submit"
-                  className="btn btn-sm btn-neutral mt-3 w-80"
+                  className="btn btn-sm btn-neutral mt-3 w-2/3 md:w-80"
                   disabled={isBtnDisabled}>
-                  Submit
+                  Edit
                 </button>
               </div>
             </form>
@@ -413,7 +414,7 @@ export const DekidakaProvider = ({ children }: any) => {
             <p>Anda yakin ingin menghapus data?</p>
             <div className="flex justify-end mt-4">
               <button
-                onClick={closeDeleteModal}
+                onClick={handleDeleteModal}
                 className="btn btn-sm btn-neutral ">
                 Tidak
               </button>
@@ -440,6 +441,8 @@ export const DekidakaProvider = ({ children }: any) => {
     isDeleteConfirmOpen,
     setIsModalAddOpen,
     setIsModalUpdateOpen,
+    setIsDeleteConfirmOpen,
+    isLoading,
     getDekidakaById,
     getDekidaka,
     modalAddData,
@@ -447,6 +450,7 @@ export const DekidakaProvider = ({ children }: any) => {
     modalDeleteConfirmation,
     handleAddModal,
     handleUpdateModal,
+    handleDeleteModal,
   };
 
   return (

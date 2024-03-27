@@ -1,14 +1,8 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  FormEvent,
-} from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useSessionContext } from "./sessionContext";
-import { getDekidaka } from "@/lib/services/firebase/dataServices";
 import { useDekidakaContext } from "./dekidakaContext";
+import Modal from "@/pages/production/components/ui/modal";
 
 type ProductionContextValue = {
   profileId: string;
@@ -18,6 +12,7 @@ type ProductionContextValue = {
   date: string;
   isDisabled: boolean;
   isFilled: boolean;
+  isDeleteConfirmOpen: boolean;
   setProfileId: (value: string) => void;
   setLine: (value: string) => void;
   setProduct: (value: string) => void;
@@ -25,8 +20,11 @@ type ProductionContextValue = {
   setDate: (value: string) => void;
   setIsDisabled: (value: boolean) => void;
   setIsFilled: (value: boolean) => void;
+  modalDeleteConfirmation: () => React.ReactNode;
+  handleDeleteModal: () => void;
   addProfile: () => Promise<void>;
   updateProfile: () => Promise<void>;
+  deleteProfile: () => Promise<void>;
   showWarning: () => void;
 };
 
@@ -42,6 +40,7 @@ export const ProfileProvider = ({ children }: any) => {
   const [profileId, setProfileId] = useState<string>("");
   const [isFilled, setIsFilled] = useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
   const { userData, userDataName, dateNow } = useSessionContext();
   const { getDekidaka } = useDekidakaContext();
@@ -73,6 +72,12 @@ export const ProfileProvider = ({ children }: any) => {
         console.log("Data tidak ditemukan");
       }
     } catch {
+      setLine("");
+      setProduct("");
+      setShift("");
+      setDate("");
+      setIsDisabled(false);
+      setIsFilled(false);
       console.log("Error fetching data:");
     }
   };
@@ -140,8 +145,60 @@ export const ProfileProvider = ({ children }: any) => {
     }
   };
 
+  const deleteProfile = async () => {
+    try {
+      setIsDeleteConfirmOpen(true);
+      const storedLastDocId = localStorage.getItem("profileDocId") || "";
+      if (storedLastDocId) {
+        const [username, docId] = storedLastDocId.split("_");
+        if (userDataName && userData) {
+          if (username === userDataName) {
+            await axios.delete(`/api/deleteProfile?docId=${docId}`);
+            setIsDeleteConfirmOpen(false);
+            getProfile();
+            getDekidaka();
+          } else {
+            console.log("Username Not Found");
+          }
+        } else {
+          console.log("Session Not Found");
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   const showWarning = () => {
     setIsFilled(false);
+  };
+
+  const handleDeleteModal = () => {
+    setIsDeleteConfirmOpen(!isDeleteConfirmOpen);
+  };
+
+  const modalDeleteConfirmation = () => {
+    return (
+      <Modal
+        modalBody={
+          <div className="p-2">
+            <p>Anda yakin ingin menghapus data?</p>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={handleDeleteModal}
+                className="btn btn-sm btn-neutral ">
+                Tidak
+              </button>
+              <button
+                onClick={deleteProfile}
+                className="btn btn-sm btn-error ms-2">
+                Ya
+              </button>
+            </div>
+          </div>
+        }
+      />
+    );
   };
 
   const contextValue: ProductionContextValue = {
@@ -158,10 +215,14 @@ export const ProfileProvider = ({ children }: any) => {
     profileId,
     setProfileId,
     isDisabled,
+    isDeleteConfirmOpen,
     setIsDisabled,
     updateProfile,
+    handleDeleteModal,
     addProfile,
+    deleteProfile,
     showWarning,
+    modalDeleteConfirmation,
   };
 
   return (

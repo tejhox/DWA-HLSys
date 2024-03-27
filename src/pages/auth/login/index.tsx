@@ -40,7 +40,7 @@ const LoginPage = () => {
       <div className="container flex flex-col w-11/12 p-6 my-auto border rounded-lg border-slate-600 ">
         <h1 className="text-xl text-center">SIGN IN</h1>
         <div className="divider"></div>
-        {error && <div>{error}</div>}
+        {error && <p className="text-center mb-3 text-error">{error}</p>}
         <form onSubmit={handleSubmit} className="form-control">
           <label className="input input-bordered flex items-center gap-2">
             <svg

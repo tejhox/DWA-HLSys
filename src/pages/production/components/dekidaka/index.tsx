@@ -2,6 +2,10 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useProfileContext } from "@/context/profileContext";
 import { SubDekidaka, useDekidakaContext } from "@/context/dekidakaContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileCirclePlus } from "@fortawesome/free-solid-svg-icons/faFileCirclePlus";
+import { faSquarePlus } from "@fortawesome/free-regular-svg-icons";
+import { faCirclePlus, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const Dekidaka = () => {
   const [userData, setUserData] = useState<any>(null);
@@ -17,6 +21,7 @@ const Dekidaka = () => {
     isModalAddOpen,
     isModalUpdateOpen,
     isDeleteConfirmOpen,
+    isLoading,
     handleAddModal,
     subDekidaka,
     modalDeleteConfirmation,
@@ -81,18 +86,21 @@ const Dekidaka = () => {
               ))}
           </tbody>
         </table>
-        {!subDekidaka || subDekidaka.length === 0 ? (
+        {isLoading ? (
+          <p className="text-center text-sm my-3">Loading ....</p>
+        ) : !subDekidaka || subDekidaka.length === 0 ? (
           <p className="text-center text-sm my-3">
-            -------- Belum ada data --------
+            -------- Belum Ada Data --------
           </p>
         ) : (
           ""
         )}
+
         <div className="w-full mt-2">
           <button
             onClick={isFilled ? handleAddModal : () => showWarning()}
             className="btn btn-sm btn-neutral w-full">
-            +
+            <FontAwesomeIcon icon={faPlus} size="lg" />
           </button>
           {isModalAddOpen && modalAddData()}
           {isModalUpdateOpen && modalUpdateData()}
