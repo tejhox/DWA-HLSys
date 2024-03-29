@@ -1,44 +1,5 @@
 import { useDekidakaContext } from "@/context/dekidakaContext";
 const DekidakaTotal = () => {
-  // const [dekidakaTotal, setDekidakaTotal] = useState<any>();
-  // const [totalPlan, setTotalPlan] = useState<number>();
-  // const [totalActual, setTotalActual] = useState<number>();
-  // const [totalDeviasi, setTotalDeviasi] = useState<number>();
-  // const [totalLossTime, setTotalLossTime] = useState<number>();
-
-  // const { userData, userDataName, dateNow } = useSessionContext();
-
-  // useEffect(() => {
-  //   getDekidakaSum();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [dateNow]);
-
-  // const getDekidakaSum = async () => {
-  //   try {
-  //     const storedLastDocId = localStorage.getItem("profileDocId") || "";
-  //     if (storedLastDocId) {
-  //       const [username, id] = storedLastDocId.split("_");
-  //       if (userDataName && userData) {
-  //         if (username === userDataName) {
-  //           const response = await axios.get(`/api/getDekidakaSum?id=${id}`);
-  //           setTotalPlan(response.data.totalPlan);
-  //           setTotalActual(response.data.totalActual);
-  //           setTotalDeviasi(response.data.totalDeviasi);
-  //           setTotalLossTime(response.data.totalLossTime);
-  //           setDekidakaTotal(response.data);
-  //           console.log(response.data.totalPlan);
-  //         } else {
-  //           console.log("Username tidak cocok");
-  //         }
-  //       }
-  //     } else {
-  //       console.log("Data tidak ditemukan");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
-
   const { totalPlan, totalActual, totalDeviasi, totalLossTime } =
     useDekidakaContext();
 
@@ -68,15 +29,17 @@ const DekidakaTotal = () => {
             <tbody>
               <tr>
                 <td className="border-double border-4 border-gray-700">
-                  {totalPlan}
+                  {totalPlan ? totalPlan : 0}
                 </td>
                 <td className="border-double border-4 border-gray-700">
-                  {totalActual}
+                  {totalActual ? totalActual : 0}
                 </td>
                 <td className="border-double border-4 border-gray-700">
-                  {totalDeviasi}
+                  {totalDeviasi ? totalDeviasi : 0}
                 </td>
-                <td className="border-double border-4 border-gray-700">{`${totalLossTime}'`}</td>
+                <td className="border-double border-4 border-gray-700">
+                  {totalLossTime ? `${totalLossTime}'` : `${0}'`}
+                </td>
               </tr>
             </tbody>
           </table>
