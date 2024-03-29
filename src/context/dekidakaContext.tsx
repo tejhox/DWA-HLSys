@@ -20,6 +20,10 @@ type DekidakaContextValue = {
   actual: number | undefined;
   deviasi: number | undefined;
   lossTime: number | undefined;
+  totalPlan: number | undefined;
+  totalActual: number | undefined;
+  totalDeviasi: number | undefined;
+  totalLossTime: number | undefined;
   isModalAddOpen: boolean;
   isDeleteConfirmOpen: boolean;
   isModalUpdateOpen: boolean;
@@ -68,6 +72,12 @@ export const DekidakaProvider = ({ children }: any) => {
   const [tableIndex, setTableIndex] = useState<number>(0);
   const [isBtnDisabled, setIsBtnDisabled] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [totalId, setTotalId] = useState<string>("");
+
+  const [totalPlan, setTotalPlan] = useState<number>();
+  const [totalActual, setTotalActual] = useState<number>();
+  const [totalDeviasi, setTotalDeviasi] = useState<number>();
+  const [totalLossTime, setTotalLossTime] = useState<number>();
 
   const { userData, userDataName, dateNow } = useSessionContext();
 
@@ -116,6 +126,11 @@ export const DekidakaProvider = ({ children }: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateNow]);
 
+  useEffect(() => {
+    getDekidakaSum();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dateNow]);
+
   const handleAddModal = () => {
     setIsModalAddOpen(!isModalAddOpen);
   };
@@ -124,6 +139,52 @@ export const DekidakaProvider = ({ children }: any) => {
   };
   const handleDeleteModal = () => {
     setIsDeleteConfirmOpen(!isDeleteConfirmOpen);
+  };
+
+  const sumDekidaka = async () => {
+    try {
+      const storedLastDocId = localStorage.getItem("profileDocId") || "";
+      if (storedLastDocId) {
+        const [username, id] = storedLastDocId.split("_");
+        if (userDataName && userData) {
+          if (username === userDataName) {
+            await axios.post(`/api/sumDekidaka`, {
+              id,
+            });
+          } else {
+            console.log("Username tidak cocok");
+          }
+        }
+      } else {
+        console.log("Data tidak ditemukan");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const getDekidakaSum = async () => {
+    try {
+      const storedLastDocId = localStorage.getItem("profileDocId") || "";
+      if (storedLastDocId) {
+        const [username, id] = storedLastDocId.split("_");
+        if (userDataName && userData) {
+          if (username === userDataName) {
+            const response = await axios.get(`/api/getDekidakaSum?id=${id}`);
+            setTotalPlan(response.data.totalPlan);
+            setTotalActual(response.data.totalActual);
+            setTotalDeviasi(response.data.totalDeviasi);
+            setTotalLossTime(response.data.totalLossTime);
+          } else {
+            console.log("Username tidak cocok");
+          }
+        }
+      } else {
+        console.log("Data tidak ditemukan");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
   const getDekidaka = async () => {
@@ -136,6 +197,7 @@ export const DekidakaProvider = ({ children }: any) => {
           if (username === userDataName) {
             const response = await axios.get(`/api/getDekidaka?id=${id}`);
             setSubDekidaka(response.data);
+            getDekidakaSum();
             setIsLoading(false);
           } else {
             console.log("Username tidak cocok");
@@ -191,18 +253,14 @@ export const DekidakaProvider = ({ children }: any) => {
         const [username, id] = storedLastDocId.split("_");
         if (username === userDataName) {
           if (plan && actual) {
-            const response = await axios.post(`/api/addDekidaka`, {
+            await axios.post(`/api/addDekidaka`, {
               id,
               plan,
               actual,
               deviasi: calcDeviasi.deviasi,
               lossTime: calcLossTime.lossTime,
             });
-            const { subDekidakaId } = response.data;
-            localStorage.setItem(
-              "subDekidaka",
-              `${userDataName}_${subDekidakaId}`
-            );
+            sumDekidaka();
             setIsModalAddOpen(false);
             setIsBtnDisabled(false);
             getDekidaka();
@@ -231,6 +289,7 @@ export const DekidakaProvider = ({ children }: any) => {
               deviasi: calcDeviasi.deviasi,
               lossTime: calcEditLossTime.lossTime,
             });
+            sumDekidaka();
             setIsModalUpdateOpen(false);
             setIsBtnDisabled(false);
             getDekidaka();
@@ -256,6 +315,7 @@ export const DekidakaProvider = ({ children }: any) => {
             await axios.delete(
               `/api/deleteDekidaka?docId=${docId}&subDocId=${subDocId}`
             );
+            sumDekidaka();
             setIsDeleteConfirmOpen(false);
             setIsModalUpdateOpen(false);
             getDekidaka();
@@ -386,16 +446,16 @@ export const DekidakaProvider = ({ children }: any) => {
                   disabled
                 />
               </div>
-              <div className="flex items-center justify-between lg:px-7">
+              <div className="flex justify-between mt-3 lg:px-7">
                 <button
                   type="button"
                   onClick={handleDeleteModal}
-                  className="btn btn-sm btn-outline btn-error mt-2.5 ">
+                  className="btn btn-sm btn-outline btn-error">
                   <FontAwesomeIcon icon={faTrashCan} size="lg" />
                 </button>
                 <button
                   type="submit"
-                  className="btn btn-sm btn-neutral mt-3 w-2/3 md:w-80"
+                  className="btn btn-sm btn-neutral w-2/3 md:w-80"
                   disabled={isBtnDisabled}>
                   Edit
                 </button>
@@ -436,6 +496,10 @@ export const DekidakaProvider = ({ children }: any) => {
     actual,
     deviasi,
     lossTime,
+    totalPlan,
+    totalActual,
+    totalDeviasi,
+    totalLossTime,
     subDekidaka,
     isModalAddOpen,
     isModalUpdateOpen,

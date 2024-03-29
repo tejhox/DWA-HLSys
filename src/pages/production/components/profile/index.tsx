@@ -186,7 +186,7 @@ const Profile = () => {
                 </button>
                 <button
                   onClick={() => handleEdit()}
-                  className="btn btn-outline btn-primary btn-sm ms-1">
+                  className="btn btn-outline btn-primary btn-sm ms-1.5">
                   <FontAwesomeIcon icon={faPenToSquare} />
                 </button>
               </div>

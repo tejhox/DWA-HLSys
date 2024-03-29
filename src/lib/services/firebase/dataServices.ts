@@ -10,6 +10,7 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import app from "./init";
@@ -119,10 +120,19 @@ export async function updateProfileData(
 export async function deleteProfile(docId: string) {
   try {
     const docRef = doc(firestore, "document", docId);
-    const subColSnapshot = await getDocs(collection(docRef, "dekidaka"));
-    subColSnapshot.forEach(async (subDoc) => {
+
+    const dekidakaSnapshot = await getDocs(collection(docRef, "dekidaka"));
+    dekidakaSnapshot.forEach(async (subDoc) => {
       await deleteDoc(subDoc.ref);
     });
+
+    const dekidakaTotalSnapshot = await getDocs(
+      collection(docRef, "dekidakaTotal")
+    );
+    dekidakaTotalSnapshot.forEach(async (subDoc) => {
+      await deleteDoc(subDoc.ref);
+    });
+
     await deleteDoc(docRef);
   } catch (error) {
     console.error("Error deleting profile:", error);
@@ -192,5 +202,58 @@ export async function deleteDekidaka(docId: string, subDocId: string) {
   } catch (error) {
     console.error("Error updating profile:", error);
     throw new Error("Failed to add document subcollection to Firestore");
+  }
+}
+
+export async function sumDekidaka(id: string) {
+  try {
+    const docRef = doc(firestore, "document", id);
+    const subDocRef = collection(docRef, "dekidaka");
+    const querySnapshot = await getDocs(subDocRef);
+
+    let totalPlan = 0;
+    let totalActual = 0;
+    let totalDeviasi = 0;
+    let totalLossTime = 0;
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      totalPlan += data.plan;
+      totalActual += data.actual;
+      totalDeviasi += data.deviasi;
+      totalLossTime += data.lossTime;
+    });
+
+    const newData = {
+      totalPlan,
+      totalActual,
+      totalDeviasi,
+      totalLossTime,
+    };
+
+    const totalDocRef = doc(docRef, "dekidakaTotal", "accumulation");
+    const result = await setDoc(totalDocRef, newData);
+
+    console.log("Data berhasil diakumulasi dan disimpan!");
+    return result;
+  } catch (error) {
+    console.error("Error:", error);
+    throw new Error("Failed to accumulate and save data.");
+  }
+}
+
+export async function getDekidakaSum(id: string) {
+  try {
+    const docRef = doc(firestore, "document", id);
+    const subDocRef = doc(docRef, "dekidakaTotal", "accumulation");
+    const snapshot = await getDoc(subDocRef);
+    if (snapshot.exists()) {
+      return { ...snapshot.data() };
+    } else {
+      throw new Error("document document does not exist");
+    }
+  } catch (error) {
+    console.error("Error fetching document data:", error);
+    throw new Error("Failed to fetch document data from Firestore");
   }
 }
