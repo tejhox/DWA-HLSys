@@ -29,16 +29,16 @@ const DekidakaTotal = () => {
             </thead>
             <tbody>
               <tr>
-                <td className="border-double border-4 border-gray-700">
+                <td className="border-double border-4 border-gray-700 text-info">
                   {totalPlan ? totalPlan : 0}
                 </td>
-                <td className="border-double border-4 border-gray-700">
+                <td className="border-double border-4 border-gray-700 text-success">
                   {totalActual ? totalActual : 0}
                 </td>
-                <td className="border-double border-4 border-gray-700">
+                <td className="border-double border-4 border-gray-700 text-warning">
                   {totalDeviasi ? totalDeviasi : 0}
                 </td>
-                <td className="border-double border-4 border-gray-700">
+                <td className="border-double border-4 border-gray-700 text-error">
                   {totalLossTime ? `${totalLossTime}'` : `${0}'`}
                 </td>
               </tr>

@@ -46,16 +46,16 @@ const Dekidaka = () => {
                   <td className="border-double border-4 border-gray-700">
                     {index + 1}
                   </td>
-                  <td className="border-double border-4 border-gray-700">
+                  <td className="border-double border-4 border-gray-700 text-info">
                     {item.plan}
                   </td>
-                  <td className="border-double border-4 border-gray-700">
+                  <td className="border-double border-4 border-gray-700 text-success">
                     {item.actual}
                   </td>
-                  <td className="border-double border-4 border-gray-700">
+                  <td className="border-double border-4 border-gray-700 text-warning">
                     {item.deviasi}
                   </td>
-                  <td className="border-double border-4 border-gray-700">
+                  <td className="border-double border-4 border-gray-700 text-error">
                     {`${item.lossTime}'`}
                   </td>
                 </tr>

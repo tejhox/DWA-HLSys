@@ -93,7 +93,7 @@ export const GetDataProvider = ({ children }: any) => {
       getDekidaka();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profileId]);
+  }, [profileId, dateNow]);
 
   useEffect(() => {
     if (profileId) {
