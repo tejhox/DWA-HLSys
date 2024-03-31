@@ -6,6 +6,7 @@ import Navbar from "@/components/navbar/";
 import { ProfileProvider } from "@/context/profileContext";
 import { DekidakaProvider } from "@/context/dekidakaContext";
 import { SessionContextProvider } from "@/context/sessionContext";
+import { GetDataProvider } from "@/context/getDataContext";
 
 const lato = Lato({
   weight: ["100", "300", "400", "700", "900"],
@@ -21,14 +22,16 @@ export default function App({
   return (
     <SessionProvider session={session}>
       <SessionContextProvider>
-        <DekidakaProvider>
-          <ProfileProvider>
-            <div className={lato.className}>
-              <Navbar />
-              <Component {...pageProps} />
-            </div>
-          </ProfileProvider>
-        </DekidakaProvider>
+        <GetDataProvider>
+          <DekidakaProvider>
+            <ProfileProvider>
+              <div className={lato.className}>
+                <Navbar />
+                <Component {...pageProps} />
+              </div>
+            </ProfileProvider>
+          </DekidakaProvider>
+        </GetDataProvider>
       </SessionContextProvider>
     </SessionProvider>
   );

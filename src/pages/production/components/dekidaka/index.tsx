@@ -1,45 +1,21 @@
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
 import { useProfileContext } from "@/context/profileContext";
-import { SubDekidaka, useDekidakaContext } from "@/context/dekidakaContext";
+import { useDekidakaContext } from "@/context/dekidakaContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileCirclePlus } from "@fortawesome/free-solid-svg-icons/faFileCirclePlus";
-import { faSquarePlus } from "@fortawesome/free-regular-svg-icons";
-import { faCirclePlus, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { SubDekidaka, useGetDataContext } from "@/context/getDataContext";
 
 const Dekidaka = () => {
-  const [userData, setUserData] = useState<any>(null);
-  const [dateNow, setDateNow] = useState<any>("");
-  const { data: session } = useSession<any>();
-
-  const { showWarning, isFilled } = useProfileContext();
-
-  const { getDekidakaById, modalAddData, modalUpdateData } =
-    useDekidakaContext();
-
+  const { handleShowWarning } = useProfileContext();
+  const { modalAddData, modalUpdateData } = useDekidakaContext();
+  const { getDekidakaById, subDekidaka, isLoading, isInputFilled } =
+    useGetDataContext();
   const {
     isModalAddOpen,
     isModalUpdateOpen,
     isDeleteConfirmOpen,
-    isLoading,
     handleAddModal,
-    subDekidaka,
     modalDeleteConfirmation,
   } = useDekidakaContext();
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      try {
-        if (session?.user) {
-          setUserData(session.user);
-          setDateNow(Date.now());
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchSession();
-  }, [session]);
 
   return (
     <div className="flex justify-center px-1.5 mt-1 h-full w-full lg:w-1/3">
@@ -98,7 +74,7 @@ const Dekidaka = () => {
 
         <div className="w-full mt-2">
           <button
-            onClick={isFilled ? handleAddModal : () => showWarning()}
+            onClick={isInputFilled ? handleAddModal : () => handleShowWarning()}
             className="btn btn-sm btn-neutral w-full">
             <FontAwesomeIcon icon={faPlus} size="lg" />
           </button>

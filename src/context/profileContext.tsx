@@ -3,29 +3,19 @@ import axios from "axios";
 import { useSessionContext } from "./sessionContext";
 import { useDekidakaContext } from "./dekidakaContext";
 import Modal from "@/pages/production/components/ui/modal";
+import { useGetDataContext } from "./getDataContext";
 
 type ProductionContextValue = {
-  profileId: string;
   line: string;
   product: string;
   shift: string;
   date: string;
-  isDisabled: boolean;
-  isFilled: boolean;
   isDeleteConfirmOpen: boolean;
-  setProfileId: (value: string) => void;
-  setLine: (value: string) => void;
-  setProduct: (value: string) => void;
-  setShift: (value: string) => void;
-  setDate: (value: string) => void;
-  setIsDisabled: (value: boolean) => void;
-  setIsFilled: (value: boolean) => void;
-  modalDeleteConfirmation: () => React.ReactNode;
-  handleDeleteModal: () => void;
   addProfile: () => Promise<void>;
   updateProfile: () => Promise<void>;
-  deleteProfile: () => Promise<void>;
-  showWarning: () => void;
+  modalDeleteConfirmation: () => React.ReactNode;
+  handleDeleteModal: () => void;
+  handleShowWarning: () => void;
 };
 
 const ProfileContext = createContext<ProductionContextValue | undefined>(
@@ -33,60 +23,32 @@ const ProfileContext = createContext<ProductionContextValue | undefined>(
 );
 
 export const ProfileProvider = ({ children }: any) => {
-  const [line, setLine] = useState("");
-  const [product, setProduct] = useState("");
-  const [shift, setShift] = useState("");
-  const [date, setDate] = useState("");
-  const [profileId, setProfileId] = useState<string>("");
-  const [isFilled, setIsFilled] = useState<boolean>(false);
-  const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-
-  const { userData, userDataName, dateNow } = useSessionContext();
+  const { userDataName } = useSessionContext();
   const { getDekidaka } = useDekidakaContext();
 
-  useEffect(() => {
-    getProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateNow]);
+  const {
+    line,
+    product,
+    shift,
+    date,
+    setTotalPlan,
+    setTotalActual,
+    setTotalDeviasi,
+    setTotalLossTime,
+    setIsDisabled,
+    setIsInputFilled,
+    setProfileId,
+    profileId,
+    getDekidakaSum,
+  } = useGetDataContext();
 
-  const getProfile = async () => {
-    try {
-      const storedLastDocId = localStorage.getItem("profileDocId") || "";
-      if (storedLastDocId) {
-        const [username, id] = storedLastDocId.split("_");
-        if (userDataName && userData) {
-          if (username === userDataName) {
-            const response = await axios.get(`/api/getProfileData?id=${id}`);
-            setLine(response.data.line);
-            setProduct(response.data.product);
-            setShift(response.data.shift);
-            setDate(response.data.date);
-            setIsFilled(true);
-            setIsDisabled(true);
-          } else {
-            console.log("Username tidak cocok");
-          }
-        }
-      } else {
-        console.log("Data tidak ditemukan");
-      }
-    } catch {
-      setLine("");
-      setProduct("");
-      setShift("");
-      setDate("");
-      setIsDisabled(false);
-      setIsFilled(false);
-      console.log("Error fetching data:");
-    }
-  };
+  const { getLastProfile } = useGetDataContext();
 
   const addProfile = async () => {
     if (line && product && shift && date) {
       setIsDisabled(true);
     }
-
     const leaderGroups = {
       "Bowo Dwi": "1",
       "Ocza Aurellia": "2",
@@ -104,42 +66,26 @@ export const ProfileProvider = ({ children }: any) => {
             date,
           });
           const { docId } = response.data;
-          localStorage.setItem("profileDocId", `${userDataName}_${docId}`);
-          const profileDocId = localStorage.getItem("profileDocId") || "";
-          setProfileId(profileDocId || "");
-          setIsFilled(true);
+          setProfileId(docId);
+          setIsInputFilled(true);
           getDekidaka();
         }
       } catch (error) {
         console.error("Error submitting form data:", error);
       }
-    } else {
-      console.log("Line bukan ER01");
     }
   };
 
   const updateProfile = async () => {
     setIsDisabled(true);
     try {
-      const storedLastDocId = localStorage.getItem("profileDocId") || "";
-      if (storedLastDocId) {
-        const [username, id] = storedLastDocId.split("_");
-        if (userDataName && userData) {
-          if (username === userDataName) {
-            await axios.patch("/api/updateProfileData", {
-              id,
-              line,
-              product,
-              shift,
-              date,
-            });
-          } else {
-            console.log("Username Not Found");
-          }
-        } else {
-          console.log("Session Not Found");
-        }
-      }
+      await axios.patch("/api/updateProfileData", {
+        docId: profileId,
+        line,
+        product,
+        shift,
+        date,
+      });
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -147,30 +93,23 @@ export const ProfileProvider = ({ children }: any) => {
 
   const deleteProfile = async () => {
     try {
-      setIsDeleteConfirmOpen(true);
-      const storedLastDocId = localStorage.getItem("profileDocId") || "";
-      if (storedLastDocId) {
-        const [username, docId] = storedLastDocId.split("_");
-        if (userDataName && userData) {
-          if (username === userDataName) {
-            await axios.delete(`/api/deleteProfile?docId=${docId}`);
-            setIsDeleteConfirmOpen(false);
-            getProfile();
-            getDekidaka();
-          } else {
-            console.log("Username Not Found");
-          }
-        } else {
-          console.log("Session Not Found");
-        }
-      }
+      await axios.delete(`/api/deleteProfileData?docId=${profileId}`);
+      setTotalPlan(0);
+      setTotalActual(0);
+      setTotalDeviasi(0);
+      setTotalLossTime(0);
+      setIsDeleteConfirmOpen(false);
+      setProfileId("");
+      getLastProfile();
+      getDekidaka();
+      getDekidakaSum();
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const showWarning = () => {
-    setIsFilled(false);
+  const handleShowWarning = () => {
+    setIsInputFilled(false);
   };
 
   const handleDeleteModal = () => {
@@ -203,25 +142,14 @@ export const ProfileProvider = ({ children }: any) => {
 
   const contextValue: ProductionContextValue = {
     line,
-    setLine,
     product,
-    setProduct,
     shift,
-    setShift,
     date,
-    setDate,
-    isFilled,
-    setIsFilled,
-    profileId,
-    setProfileId,
-    isDisabled,
     isDeleteConfirmOpen,
-    setIsDisabled,
+    addProfile,
     updateProfile,
     handleDeleteModal,
-    addProfile,
-    deleteProfile,
-    showWarning,
+    handleShowWarning,
     modalDeleteConfirmation,
   };
 

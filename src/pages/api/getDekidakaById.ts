@@ -1,5 +1,5 @@
+import { getDekidakaById } from "@/lib/services/firebase/dataServices/dekidakaDataServices";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getDekidakaById } from "@/lib/services/firebase/dataServices";
 
 export default async function handlerSubData(
   req: NextApiRequest,

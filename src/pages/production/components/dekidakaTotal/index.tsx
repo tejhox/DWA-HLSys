@@ -1,7 +1,8 @@
-import { useDekidakaContext } from "@/context/dekidakaContext";
+import { useGetDataContext } from "@/context/getDataContext";
+
 const DekidakaTotal = () => {
   const { totalPlan, totalActual, totalDeviasi, totalLossTime } =
-    useDekidakaContext();
+    useGetDataContext();
 
   return (
     <div className="flex justify-center px-1.5 mt-1 h-full w-full lg:w-1/3">

@@ -1,4 +1,4 @@
-import { addProfileData } from "@/lib/services/firebase/dataServices";
+import { addProfileData } from "@/lib/services/firebase/dataServices/profileDataService";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handlerAddProfile(

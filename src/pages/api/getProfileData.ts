@@ -1,5 +1,5 @@
+import { getProfileData } from "@/lib/services/firebase/dataServices/profileDataService";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getProfileData } from "@/lib/services/firebase/dataServices";
 
 export default async function handlerProfileData(
   req: NextApiRequest,
@@ -7,11 +7,11 @@ export default async function handlerProfileData(
 ) {
   if (req.method === "GET") {
     try {
-      const { id } = req.query;
-      if (!id || typeof id !== "string") {
-        throw new Error("Invalid id parameter");
+      const { docId } = req.query;
+      if (!docId || typeof docId !== "string") {
+        throw new Error("Invalid docId parameter");
       }
-      const data = await getProfileData(id);
+      const data = await getProfileData(docId);
       res.status(200).json(data);
     } catch (error) {
       console.error("Error fetching profile data:", error);

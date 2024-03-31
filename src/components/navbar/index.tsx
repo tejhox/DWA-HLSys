@@ -86,7 +86,7 @@ const Navbar = () => {
             </li>
             <li>
               <button
-                className="link link-hover mt-2 font-bold text-sm"
+                className="link link-hover mt-4 font-bold text-sm"
                 onClick={handleSignInOut}>
                 {data ? "Sign Out" : "Sign In"}
               </button>

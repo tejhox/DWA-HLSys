@@ -1,5 +1,5 @@
+import { deleteProfile } from "@/lib/services/firebase/dataServices/profileDataService";
 import { NextApiRequest, NextApiResponse } from "next";
-import { deleteProfile } from "@/lib/services/firebase/dataServices";
 
 export default async function handlerSubDekidaka(
   req: NextApiRequest,

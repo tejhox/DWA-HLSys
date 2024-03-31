@@ -1,5 +1,5 @@
+import { getDekidaka } from "@/lib/services/firebase/dataServices/dekidakaDataServices";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getDekidaka } from "@/lib/services/firebase/dataServices";
 
 export default async function handlerSubDekidaka(
   req: NextApiRequest,
@@ -7,15 +7,14 @@ export default async function handlerSubDekidaka(
 ) {
   if (req.method === "GET") {
     try {
-      const { id } = req.query;
-      if (!id || typeof id !== "string") {
-        throw new Error("Invalid id parameter");
+      const { docId } = req.query;
+      if (!docId || typeof docId !== "string" || docId.trim() === "") {
+        throw new Error("Invalid docId parameter");
       }
-      const data = await getDekidaka(id);
+      const data = await getDekidaka(docId);
       res.status(200).json(data);
     } catch (error) {
-      console.error("Error fetching Dekidaka data:", error);
-      res.status(500).json({ message: "Failed to fetch Dekidaka data" });
+      res.status(404).json({ message: "Data not found" });
     }
   } else {
     res.status(405).json({ message: "Method Not Allowed" });

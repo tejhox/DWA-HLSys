@@ -1,33 +1,15 @@
-import { FormEvent } from "react";
-import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Modal from "../pages/production/components/ui/modal";
-import { useSessionContext } from "./sessionContext";
+import React, { createContext, useContext, useState } from "react";
+import { FormEvent } from "react";
+import { useGetDataContext } from "./getDataContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
-export type SubDekidaka = {
-  id: string;
-  plan: number;
-  actual?: number;
-  deviasi: number;
-  lossTime: number;
-};
-
 type DekidakaContextValue = {
-  subDekidaka: SubDekidaka[] | undefined;
-  plan: number | undefined;
-  actual: number | undefined;
-  deviasi: number | undefined;
-  lossTime: number | undefined;
-  totalPlan: number | undefined;
-  totalActual: number | undefined;
-  totalDeviasi: number | undefined;
-  totalLossTime: number | undefined;
   isModalAddOpen: boolean;
   isDeleteConfirmOpen: boolean;
   isModalUpdateOpen: boolean;
-  isLoading: boolean;
   setIsModalAddOpen: (value: boolean) => void;
   setIsModalUpdateOpen: (value: boolean) => void;
   setIsDeleteConfirmOpen: (value: boolean) => void;
@@ -35,7 +17,6 @@ type DekidakaContextValue = {
   modalUpdateData: () => React.ReactNode;
   modalDeleteConfirmation: () => React.ReactNode;
   getDekidaka: () => Promise<void>;
-  getDekidakaById: (subDocId: string, index: number) => Promise<void>;
   handleAddModal: () => void;
   handleUpdateModal: () => void;
   handleDeleteModal: () => void;
@@ -46,40 +27,45 @@ const DekidakaContext = createContext<DekidakaContextValue | undefined>(
 );
 
 export const DekidakaProvider = ({ children }: any) => {
-  type SubData = {
-    plan?: number;
-    actual?: number;
-    deviasi?: number;
-    lossTime?: number;
-  };
   type DekidakaData = {
-    plan?: number;
-    actual?: number;
-    deviasi?: number;
-    lossTime?: number;
+    plan: number | undefined;
+    actual: number | undefined;
+    deviasi: number | undefined;
+    lossTime: number | undefined;
   };
 
-  const [isModalAddOpen, setIsModalAddOpen] = useState(false);
-  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-  const [plan, setPlan] = useState<number | undefined>();
-  const [actual, setActual] = useState<number | undefined>();
-  const [deviasi, setDeviasi] = useState<number | undefined>();
-  const [lossTime, setLossTime] = useState<number | undefined>(0);
-  const [subDekidaka, setSubDekidaka] = useState<SubDekidaka[]>();
-  const [subData, setSubData] = useState<SubData[]>();
-  const [subDocId, setSubDocId] = useState<string>("");
-  const [tableIndex, setTableIndex] = useState<number>(0);
   const [isBtnDisabled, setIsBtnDisabled] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [totalId, setTotalId] = useState<string>("");
+  const [isModalAddOpen, setIsModalAddOpen] = useState(false);
 
-  const [totalPlan, setTotalPlan] = useState<number>();
-  const [totalActual, setTotalActual] = useState<number>();
-  const [totalDeviasi, setTotalDeviasi] = useState<number>();
-  const [totalLossTime, setTotalLossTime] = useState<number>();
+  const {
+    plan,
+    actual,
+    deviasi,
+    lossTime,
+    setPlan,
+    setActual,
+    setDeviasi,
+    setLossTime,
+    itemId,
+    subDekidaka,
+    tableIndex,
+    getDekidaka,
+    isModalUpdateOpen,
+    setIsModalUpdateOpen,
+    profileId,
+    getDekidakaSum,
+  } = useGetDataContext();
 
-  const { userData, userDataName, dateNow } = useSessionContext();
+  const handleAddModal = () => {
+    setIsModalAddOpen(!isModalAddOpen);
+  };
+  const handleUpdateModal = () => {
+    setIsModalUpdateOpen(!isModalUpdateOpen);
+  };
+  const handleDeleteModal = () => {
+    setIsDeleteConfirmOpen(!isDeleteConfirmOpen);
+  };
 
   const data: DekidakaData = {
     plan: plan,
@@ -95,16 +81,20 @@ export const DekidakaProvider = ({ children }: any) => {
         : undefined,
   };
 
-  let calcLossTime: { lossTime: number };
+  let calcLossTime: { lossTime: number } = { lossTime: 0 };
 
   if (subDekidaka && plan !== undefined && actual !== undefined) {
     const tableRowCount = subDekidaka.length;
-
+    let lossTimeRatio;
     if (tableRowCount === 3 || tableRowCount === 7) {
-      calcLossTime = { lossTime: Math.round((plan - actual) * (55 / plan)) };
+      lossTimeRatio = 55 / plan;
     } else {
-      calcLossTime = { lossTime: Math.round((plan - actual) * (60 / plan)) };
+      lossTimeRatio = 60 / plan;
     }
+    if (calcLossTime === undefined) {
+      calcLossTime = { lossTime: 0 };
+    }
+    calcLossTime.lossTime = Math.round((plan - actual) * lossTimeRatio);
   }
 
   let calcEditLossTime: { lossTime: number };
@@ -121,122 +111,13 @@ export const DekidakaProvider = ({ children }: any) => {
     }
   }
 
-  useEffect(() => {
-    getDekidaka();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateNow]);
-
-  useEffect(() => {
-    getDekidakaSum();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateNow]);
-
-  const handleAddModal = () => {
-    setIsModalAddOpen(!isModalAddOpen);
-  };
-  const handleUpdateModal = () => {
-    setIsModalUpdateOpen(!isModalUpdateOpen);
-  };
-  const handleDeleteModal = () => {
-    setIsDeleteConfirmOpen(!isDeleteConfirmOpen);
-  };
-
   const sumDekidaka = async () => {
     try {
-      const storedLastDocId = localStorage.getItem("profileDocId") || "";
-      if (storedLastDocId) {
-        const [username, id] = storedLastDocId.split("_");
-        if (userDataName && userData) {
-          if (username === userDataName) {
-            await axios.post(`/api/sumDekidaka`, {
-              id,
-            });
-          } else {
-            console.log("Username tidak cocok");
-          }
-        }
-      } else {
-        console.log("Data tidak ditemukan");
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  const getDekidakaSum = async () => {
-    try {
-      const storedLastDocId = localStorage.getItem("profileDocId") || "";
-      if (storedLastDocId) {
-        const [username, id] = storedLastDocId.split("_");
-        if (userDataName && userData) {
-          if (username === userDataName) {
-            const response = await axios.get(`/api/getDekidakaSum?id=${id}`);
-            setTotalPlan(response.data.totalPlan);
-            setTotalActual(response.data.totalActual);
-            setTotalDeviasi(response.data.totalDeviasi);
-            setTotalLossTime(response.data.totalLossTime);
-          } else {
-            console.log("Username tidak cocok");
-          }
-        }
-      } else {
-        console.log("Data tidak ditemukan");
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  const getDekidaka = async () => {
-    try {
-      setIsLoading(true);
-      const storedLastDocId = localStorage.getItem("profileDocId") || "";
-      if (storedLastDocId) {
-        const [username, id] = storedLastDocId.split("_");
-        if (userDataName && userData) {
-          if (username === userDataName) {
-            const response = await axios.get(`/api/getDekidaka?id=${id}`);
-            setSubDekidaka(response.data);
-            getDekidakaSum();
-            setIsLoading(false);
-          } else {
-            console.log("Username tidak cocok");
-          }
-        }
-      } else {
-        console.log("Data tidak ditemukan");
-      }
-    } catch (error) {
-      setIsLoading(false);
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  const getDekidakaById = async (subDocId: string, index: number) => {
-    try {
-      setIsModalUpdateOpen(true);
-      const storedLastDocId = localStorage.getItem("profileDocId") || "";
-      if (storedLastDocId) {
-        const [username, docId] = storedLastDocId.split("_");
-        if (userDataName && userData) {
-          if (username === userDataName) {
-            const response = await axios.get(
-              `/api/getDekidakaById?docId=${docId}&subDocId=${subDocId}`
-            );
-            setTableIndex(index);
-            setPlan(response.data.plan);
-            setActual(response.data.actual);
-            setDeviasi(response.data.deviasi);
-            setLossTime(response.data.lossTime);
-            setSubData(response.data);
-            setSubDocId(response.data.id);
-          } else {
-            console.log("Username Not Found");
-          }
-        } else {
-          console.log("Session Not Found");
-        }
-      }
+      await axios.post(`/api/sumDekidaka`, {
+        docId: profileId,
+      });
+      getDekidaka();
+      getDekidakaSum();
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -247,25 +128,16 @@ export const DekidakaProvider = ({ children }: any) => {
     try {
       if (plan && actual) {
         setIsBtnDisabled(true);
-      }
-      const storedLastDocId = localStorage.getItem("profileDocId") || "";
-      if (storedLastDocId) {
-        const [username, id] = storedLastDocId.split("_");
-        if (username === userDataName) {
-          if (plan && actual) {
-            await axios.post(`/api/addDekidaka`, {
-              id,
-              plan,
-              actual,
-              deviasi: calcDeviasi.deviasi,
-              lossTime: calcLossTime.lossTime,
-            });
-            sumDekidaka();
-            setIsModalAddOpen(false);
-            setIsBtnDisabled(false);
-            getDekidaka();
-          }
-        }
+        await axios.post(`/api/addDekidaka`, {
+          docId: profileId,
+          plan,
+          actual,
+          deviasi: calcDeviasi.deviasi,
+          lossTime: calcLossTime.lossTime,
+        });
+        sumDekidaka();
+        setIsModalAddOpen(false);
+        setIsBtnDisabled(false);
       }
     } catch (error) {
       console.error("Error adding data:", error);
@@ -276,30 +148,17 @@ export const DekidakaProvider = ({ children }: any) => {
     e.preventDefault();
     try {
       setIsBtnDisabled(true);
-      const storedLastDocId = localStorage.getItem("profileDocId") || "";
-      if (storedLastDocId) {
-        const [username, docId] = storedLastDocId.split("_");
-        if (userDataName && userData) {
-          if (username === userDataName) {
-            await axios.patch("/api/updateDekidaka", {
-              docId: docId,
-              subDocId: subDocId,
-              plan: plan,
-              actual: actual,
-              deviasi: calcDeviasi.deviasi,
-              lossTime: calcEditLossTime.lossTime,
-            });
-            sumDekidaka();
-            setIsModalUpdateOpen(false);
-            setIsBtnDisabled(false);
-            getDekidaka();
-          } else {
-            console.log("Username Not Found");
-          }
-        } else {
-          console.log("Session Not Found");
-        }
-      }
+      await axios.patch("/api/updateDekidaka", {
+        docId: profileId,
+        subDocId: itemId,
+        plan: plan,
+        actual: actual,
+        deviasi: calcDeviasi.deviasi,
+        lossTime: calcEditLossTime.lossTime,
+      });
+      sumDekidaka();
+      setIsModalUpdateOpen(false);
+      setIsBtnDisabled(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -307,25 +166,12 @@ export const DekidakaProvider = ({ children }: any) => {
 
   const deleteDekidaka = async () => {
     try {
-      const storedLastDocId = localStorage.getItem("profileDocId") || "";
-      if (storedLastDocId) {
-        const [username, docId] = storedLastDocId.split("_");
-        if (userDataName && userData) {
-          if (username === userDataName) {
-            await axios.delete(
-              `/api/deleteDekidaka?docId=${docId}&subDocId=${subDocId}`
-            );
-            sumDekidaka();
-            setIsDeleteConfirmOpen(false);
-            setIsModalUpdateOpen(false);
-            getDekidaka();
-          } else {
-            console.log("Username Not Found");
-          }
-        } else {
-          console.log("Session Not Found");
-        }
-      }
+      await axios.delete(
+        `/api/deleteDekidaka?docId=${profileId}&subDocId=${itemId}`
+      );
+      sumDekidaka();
+      setIsDeleteConfirmOpen(false);
+      setIsModalUpdateOpen(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -375,7 +221,7 @@ export const DekidakaProvider = ({ children }: any) => {
                 <input
                   type="text"
                   className="input input-bordered input-sm w-full"
-                  value={`${calcLossTime?.lossTime}'`}
+                  value={`${calcLossTime?.lossTime}'` ?? ""}
                   onChange={(e) => setLossTime(parseInt(e.target.value))}
                   disabled
                 />
@@ -492,23 +338,12 @@ export const DekidakaProvider = ({ children }: any) => {
   };
 
   const contextValue: DekidakaContextValue = {
-    plan,
-    actual,
-    deviasi,
-    lossTime,
-    totalPlan,
-    totalActual,
-    totalDeviasi,
-    totalLossTime,
-    subDekidaka,
     isModalAddOpen,
     isModalUpdateOpen,
     isDeleteConfirmOpen,
     setIsModalAddOpen,
     setIsModalUpdateOpen,
     setIsDeleteConfirmOpen,
-    isLoading,
-    getDekidakaById,
     getDekidaka,
     modalAddData,
     modalUpdateData,

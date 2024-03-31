@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import { faCheck, faEllipsis } from "@fortawesome/free-solid-svg-icons";
+import { useGetDataContext } from "@/context/getDataContext";
 
 const Profile = () => {
   const [editMode, setEditMode] = useState<boolean>(false);
@@ -18,20 +19,18 @@ const Profile = () => {
     setIsMobile(window.matchMedia("(max-width: 768px)").matches);
   }, []);
 
+  const { line, product, shift, date, isDeleteConfirmOpen } =
+    useProfileContext();
+
   const {
-    line,
-    product,
-    shift,
-    date,
     isDisabled,
+    isInputFilled,
     setLine,
     setProduct,
     setShift,
     setDate,
     setIsDisabled,
-    isFilled,
-    isDeleteConfirmOpen,
-  } = useProfileContext();
+  } = useGetDataContext();
 
   const { userData, userDataName, userDataNik } = useSessionContext();
 
@@ -181,19 +180,21 @@ const Profile = () => {
               <div>
                 <button
                   onClick={() => handleDeleteModal()}
-                  className="btn btn-outline btn-error btn-sm">
+                  className="btn btn-outline btn-error btn-sm"
+                  disabled={!isInputFilled}>
                   <FontAwesomeIcon icon={faTrashCan} />
                 </button>
                 <button
                   onClick={() => handleEdit()}
-                  className="btn btn-outline btn-primary btn-sm ms-1.5">
+                  className="btn btn-outline btn-primary btn-sm ms-1.5"
+                  disabled={!isInputFilled}>
                   <FontAwesomeIcon icon={faPenToSquare} />
                 </button>
               </div>
               <div>
-                {!isFilled ? (
+                {!isInputFilled ? (
                   <p className="text-sm text-warning">Lengkapi Profile !</p>
-                ) : isFilled ? (
+                ) : isInputFilled ? (
                   ""
                 ) : (
                   ""

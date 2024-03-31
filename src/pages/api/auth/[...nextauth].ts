@@ -37,9 +37,10 @@ const authOption: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, account, profile, user }: any) {
+    async jwt({ token, account, user }: any) {
       if (account?.provider === "credentials") {
-        (token.nik = user.nik),
+        (token.id = user.id),
+          (token.nik = user.nik),
           (token.nama = user.nama),
           (token.role = user.role);
       }
@@ -47,6 +48,9 @@ const authOption: NextAuthOptions = {
     },
 
     async session({ session, token }: any) {
+      if ("id" in token) {
+        session.user.id = token.id;
+      }
       if ("nik" in token) {
         session.user.nik = token.nik;
       }

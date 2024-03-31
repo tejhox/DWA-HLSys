@@ -1,4 +1,4 @@
-import { sumDekidaka } from "@/lib/services/firebase/dataServices";
+import { sumDekidaka } from "@/lib/services/firebase/dataServices/dekidakaDataServices";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handlerSumDekidaka(
@@ -6,15 +6,15 @@ export default async function handlerSumDekidaka(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    const { id } = req.body;
+    const { docId } = req.body;
     try {
-      const docRef = await sumDekidaka(id);
+      await sumDekidaka(docId);
       res.status(200).json({
-        message: "Data berhasil diakumulasi dan disimpan!",
+        message: "Error processing Dekidaka data:",
       });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Gagal menyimpan data!" });
+      res.status(500).json({ message: "Failed processing data!" });
     }
   } else {
     res.status(405).json({ message: "Method not allowed" });

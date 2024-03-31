@@ -1,4 +1,4 @@
-import { updateProfileData } from "@/lib/services/firebase/dataServices";
+import { updateProfileData } from "@/lib/services/firebase/dataServices/profileDataService";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handlerUpdateDekidaka(
@@ -7,9 +7,9 @@ export default async function handlerUpdateDekidaka(
 ) {
   if (req.method === "PATCH") {
     try {
-      const { id, line, product, shift, date } = req.body;
+      const { docId, line, product, shift, date } = req.body;
 
-      await updateProfileData(id, line, product, shift, date);
+      await updateProfileData(docId, line, product, shift, date);
 
       res.status(200).json({
         message: "Profile updated in Firestore successfully",

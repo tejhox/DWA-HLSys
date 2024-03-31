@@ -1,6 +1,6 @@
 import app from "@/lib/services/firebase/init";
-import { retrieveDataByField } from "@/lib/services/firebase/service";
 import bcrypt from "bcrypt";
+import { retrieveDataByField } from "@/lib/services/firebase/service";
 import { doc, getFirestore, updateDoc } from "firebase/firestore";
 
 const firestore = getFirestore(app);

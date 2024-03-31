@@ -1,4 +1,4 @@
-import { updateDekidaka } from "@/lib/services/firebase/dataServices";
+import { updateDekidaka } from "@/lib/services/firebase/dataServices/dekidakaDataServices";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handlerUpdateDekidaka(
