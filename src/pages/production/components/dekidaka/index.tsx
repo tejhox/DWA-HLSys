@@ -4,6 +4,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useEffect } from "react";
 import { SubDekidaka, useGetDataContext } from "@/context/getDataContext";
 import { useDekidakaContext } from "@/context/dekidakaContext";
+import { useSessionContext } from "@/context/sessionContext";
 
 const Dekidaka = () => {
   const { handleShowWarning } = useProfileContext();
@@ -26,12 +27,14 @@ const Dekidaka = () => {
     modalUpdateData,
   } = useDekidakaContext();
 
+  const { dateNow } = useSessionContext();
+
   useEffect(() => {
     if (profileId) {
       getDekidaka();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profileId]);
+  }, [dateNow]);
 
   return (
     <div className="flex justify-center px-1.5 mt-1 h-full w-full lg:w-1/3">

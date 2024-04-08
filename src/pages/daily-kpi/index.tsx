@@ -11,17 +11,16 @@ const DailyKpi = () => {
     efficiency,
     getLastKpi,
     getEfficiency,
-    getAllEfficiency,
   } = useGetDataContext();
 
-  const { session, userDataName, dateNow } = useSessionContext();
+  const { userDataName, dateNow } = useSessionContext();
 
   useEffect(() => {
     if (userDataName) {
       getLastKpi();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session]);
+  }, [dateNow]);
 
   useEffect(() => {
     if (kpiId) {
@@ -29,11 +28,6 @@ const DailyKpi = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [efficiency]);
-
-  useEffect(() => {
-    getAllEfficiency();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateNow]);
 
   return (
     <div className="container flex flex-col justify-center w-full p-2 lg:w-1/3 ">
