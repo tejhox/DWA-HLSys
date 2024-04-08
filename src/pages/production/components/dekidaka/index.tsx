@@ -12,7 +12,6 @@ const Dekidaka = () => {
     getDekidaka,
     getDekidakaById,
     subDekidaka,
-    profileId,
     isLoading,
     isInputFilled,
   } = useGetDataContext();
@@ -30,9 +29,7 @@ const Dekidaka = () => {
   const { dateNow } = useSessionContext();
 
   useEffect(() => {
-    if (profileId) {
-      getDekidaka();
-    }
+    getDekidaka();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateNow]);
 
