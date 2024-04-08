@@ -5,12 +5,12 @@ import { useGetDataContext } from "./getDataContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import Modal from "@/components/modal";
+import { useKpiContext } from "./kpiContext";
 import {
   calculateDeviasi,
   calculateLossTime,
   useLossTimeCalculation,
 } from "@/utils/dekidakaCalculation";
-import { useKpiContext } from "./kpiContext";
 
 type DekidakaContextValue = {
   isModalAddOpen: boolean;
