@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 import axios from "axios";
-import { useSessionContext } from "./sessionContext";
-import { useDekidakaContext } from "./dekidakaContext";
-import Modal from "@/pages/production/components/ui/modal";
-import { useGetDataContext } from "./getDataContext";
+import Modal from "@/components/modal";
+import { useSessionContext } from "./SessionContext";
+import { useDekidakaContext } from "./DekidakaContext";
+import { useGetDataContext } from "./GetDataContext";
 
 type ProductionContextValue = {
   line: string;
@@ -40,10 +40,12 @@ export const ProfileProvider = ({ children }: any) => {
     setIsInputFilled,
     setProfileId,
     profileId,
-    getDekidakaSum,
+    setSwitchProfileUi,
+    kpiId,
+    setKpiId,
   } = useGetDataContext();
 
-  const { getLastProfile } = useGetDataContext();
+  const { getLastProfile, getLastKpi } = useGetDataContext();
 
   const addProfile = async () => {
     if (line && product && shift && date) {
@@ -65,10 +67,12 @@ export const ProfileProvider = ({ children }: any) => {
             shift,
             date,
           });
-          const { docId } = response.data;
-          setProfileId(docId);
+          const { kpiDocId } = response.data;
+          setKpiId(kpiDocId);
           setIsInputFilled(true);
-          getDekidaka();
+          setSwitchProfileUi(true);
+          getLastProfile();
+          getLastKpi();
         }
       } catch (error) {
         console.error("Error submitting form data:", error);
@@ -86,6 +90,7 @@ export const ProfileProvider = ({ children }: any) => {
         shift,
         date,
       });
+      setSwitchProfileUi(true);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -93,16 +98,18 @@ export const ProfileProvider = ({ children }: any) => {
 
   const deleteProfile = async () => {
     try {
-      await axios.delete(`/api/deleteProfileData?docId=${profileId}`);
+      await axios.delete(
+        `/api/deleteProfileData?docId=${profileId}&kpiDocId=${kpiId}`
+      );
       setTotalPlan(0);
       setTotalActual(0);
       setTotalDeviasi(0);
       setTotalLossTime(0);
       setIsDeleteConfirmOpen(false);
       setProfileId("");
+      setSwitchProfileUi(false);
       getLastProfile();
       getDekidaka();
-      getDekidakaSum();
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -125,7 +132,7 @@ export const ProfileProvider = ({ children }: any) => {
             <div className="flex justify-end mt-4">
               <button
                 onClick={handleDeleteModal}
-                className="btn btn-sm btn-neutral ">
+                className="btn btn-sm bg-blue-700 text-white ">
                 Tidak
               </button>
               <button

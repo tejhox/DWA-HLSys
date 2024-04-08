@@ -1,10 +1,10 @@
-import { useSessionContext } from "@/context/sessionContext";
-import { useProfileContext } from "../../../../context/profileContext";
+import { useSessionContext } from "@/context/SessionContext";
+import { useProfileContext } from "../../../../context/ProfileContext";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import { faCheck, faEllipsis } from "@fortawesome/free-solid-svg-icons";
-import { useGetDataContext } from "@/context/getDataContext";
+import { useGetDataContext } from "@/context/GetDataContext";
 
 const Profile = () => {
   const [editMode, setEditMode] = useState<boolean>(false);
@@ -30,9 +30,28 @@ const Profile = () => {
     setShift,
     setDate,
     setIsDisabled,
+    switchProfileUi,
+    setSwitchProfileUi,
+    getLastProfile,
+    getLastKpi,
+    newProfile,
   } = useGetDataContext();
 
-  const { userData, userDataName, userDataNik } = useSessionContext();
+  const { userData, userDataName, userDataNik, session } = useSessionContext();
+
+  useEffect(() => {
+    if (userDataName) {
+      getLastProfile();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session]);
+
+  useEffect(() => {
+    if (userDataName) {
+      getLastKpi();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session]);
 
   const {
     addProfile,
@@ -43,20 +62,25 @@ const Profile = () => {
 
   const handleEdit = () => {
     setIsDisabled(false);
+    setSwitchProfileUi(false);
     setEditMode(true);
   };
+
+  let formattedDate: any;
+  if (date) {
+    const rawDate = new Date(date).toLocaleDateString("en-GB");
+    formattedDate = rawDate;
+  }
 
   return (
     <div className="flex justify-center px-1.5 mt-2 h-full w-full lg:w-1/3">
       <div className="container w-full relative">
-        <div className="container w-full border-2 border-gray-400 rounded-lg px-1 py-1">
+        <div className="container w-full border-2 rounded-lg bg-gray-200 shadow-md shadow-gray-500/60 px-1 py-1 mb-1">
           <div className="container flex flex-row items-center w-full ps-2 pe-2 py-1 ">
             {userData ? (
-              <p className="text-sm text-primary">
+              <p className="text-sm text-blue-900">
                 {userDataName} - {userDataNik}
               </p>
-            ) : !userData ? (
-              ""
             ) : (
               <p className="text-sm text-primary">Loading...</p>
             )}
@@ -64,9 +88,14 @@ const Profile = () => {
               <FontAwesomeIcon icon={faEllipsis} size="lg" />
             </span>
             {isMenuOpen && (
-              <div className="absolute h-30 right-1.5 top-7 bg-neutral mt-2 rounded-md shadow-md border border-gray-200 z-50">
+              <div className="absolute h-30 right-1.5 top-7 bg-gray-400 mt-2 rounded-md shadow-md border border-white-200 z-50">
                 <ul className="py-2">
-                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">
+                  <li
+                    onClick={() => {
+                      newProfile();
+                      setIsMenuOpen(false);
+                    }}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">
                     New
                   </li>
                   <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">
@@ -77,45 +106,28 @@ const Profile = () => {
             )}
           </div>
           <hr className=" border border-gray-400" />
-          <div className="container flex w-full p-1 mt-1">
+          <div
+            className={
+              !switchProfileUi ? "container flex w-full p-1 mt-1" : "hidden"
+            }>
             <div className="container w-1/2">
               <select
                 className="select select-bordered select-sm w-full max-w-xs mb-1"
                 value={line}
-                onChange={(e) => setLine(e.target.value)}
-                disabled={isDisabled}>
-                {line ? (
-                  <option className="text-sm" value="">
-                    Line
-                  </option>
-                ) : !line ? (
-                  <option className="text-sm" value="">
-                    Line
-                  </option>
-                ) : (
-                  <option className="text-sm" value="">
-                    Loading...
-                  </option>
-                )}
-                <option value="ER01">ER 01</option>
-                <option value="ER02">ER 02</option>
-                <option value="ER03">ER 03</option>
-                <option value="ER150">ER 150</option>
+                onChange={(e) => setLine(e.target.value)}>
+                <option className="text-sm" value="">
+                  Line
+                </option>
+                <option value="ER01">ER01</option>
+                <option value="ER02">ER02</option>
+                <option value="ER03">ER03</option>
+                <option value="ER150">ER150</option>
               </select>
               <select
                 className="select select-bordered select-sm w-full max-w-xs"
                 value={product}
-                onChange={(e) => setProduct(e.target.value)}
-                disabled={isDisabled}>
-                {product ? (
-                  <option>Produk</option>
-                ) : !product ? (
-                  <option>Produk</option>
-                ) : (
-                  <option className="text-sm" value="">
-                    Loading...
-                  </option>
-                )}
+                onChange={(e) => setProduct(e.target.value)}>
+                <option>Produk</option>
                 <option value="D14N">D14N</option>
                 <option value="KS Hyundai">KS Hyundai</option>
               </select>
@@ -124,17 +136,8 @@ const Profile = () => {
               <select
                 className="select select-bordered select-sm w-full max-w-xs mb-1"
                 value={shift}
-                onChange={(e) => setShift(e.target.value)}
-                disabled={isDisabled}>
-                {shift ? (
-                  <option value="">Shift</option>
-                ) : !shift ? (
-                  <option value="">Shift</option>
-                ) : (
-                  <option className="text-sm" value="">
-                    Loading...
-                  </option>
-                )}
+                onChange={(e) => setShift(e.target.value)}>
+                <option value="">Shift</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -145,7 +148,6 @@ const Profile = () => {
                 className="input input-bordered input-sm w-full"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                disabled={isDisabled}
               />
               {/* {typeof window !== "undefined" && isMobile ? (
                 <input
@@ -173,6 +175,39 @@ const Profile = () => {
                   disabled={isDisabled}
                 />
               )} */}
+            </div>
+          </div>
+          <div
+            className={
+              switchProfileUi ? "container flex w-full p-1 mt-1" : "hidden"
+            }>
+            <div className="container w-1/2">
+              <input
+                type="text"
+                className="input input-bordered input-sm w-full max-w-xs mb-1"
+                defaultValue={line}
+                readOnly={isDisabled}
+              />
+              <input
+                type="text"
+                className="input input-bordered input-sm w-full max-w-xs mb-1"
+                defaultValue={product}
+                readOnly={isDisabled}
+              />
+            </div>
+            <div className="container w-1/2 ms-2">
+              <input
+                type="text"
+                className="input input-bordered input-sm w-full max-w-xs mb-1"
+                defaultValue={shift}
+                readOnly={isDisabled}
+              />
+              <input
+                type="text"
+                className="input input-bordered input-sm w-full max-w-xs mb-1"
+                defaultValue={formattedDate}
+                readOnly={isDisabled}
+              />
             </div>
           </div>
           <div className="container flex justify-between items-center w-full p-1">
@@ -214,7 +249,7 @@ const Profile = () => {
                 <button
                   onClick={updateProfile}
                   disabled={isDisabled}
-                  className="btn btn-outline btn-success btn-sm">
+                  className="btn btn-outline btn-success btn-sm w-1/5">
                   <FontAwesomeIcon icon={faCheck} size="lg" />
                 </button>
               ) : (

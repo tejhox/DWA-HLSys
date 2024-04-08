@@ -1,37 +1,49 @@
-import { useProfileContext } from "@/context/profileContext";
-import { useDekidakaContext } from "@/context/dekidakaContext";
+import { useProfileContext } from "@/context/ProfileContext";
+import { useDekidakaContext } from "@/context/DekidakaContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { SubDekidaka, useGetDataContext } from "@/context/getDataContext";
+import { SubDekidaka, useGetDataContext } from "@/context/GetDataContext";
+import { useEffect } from "react";
 
 const Dekidaka = () => {
   const { handleShowWarning } = useProfileContext();
-  const { modalAddData, modalUpdateData } = useDekidakaContext();
-  const { getDekidakaById, subDekidaka, isLoading, isInputFilled } =
-    useGetDataContext();
+  const {
+    getDekidaka,
+    getDekidakaById,
+    subDekidaka,
+    profileId,
+    isLoading,
+    isInputFilled,
+  } = useGetDataContext();
+
   const {
     isModalAddOpen,
     isModalUpdateOpen,
     isDeleteConfirmOpen,
     handleAddModal,
     modalDeleteConfirmation,
+    modalAddData,
+    modalUpdateData,
   } = useDekidakaContext();
+
+  useEffect(() => {
+    if (profileId) {
+      getDekidaka();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profileId]);
 
   return (
     <div className="flex justify-center px-1.5 mt-1 h-full w-full lg:w-1/3">
-      <div className="container w-full border-2 border-gray-400 rounded-lg p-2">
+      <div className="container w-full border-2 rounded-lg bg-gray-200 shadow-md shadow-gray-500/60 p-2">
         <table className="table table-zebra table-sm text-center">
-          <thead className="border-double border-4">
-            <tr>
-              <th className="border-double border-4 border-gray-700">Jam</th>
-              <th className="border-double border-4 border-gray-700">Plan</th>
-              <th className="border-double border-4 border-gray-700">Aktual</th>
-              <th className="border-double border-4 border-gray-700">
-                Deviasi
-              </th>
-              <th className="border-double border-4 border-gray-700">
-                Loss Time
-              </th>
+          <thead className="border border-2">
+            <tr className="bg-slate-500">
+              <th className="border border-2 text-white">Jam</th>
+              <th className="border border-2 text-white">Plan</th>
+              <th className="border border-2 text-white">Aktual</th>
+              <th className="border border-2 text-white">Deviasi</th>
+              <th className="border border-2 text-white">Loss Time</th>
             </tr>
           </thead>
           <tbody>
@@ -41,21 +53,15 @@ const Dekidaka = () => {
               .map((item: SubDekidaka, index: number) => (
                 <tr
                   onClick={() => getDekidakaById(item.id, index)}
-                  className="hover"
+                  className="hover bg-white"
                   key={item.id}>
-                  <td className="border-double border-4 border-gray-700">
-                    {index + 1}
-                  </td>
-                  <td className="border-double border-4 border-gray-700 text-info">
-                    {item.plan}
-                  </td>
-                  <td className="border-double border-4 border-gray-700 text-success">
+                  <td className="border border-2">{index + 1}</td>
+                  <td className="border border-2">{item.plan}</td>
+                  <td className="border border-2 text-blue-700">
                     {item.actual}
                   </td>
-                  <td className="border-double border-4 border-gray-700 text-warning">
-                    {item.deviasi}
-                  </td>
-                  <td className="border-double border-4 border-gray-700 text-error">
+                  <td className="border border-2">{item.deviasi}</td>
+                  <td className="border border-2 text-error">
                     {`${item.lossTime}'`}
                   </td>
                 </tr>
@@ -66,16 +72,16 @@ const Dekidaka = () => {
           <p className="text-center text-sm my-3">Loading ....</p>
         ) : !subDekidaka || subDekidaka.length === 0 ? (
           <p className="text-center text-sm my-3">
-            -------- Belum Ada Data --------
+            -------- Belum Ada Laporan --------
           </p>
         ) : (
           ""
         )}
 
-        <div className="w-full mt-2">
+        <div className="w-full mt-2 mb-0.5">
           <button
             onClick={isInputFilled ? handleAddModal : () => handleShowWarning()}
-            className="btn btn-sm btn-neutral w-full">
+            className="btn btn-sm text-white bg-blue-700 hover:bg-blue-900 w-full shadow-md shadow-indigo-500/50">
             <FontAwesomeIcon icon={faPlus} size="lg" />
           </button>
           {isModalAddOpen && modalAddData()}

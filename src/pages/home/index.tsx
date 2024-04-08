@@ -17,13 +17,29 @@ const Home = () => {
           <p className="text-lg text-gray-400">
             Create in a Snap, Monitor on the Fly!
           </p>
-          <div className="divider divider-neutral pe-5 md:w-full md:mx-auto"></div>
+          <div className="divider divider-primary pe-5 md:w-full md:mx-auto"></div>
           {data ? (
             <div className="flex items-center md:justify-center">
               <Link
                 href="/production"
                 className="text-2xl/8 font-semibold link link-hover">
                 Buat Laporan
+              </Link>
+              <FontAwesomeIcon
+                icon={faArrowRight}
+                size="lg"
+                className="ms-3 mt-1.5"
+              />
+            </div>
+          ) : (
+            ""
+          )}
+          {data ? (
+            <div className="flex items-center md:justify-center mt-3">
+              <Link
+                href="/monthly-kpi"
+                className="text-2xl/8 font-semibold link link-hover">
+                Lihat KPI
               </Link>
               <FontAwesomeIcon
                 icon={faArrowRight}

@@ -1,4 +1,4 @@
-import { getDekidaka } from "@/lib/services/firebase/dataServices/dekidakaDataServices";
+import { getDekidaka } from "@/lib/services/firebase/dataServices/DekidakaDataServices";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handlerSubDekidaka(
@@ -8,7 +8,7 @@ export default async function handlerSubDekidaka(
   if (req.method === "GET") {
     try {
       const { docId } = req.query;
-      if (!docId || typeof docId !== "string" || docId.trim() === "") {
+      if (!docId || typeof docId !== "string") {
         throw new Error("Invalid docId parameter");
       }
       const data = await getDekidaka(docId);

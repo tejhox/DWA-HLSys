@@ -16,19 +16,26 @@ export async function getLastProfile(name: string) {
   try {
     const q = query(
       collection(firestore, "document"),
-      where("leader", "==", name),
-      limit(1)
+      where("leader", "==", name)
     );
 
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
-      const doc = querySnapshot.docs[0];
-      const data = doc.data();
-      const docId = doc.id;
-      return { docId, ...data };
+      const matchingDocs = querySnapshot.docs;
+      matchingDocs.sort((a, b) => {
+        const timeA = a.data().time;
+        const timeB = b.data().time;
+        return timeB - timeA;
+      });
+
+      const latestDoc = matchingDocs[0];
+      const latestData = latestDoc.data();
+      const docId = latestDoc.id;
+
+      return { docId, ...latestData };
     } else {
-      throw new Error("Document does not exist");
+      return null;
     }
   } catch (error) {
     console.error("Error getting data:", error);

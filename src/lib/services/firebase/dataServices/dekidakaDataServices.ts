@@ -1,4 +1,5 @@
 import {
+  Timestamp,
   addDoc,
   collection,
   deleteDoc,
@@ -21,7 +22,8 @@ export async function addDekidaka(
   plan: number,
   actual: number,
   deviasi: number,
-  lossTime: number
+  lossTime: number,
+  workHour: number
 ) {
   try {
     const docRef = doc(firestore, "document", docId);
@@ -31,9 +33,9 @@ export async function addDekidaka(
       actual: actual,
       deviasi: deviasi,
       lossTime: lossTime,
+      workHour: workHour,
       time: serverTimestamp(),
     });
-
     return snapshot;
   } catch (error) {
     console.error("Error adding document subcollection to Firestore:", error);
@@ -87,6 +89,7 @@ export async function sumDekidaka(docId: string) {
     let totalActual = 0;
     let totalDeviasi = 0;
     let totalLossTime = 0;
+    let totalWorkHour = 0;
 
     querySnapshot.forEach((doc) => {
       const data = doc.data();
@@ -94,6 +97,7 @@ export async function sumDekidaka(docId: string) {
       totalActual += data.actual;
       totalDeviasi += data.deviasi;
       totalLossTime += data.lossTime;
+      totalWorkHour += data.workHour;
     });
 
     const newData = {
@@ -101,12 +105,11 @@ export async function sumDekidaka(docId: string) {
       totalActual,
       totalDeviasi,
       totalLossTime,
+      totalWorkHour,
     };
 
-    const totalDocRef = doc(docRef, "dekidakaTotal", "accumulation");
+    const totalDocRef = doc(docRef, "dekidakaTotal", "1");
     const result = await setDoc(totalDocRef, newData);
-
-    console.log("Data berhasil diakumulasi dan disimpan!");
     return result;
   } catch (error) {
     console.error("Error:", error);
@@ -141,7 +144,7 @@ export async function getDekidakaById(docId: string, subDocId: string) {
     if (snapshot.exists()) {
       return { id: snapshot.id, ...snapshot.data() };
     } else {
-      throw new Error("document document does not exist");
+      throw new Error("document does not exist");
     }
   } catch (error) {
     console.error("Error fetching document ID:", error);
@@ -149,15 +152,15 @@ export async function getDekidakaById(docId: string, subDocId: string) {
   }
 }
 
-export async function getDekidakaSum(id: string) {
+export async function getDekidakaSum(docId: string) {
   try {
-    const docRef = doc(firestore, "document", id);
-    const subDocRef = doc(docRef, "dekidakaTotal", "accumulation");
+    const docRef = doc(firestore, "document", docId);
+    const subDocRef = doc(docRef, "dekidakaTotal", "1");
     const snapshot = await getDoc(subDocRef);
     if (snapshot.exists()) {
-      return { ...snapshot.data() };
+      return { id: snapshot.id, ...snapshot.data() };
     } else {
-      throw new Error("document document does not exist");
+      return null;
     }
   } catch (error) {
     console.error("Error fetching document data:", error);

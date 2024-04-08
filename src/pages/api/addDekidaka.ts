@@ -7,9 +7,16 @@ export default async function handlerDekidaka(
 ) {
   if (req.method === "POST") {
     try {
-      const { docId, plan, actual, deviasi, lossTime } = req.body;
+      const { docId, plan, actual, deviasi, lossTime, workHour } = req.body;
 
-      const docRef = await addDekidaka(docId, plan, actual, deviasi, lossTime);
+      const docRef = await addDekidaka(
+        docId,
+        plan,
+        actual,
+        deviasi,
+        lossTime,
+        workHour
+      );
 
       const subDekidakaId = docRef.id;
 

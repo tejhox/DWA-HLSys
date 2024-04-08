@@ -1,4 +1,4 @@
-import { addProfileData } from "@/lib/services/firebase/dataServices/profileDataService";
+import { addProfileData } from "@/lib/services/firebase/dataServices/ProfileDataService";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handlerAddProfile(
@@ -9,7 +9,7 @@ export default async function handlerAddProfile(
     try {
       const { line, product, shift, group, leader, date } = req.body;
 
-      const docRef = await addProfileData(
+      const { docId, kpiDocId } = await addProfileData(
         line,
         product,
         shift,
@@ -17,10 +17,11 @@ export default async function handlerAddProfile(
         leader,
         date
       );
-      const docId = docRef.id;
-      res
-        .status(200)
-        .json({ message: "Form data added to Firestore successfully", docId });
+      res.status(200).json({
+        message: "Form data added to Firestore successfully",
+        docId,
+        kpiDocId,
+      });
     } catch (error) {
       console.error("Error adding form data to Firestore:", error);
       res.status(500).json({ message: "Failed to add form data to Firestore" });

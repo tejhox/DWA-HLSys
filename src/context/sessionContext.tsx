@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -16,6 +15,7 @@ type SessionContextValue = {
   userDataNik: string;
   userLastProfileId: string;
   dateNow: any;
+  session: any;
 };
 
 const sessionContext = createContext<SessionContextValue | undefined>(
@@ -50,6 +50,7 @@ export const SessionContextProvider = ({ children }: any) => {
     userDataNik: userData ? userData.nik : "",
     userLastProfileId: userData ? userData.lastProfileId : "",
     dateNow,
+    session,
   };
 
   return (

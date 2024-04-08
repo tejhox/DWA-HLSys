@@ -36,9 +36,11 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="container flex w-screen justify-center mt-16 sm:w-1/2 sm:mx-auto lg:w-1/3 lg:mx-auto">
-      <div className="container flex flex-col w-11/12 p-6 my-auto border rounded-lg border-slate-600 ">
-        <h1 className="text-xl text-center">SIGN IN</h1>
+    <div className="container flex w-screen  justify-center mt-16 sm:w-1/2 sm:mx-auto lg:w-1/3 lg:mx-auto">
+      <div className="container flex flex-col border-2 rounded-lg bg-gray-200 shadow-md shadow-indigo-500/50 w-11/12 p-6 my-auto ">
+        <h1 className="text-2xl font-bold text-center text-gray-700">
+          SIGN IN
+        </h1>
         <div className="divider"></div>
         {error && <p className="text-center mb-3 text-error">{error}</p>}
         <form onSubmit={handleSubmit} className="form-control">
@@ -78,7 +80,9 @@ const LoginPage = () => {
           </label>
 
           <div className="divider mt-10">
-            <button type="submit" className="btn btn-outline btn-sm w-32">
+            <button
+              type="submit"
+              className="btn btn-outline btn-primary btn-sm w-32">
               {isLoading ? "Loading..." : "LOGIN"}
             </button>
           </div>

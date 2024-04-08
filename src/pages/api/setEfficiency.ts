@@ -1,16 +1,16 @@
-import { sumDekidaka } from "@/lib/services/firebase/dataServices/DekidakaDataServices";
+import { setEfficiency } from "@/lib/services/firebase/dataServices/KpiService";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handlerSumDekidaka(
+export default async function handlerSetEfficiency(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    const { docId } = req.body;
+    const { docId, kpiDocId } = req.body;
     try {
-      await sumDekidaka(docId);
+      await setEfficiency(docId, kpiDocId);
       res.status(200).json({
-        message: "Error processing Dekidaka data:",
+        message: "Data processed successfully",
       });
     } catch (error) {
       console.error(error);

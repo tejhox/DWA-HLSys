@@ -1,10 +1,16 @@
 import axios from "axios";
-import Modal from "../pages/production/components/ui/modal";
 import React, { createContext, useContext, useState } from "react";
 import { FormEvent } from "react";
-import { useGetDataContext } from "./getDataContext";
+import { useGetDataContext } from "./GetDataContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import Modal from "@/components/modal";
+import {
+  calculateDeviasi,
+  calculateLossTime,
+  useLossTimeCalculation,
+} from "@/utils/dekidakaCalculation";
+import { useKpiContext } from "./KpiContext";
 
 type DekidakaContextValue = {
   isModalAddOpen: boolean;
@@ -27,35 +33,30 @@ const DekidakaContext = createContext<DekidakaContextValue | undefined>(
 );
 
 export const DekidakaProvider = ({ children }: any) => {
-  type DekidakaData = {
-    plan: number | undefined;
-    actual: number | undefined;
-    deviasi: number | undefined;
-    lossTime: number | undefined;
-  };
-
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [isBtnDisabled, setIsBtnDisabled] = useState<boolean>(false);
   const [isModalAddOpen, setIsModalAddOpen] = useState(false);
 
+  const { calculateLossTimeById } = useLossTimeCalculation();
+
   const {
     plan,
     actual,
-    deviasi,
-    lossTime,
     setPlan,
     setActual,
     setDeviasi,
     setLossTime,
     itemId,
-    subDekidaka,
     tableIndex,
+    subDekidaka,
     getDekidaka,
     isModalUpdateOpen,
     setIsModalUpdateOpen,
     profileId,
     getDekidakaSum,
   } = useGetDataContext();
+
+  const { setEfficiency } = useKpiContext();
 
   const handleAddModal = () => {
     setIsModalAddOpen(!isModalAddOpen);
@@ -67,49 +68,20 @@ export const DekidakaProvider = ({ children }: any) => {
     setIsDeleteConfirmOpen(!isDeleteConfirmOpen);
   };
 
-  const data: DekidakaData = {
-    plan: plan,
-    actual: actual,
-    deviasi: deviasi,
-    lossTime: lossTime,
-  };
+  const calculatedDeviasiValue: number = calculateDeviasi(plan, actual);
 
-  const calcDeviasi = {
-    deviasi:
-      data.actual !== undefined && data.plan !== undefined
-        ? data.actual - data.plan
-        : undefined,
-  };
+  const calculatedlossTimeValue: number = calculateLossTime(
+    subDekidaka,
+    plan,
+    actual
+  );
 
-  let calcLossTime: { lossTime: number } = { lossTime: 0 };
-
-  if (subDekidaka && plan !== undefined && actual !== undefined) {
-    const tableRowCount = subDekidaka.length;
-    let lossTimeRatio;
-    if (tableRowCount === 3 || tableRowCount === 7) {
-      lossTimeRatio = 55 / plan;
-    } else {
-      lossTimeRatio = 60 / plan;
-    }
-    if (calcLossTime === undefined) {
-      calcLossTime = { lossTime: 0 };
-    }
-    calcLossTime.lossTime = Math.round((plan - actual) * lossTimeRatio);
-  }
-
-  let calcEditLossTime: { lossTime: number };
-
-  if (subDekidaka && plan !== undefined && actual !== undefined) {
-    if (tableIndex === 3 || tableIndex === 7) {
-      calcEditLossTime = {
-        lossTime: Math.round((plan - actual) * (55 / plan)),
-      };
-    } else {
-      calcEditLossTime = {
-        lossTime: Math.round((plan - actual) * (60 / plan)),
-      };
-    }
-  }
+  const calculatedlossTimeValueById = calculateLossTimeById(
+    subDekidaka,
+    plan,
+    actual,
+    tableIndex
+  );
 
   const sumDekidaka = async () => {
     try {
@@ -128,14 +100,19 @@ export const DekidakaProvider = ({ children }: any) => {
     try {
       if (plan && actual) {
         setIsBtnDisabled(true);
+        const workHourValue: number = 60;
+        const deviasiValue = calculateDeviasi(plan, actual);
+        const lossTimeValue = calculateLossTime(subDekidaka, plan, actual);
         await axios.post(`/api/addDekidaka`, {
           docId: profileId,
+          workHour: workHourValue,
           plan,
           actual,
-          deviasi: calcDeviasi.deviasi,
-          lossTime: calcLossTime.lossTime,
+          deviasi: deviasiValue,
+          lossTime: lossTimeValue,
         });
-        sumDekidaka();
+        await sumDekidaka();
+        setEfficiency();
         setIsModalAddOpen(false);
         setIsBtnDisabled(false);
       }
@@ -148,13 +125,19 @@ export const DekidakaProvider = ({ children }: any) => {
     e.preventDefault();
     try {
       setIsBtnDisabled(true);
+      const lossTimeValueById = calculateLossTimeById(
+        subDekidaka,
+        plan,
+        actual,
+        tableIndex
+      );
       await axios.patch("/api/updateDekidaka", {
         docId: profileId,
         subDocId: itemId,
         plan: plan,
         actual: actual,
-        deviasi: calcDeviasi.deviasi,
-        lossTime: calcEditLossTime.lossTime,
+        deviasi: calculatedDeviasiValue,
+        lossTime: lossTimeValueById,
       });
       sumDekidaka();
       setIsModalUpdateOpen(false);
@@ -169,7 +152,8 @@ export const DekidakaProvider = ({ children }: any) => {
       await axios.delete(
         `/api/deleteDekidaka?docId=${profileId}&subDocId=${itemId}`
       );
-      sumDekidaka();
+      await sumDekidaka();
+      setEfficiency();
       setIsDeleteConfirmOpen(false);
       setIsModalUpdateOpen(false);
     } catch (error) {
@@ -213,7 +197,7 @@ export const DekidakaProvider = ({ children }: any) => {
                 <input
                   type="number"
                   className="input input-bordered input-sm w-full"
-                  value={calcDeviasi?.deviasi}
+                  value={calculatedDeviasiValue}
                   onChange={(e) => setDeviasi(parseInt(e.target.value))}
                   disabled
                 />
@@ -221,7 +205,8 @@ export const DekidakaProvider = ({ children }: any) => {
                 <input
                   type="text"
                   className="input input-bordered input-sm w-full"
-                  value={`${calcLossTime?.lossTime}'` ?? ""}
+                  value={`${calculatedlossTimeValue}'`}
+                  // {`${calculatedLossTime}'` ?? ""}
                   onChange={(e) => setLossTime(parseInt(e.target.value))}
                   disabled
                 />
@@ -229,7 +214,7 @@ export const DekidakaProvider = ({ children }: any) => {
               <div className="lg:px-7">
                 <button
                   type="submit"
-                  className="btn btn-sm btn-neutral mt-3 w-full"
+                  className="btn btn-sm bg-blue-700 text-white mt-3 w-full"
                   disabled={isBtnDisabled}>
                   Submit
                 </button>
@@ -279,7 +264,7 @@ export const DekidakaProvider = ({ children }: any) => {
                 <input
                   type="number"
                   className="input input-bordered input-sm w-full"
-                  value={calcDeviasi?.deviasi}
+                  value={calculatedDeviasiValue}
                   onChange={(e) => setDeviasi(parseInt(e.target.value))}
                   disabled
                 />
@@ -287,7 +272,7 @@ export const DekidakaProvider = ({ children }: any) => {
                 <input
                   type="text"
                   className="input input-bordered input-sm w-full"
-                  value={`${calcEditLossTime?.lossTime}'`}
+                  value={`${calculatedlossTimeValueById}'`}
                   onChange={(e) => setLossTime(parseInt(e.target.value))}
                   disabled
                 />
@@ -301,7 +286,7 @@ export const DekidakaProvider = ({ children }: any) => {
                 </button>
                 <button
                   type="submit"
-                  className="btn btn-sm btn-neutral w-2/3 md:w-80"
+                  className="btn btn-sm bg-blue-700 text-white w-1/2 md:w-80"
                   disabled={isBtnDisabled}>
                   Edit
                 </button>
@@ -322,12 +307,12 @@ export const DekidakaProvider = ({ children }: any) => {
             <div className="flex justify-end mt-4">
               <button
                 onClick={handleDeleteModal}
-                className="btn btn-sm btn-neutral ">
+                className="btn btn-sm bg-blue-700 text-white">
                 Tidak
               </button>
               <button
                 onClick={deleteDekidaka}
-                className="btn btn-sm btn-neutral ms-2">
+                className="btn btn-sm btn-error ms-2">
                 Ya
               </button>
             </div>

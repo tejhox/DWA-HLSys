@@ -1,7 +1,7 @@
-import { getDekidakaSum } from "@/lib/services/firebase/dataServices/DekidakaDataServices";
+import { getEfficiency } from "@/lib/services/firebase/dataServices/KpiService";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handlerDekidakaTotal(
+export default async function handlerGetEfficiency(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -9,12 +9,13 @@ export default async function handlerDekidakaTotal(
     try {
       const { docId } = req.query;
       if (!docId || typeof docId !== "string") {
-        throw new Error("Invalid docId parameter");
+        res.status(400).json({ message: "Invalid docId parameter" });
+        return;
       }
-      const data = await getDekidakaSum(docId);
+      const data = await getEfficiency(docId);
       res.status(200).json(data);
     } catch (error) {
-      res.status(404).json({ message: "Data not found" });
+      res.status(500).json({ message: "Data not found" });
     }
   } else {
     res.status(405).json({ message: "Method Not Allowed" });

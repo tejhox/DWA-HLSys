@@ -25,6 +25,12 @@ module.exports = {
       "acid",
       "nord",
       "winter",
+      "corporate",
+      "aqua",
+      "garden",
+      "lofi",
+      "pastel",
+      "cmyk",
     ],
   },
 };

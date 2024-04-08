@@ -9,6 +9,7 @@ import {
   getFirestore,
   serverTimestamp,
   updateDoc,
+  runTransaction,
 } from "firebase/firestore";
 import app from "@/lib/services/firebase/init";
 
@@ -24,16 +25,33 @@ export async function addProfileData(
 ) {
   try {
     const colRef = collection(firestore, "document");
-    const snapshot = await addDoc(colRef, {
-      line: line,
-      group: group,
-      leader: leader,
-      product: product,
-      shift: shift,
-      date: date,
-      time: serverTimestamp(),
+    const kpiRef = collection(firestore, "kpi");
+
+    const snapshot = await runTransaction(firestore, async () => {
+      const docValue = await addDoc(colRef, {
+        line: line,
+        group: group,
+        leader: leader,
+        product: product,
+        shift: shift,
+        date: date,
+        time: serverTimestamp(),
+      });
+
+      const kpiValue = await addDoc(kpiRef, {
+        line: line,
+        group: group,
+        leader: leader,
+        date: date,
+        time: serverTimestamp(),
+      });
+
+      return { docValue, kpiValue };
     });
-    return snapshot;
+    const docId = snapshot.docValue.id;
+    const kpiDocId = snapshot.kpiValue.id;
+
+    return { docId, kpiDocId };
   } catch (error) {
     console.error("Error adding form data to Firestore:", error);
     throw new Error("Failed to add form data to Firestore");
@@ -77,23 +95,27 @@ export async function updateProfileData(
   }
 }
 
-export async function deleteProfile(docId: string) {
+export async function deleteProfile(docId: string, kpiDocId: string) {
   try {
-    const docRef = doc(firestore, "document", docId);
+    const documentDocRef = doc(firestore, "document", docId);
+    const kpiRef = doc(firestore, "kpi", kpiDocId);
 
-    const dekidakaSnapshot = await getDocs(collection(docRef, "dekidaka"));
+    const dekidakaSnapshot = await getDocs(
+      collection(documentDocRef, "dekidaka")
+    );
     dekidakaSnapshot.forEach(async (subDoc) => {
       await deleteDoc(subDoc.ref);
     });
 
     const dekidakaTotalSnapshot = await getDocs(
-      collection(docRef, "dekidakaTotal")
+      collection(documentDocRef, "dekidakaTotal")
     );
     dekidakaTotalSnapshot.forEach(async (subDoc) => {
       await deleteDoc(subDoc.ref);
     });
 
-    await deleteDoc(docRef);
+    await deleteDoc(kpiRef);
+    await deleteDoc(documentDocRef);
   } catch (error) {
     console.error("Error deleting profile:", error);
     throw new Error("Failed to delete document collection");
