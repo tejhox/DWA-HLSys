@@ -1,5 +1,5 @@
-import { KpiDoc, useGetDataContext } from "@/context/GetDataContext";
-import { useSessionContext } from "@/context/SessionContext";
+import { KpiDoc, useGetDataContext } from "@/context/getDataContext";
+import { useSessionContext } from "@/context/sessionContext";
 import { useEffect } from "react";
 import {
   CartesianGrid,

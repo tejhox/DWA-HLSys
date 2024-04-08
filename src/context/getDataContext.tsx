@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 import axios from "axios";
-import { useSessionContext } from "./SessionContext";
+import { useSessionContext } from "./sessionContext";
 
 export type SubDekidaka = {
   id: string;

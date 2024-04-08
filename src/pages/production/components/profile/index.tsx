@@ -1,10 +1,10 @@
-import { useSessionContext } from "@/context/SessionContext";
-import { useProfileContext } from "../../../../context/ProfileContext";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import { faCheck, faEllipsis } from "@fortawesome/free-solid-svg-icons";
-import { useGetDataContext } from "@/context/GetDataContext";
+import { useSessionContext } from "@/context/sessionContext";
+import { useGetDataContext } from "@/context/getDataContext";
+import { useProfileContext } from "@/context/profileContext";
 
 const Profile = () => {
   const [editMode, setEditMode] = useState<boolean>(false);

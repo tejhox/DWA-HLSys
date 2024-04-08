@@ -1,4 +1,4 @@
-import { useGetDataContext } from "@/context/GetDataContext";
+import { useGetDataContext } from "@/context/getDataContext";
 import { useEffect } from "react";
 
 const DekidakaTotal = () => {

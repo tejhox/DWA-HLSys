@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState } from "react";
 import axios from "axios";
 import Modal from "@/components/modal";
-import { useSessionContext } from "./SessionContext";
-import { useDekidakaContext } from "./DekidakaContext";
-import { useGetDataContext } from "./GetDataContext";
+import { useSessionContext } from "./sessionContext";
+import { useDekidakaContext } from "./dekidakaContext";
+import { useGetDataContext } from "./getDataContext";
 
 type ProductionContextValue = {
   line: string;

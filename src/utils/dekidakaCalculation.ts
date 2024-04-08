@@ -1,4 +1,4 @@
-import { useGetDataContext } from "@/context/GetDataContext";
+import { useGetDataContext } from "@/context/getDataContext";
 
 export const calculateDeviasi = (
   plan: number | undefined,

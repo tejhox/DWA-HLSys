@@ -1,9 +1,9 @@
-import { useProfileContext } from "@/context/ProfileContext";
-import { useDekidakaContext } from "@/context/DekidakaContext";
+import { useProfileContext } from "@/context/profileContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { SubDekidaka, useGetDataContext } from "@/context/GetDataContext";
 import { useEffect } from "react";
+import { SubDekidaka, useGetDataContext } from "@/context/getDataContext";
+import { useDekidakaContext } from "@/context/dekidakaContext";
 
 const Dekidaka = () => {
   const { handleShowWarning } = useProfileContext();

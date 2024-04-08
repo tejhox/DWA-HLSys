@@ -1,6 +1,6 @@
 import Card from "@/components/card";
-import { useGetDataContext } from "@/context/GetDataContext";
-import { useSessionContext } from "@/context/SessionContext";
+import { useGetDataContext } from "@/context/getDataContext";
+import { useSessionContext } from "@/context/sessionContext";
 import { useEffect } from "react";
 
 const DailyKpi = () => {

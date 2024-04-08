@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { useGetDataContext } from "./GetDataContext";
+import { useGetDataContext } from "./getDataContext";
 import axios from "axios";
 
 type KpiContextValue = {

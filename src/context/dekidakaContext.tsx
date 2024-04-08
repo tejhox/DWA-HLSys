@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { createContext, useContext, useState } from "react";
 import { FormEvent } from "react";
-import { useGetDataContext } from "./GetDataContext";
+import { useGetDataContext } from "./getDataContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import Modal from "@/components/modal";
@@ -10,7 +10,7 @@ import {
   calculateLossTime,
   useLossTimeCalculation,
 } from "@/utils/dekidakaCalculation";
-import { useKpiContext } from "./KpiContext";
+import { useKpiContext } from "./kpiContext";
 
 type DekidakaContextValue = {
   isModalAddOpen: boolean;
