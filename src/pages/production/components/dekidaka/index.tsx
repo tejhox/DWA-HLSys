@@ -15,7 +15,6 @@ const Dekidaka = () => {
     subDekidaka,
     isLoading,
     isInputFilled,
-    getDekidakaSum,
   } = useGetDataContext();
 
   const {
@@ -71,7 +70,9 @@ const Dekidaka = () => {
           </tbody>
         </table>
         {isLoading ? (
-          <p className="text-center text-sm my-3">Loading ....</p>
+          <p className="text-center text-sm my-3">
+            <span className="loading loading-dots loading-sm"></span>
+          </p>
         ) : !subDekidaka || subDekidaka.length === 0 ? (
           <p className="text-center text-sm my-3">
             -------- Belum Ada Laporan --------

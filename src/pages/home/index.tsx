@@ -22,8 +22,8 @@ const Home = () => {
             <div className="flex items-center md:justify-center">
               <Link
                 href="/production"
-                className="btn btn-primary text-xl font-semibold link link-hover">
-                Buat Laporan
+                className="btn btn-primary text-lg font-semibold shadow-md shadow-indigo-500/60">
+                Laporan
                 <FontAwesomeIcon
                   icon={faArrowRight}
                   size="lg"
@@ -35,10 +35,10 @@ const Home = () => {
             ""
           )}
           {data ? (
-            <div className="flex items-center md:justify-center mt-2">
+            <div className="flex items-center md:justify-center mt-3">
               <Link
                 href="/monthly-kpi"
-                className="btn btn-success text-xl text-white font-semibold link link-hover">
+                className="btn btn-success btn-wide text-lg text-white font-semibold shadow-md shadow-indigo-500/60 ">
                 Lihat KPI
                 <FontAwesomeIcon
                   icon={faArrowRight}
@@ -48,8 +48,10 @@ const Home = () => {
               </Link>
             </div>
           ) : (
-            <Link href={"/auth/login"} className="link mt-3">
-              Sign in!
+            <Link
+              href={"/auth/login"}
+              className="link underlined mt-3 font-bold text-green-700">
+              SIGN IN!
             </Link>
           )}
         </div>

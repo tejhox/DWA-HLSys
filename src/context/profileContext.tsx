@@ -11,6 +11,7 @@ type ProductionContextValue = {
   shift: string;
   date: string;
   isDeleteConfirmOpen: boolean;
+  isButtonClicked: boolean;
   addProfile: () => Promise<void>;
   updateProfile: () => Promise<void>;
   modalDeleteConfirmation: () => React.ReactNode;
@@ -24,6 +25,7 @@ const ProfileContext = createContext<ProductionContextValue | undefined>(
 
 export const ProfileProvider = ({ children }: any) => {
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
   const { userDataName } = useSessionContext();
   const { getDekidaka } = useDekidakaContext();
 
@@ -43,6 +45,8 @@ export const ProfileProvider = ({ children }: any) => {
     setSwitchProfileUi,
     kpiId,
     setKpiId,
+    isLoading,
+    setIsLoading,
   } = useGetDataContext();
 
   const { getLastProfile, getLastKpi } = useGetDataContext();
@@ -50,6 +54,7 @@ export const ProfileProvider = ({ children }: any) => {
   const addProfile = async () => {
     if (line && product && shift && date) {
       setIsDisabled(true);
+      setIsLoading(true);
     }
     const leaderGroups = {
       "Bowo Dwi": "1",
@@ -70,9 +75,13 @@ export const ProfileProvider = ({ children }: any) => {
           const { kpiDocId } = response.data;
           setKpiId(kpiDocId);
           setIsInputFilled(true);
+          setIsLoading(false);
           setSwitchProfileUi(true);
+          getDekidaka();
           getLastProfile();
           getLastKpi();
+        } else {
+          setIsButtonClicked(true);
         }
       } catch (error) {
         console.error("Error submitting form data:", error);
@@ -97,6 +106,7 @@ export const ProfileProvider = ({ children }: any) => {
   };
 
   const deleteProfile = async () => {
+    setIsLoading(true);
     try {
       await axios.delete(
         `/api/deleteProfileData?docId=${profileId}&kpiDocId=${kpiId}`
@@ -105,6 +115,7 @@ export const ProfileProvider = ({ children }: any) => {
       setTotalActual(0);
       setTotalDeviasi(0);
       setTotalLossTime(0);
+      setIsLoading(false);
       setIsDeleteConfirmOpen(false);
       setProfileId("");
       setSwitchProfileUi(false);
@@ -117,6 +128,7 @@ export const ProfileProvider = ({ children }: any) => {
 
   const handleShowWarning = () => {
     setIsInputFilled(false);
+    setIsButtonClicked(true);
   };
 
   const handleDeleteModal = () => {
@@ -138,7 +150,11 @@ export const ProfileProvider = ({ children }: any) => {
               <button
                 onClick={deleteProfile}
                 className="btn btn-sm btn-error ms-2">
-                Ya
+                {isLoading ? (
+                  <span className="loading loading-spinner"></span>
+                ) : (
+                  "Ya"
+                )}
               </button>
             </div>
           </div>
@@ -153,6 +169,7 @@ export const ProfileProvider = ({ children }: any) => {
     shift,
     date,
     isDeleteConfirmOpen,
+    isButtonClicked,
     addProfile,
     updateProfile,
     handleDeleteModal,

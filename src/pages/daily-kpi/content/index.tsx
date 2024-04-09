@@ -41,7 +41,13 @@ const EfficiencyContent = () => {
           <div className="container flex w-full">
             <p className="font-semibold ">Efisiensi :</p>
             <p className="text-lg font-semibold text-primary text-right">
-              {efficiency ? `${efficiency}%` : `${0}%`}
+              {efficiency ? (
+                `${efficiency}%`
+              ) : !efficiency ? (
+                <span className="loading loading-dots loading-xs"></span>
+              ) : (
+                `${0}%`
+              )}
             </p>
           </div>
           <hr className="border border-gray-400" />
@@ -56,7 +62,13 @@ const EfficiencyContent = () => {
                   Waktu Tersedia<span className="ms-1">:</span>
                 </p>
                 <p className="text-sm text-primary font-semibold text-right">
-                  {availableTime ? `${availableTime}'` : `${0}'`}
+                  {availableTime ? (
+                    `${availableTime}'`
+                  ) : !availableTime ? (
+                    <span className="loading loading-dots loading-xs"></span>
+                  ) : (
+                    `${0}'`
+                  )}
                 </p>
               </div>
             </li>
@@ -66,7 +78,13 @@ const EfficiencyContent = () => {
                   Waktu Efektif <span className="ms-3">:</span>
                 </p>
                 <p className="text-sm text-success font-semibold text-right mt-1">
-                  {effectiveTime ? `${effectiveTime}'` : `${0}'`}
+                  {effectiveTime ? (
+                    `${effectiveTime}'`
+                  ) : !effectiveTime ? (
+                    <span className="loading loading-dots loading-xs"></span>
+                  ) : (
+                    `${0}'`
+                  )}
                 </p>
               </div>
             </li>

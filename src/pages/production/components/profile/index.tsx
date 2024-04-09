@@ -11,6 +11,7 @@ import { useSessionContext } from "@/context/sessionContext";
 import { useGetDataContext } from "@/context/getDataContext";
 import { useProfileContext } from "@/context/profileContext";
 import Link from "next/link";
+import Modal from "@/components/modal";
 
 const Profile = () => {
   const [editMode, setEditMode] = useState<boolean>(false);
@@ -25,11 +26,10 @@ const Profile = () => {
     setIsMobile(window.matchMedia("(max-width: 768px)").matches);
   }, []);
 
-  const { line, product, shift, date, isDeleteConfirmOpen } =
+  const { line, product, shift, date, isDeleteConfirmOpen, isButtonClicked } =
     useProfileContext();
 
   const {
-    profileId,
     isDisabled,
     isInputFilled,
     setLine,
@@ -42,6 +42,9 @@ const Profile = () => {
     getLastProfile,
     getLastKpi,
     newProfile,
+    isLoading,
+    isFormBlank,
+    setIsFormBlank,
   } = useGetDataContext();
 
   const { fetchSession, userData, userDataName, userDataNik, session } =
@@ -85,6 +88,32 @@ const Profile = () => {
     formattedDate = rawDate;
   }
 
+  const formBlankModal = () => {
+    return (
+      <Modal
+        modalBody={
+          <div>
+            <div>
+              <p className="text-error font-bold underline">
+                Laporan masih kosong!
+              </p>
+              <p className="mt-2 text-sm">
+                *Silahkan isi atau hapus laporan terlebih dahulu
+              </p>
+            </div>
+            <div className="flex justify-end mt-3">
+              <button
+                onClick={() => setIsFormBlank(false)}
+                className="btn btn-sm btn-primary">
+                OK
+              </button>
+            </div>
+          </div>
+        }
+      />
+    );
+  };
+
   return (
     <div className="flex justify-center px-1.5 mt-2 h-full w-full lg:w-1/3">
       <div className="container w-full relative">
@@ -108,11 +137,8 @@ const Profile = () => {
                       newProfile();
                       setIsMenuOpen(false);
                     }}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">
-                    New
-                  </li>
-                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">
-                    Edit
+                    className="px-4 py-2 hover:bg-gray-100 text-gray-700 font-bold cursor-pointer text-sm">
+                    Laporan Baru
                   </li>
                 </ul>
               </div>
@@ -240,12 +266,8 @@ const Profile = () => {
                 </button>
               </div>
               <div>
-                {!isInputFilled ? (
+                {isButtonClicked && (!line || !product || !shift || !date) && (
                   <p className="text-sm text-warning">Lengkapi Profile !</p>
-                ) : isInputFilled ? (
-                  ""
-                ) : (
-                  ""
                 )}
               </div>
               {!editMode ? (
@@ -253,7 +275,11 @@ const Profile = () => {
                   onClick={addProfile}
                   disabled={isDisabled}
                   className="btn btn-outline btn-success btn-sm w-1/5">
-                  <FontAwesomeIcon icon={faCheck} size="lg" />
+                  {isLoading ? (
+                    <span className="loading loading-spinner"></span>
+                  ) : (
+                    <FontAwesomeIcon icon={faCheck} size="lg" />
+                  )}
                 </button>
               ) : (
                 ""
@@ -270,7 +296,7 @@ const Profile = () => {
               )}
             </div>
           </div>
-          <hr className="border border-gray-400 mt-2" />
+          <hr className="border border-slate-300 mt-2" />
           <div className="py-1 px-1">
             <div className="container flex justify-end w-full">
               <Link
@@ -284,6 +310,7 @@ const Profile = () => {
         </div>
       </div>
       {isDeleteConfirmOpen && modalDeleteConfirmation()}
+      {isFormBlank && formBlankModal()}
     </div>
   );
 };

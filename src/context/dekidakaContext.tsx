@@ -54,6 +54,9 @@ export const DekidakaProvider = ({ children }: any) => {
     setIsModalUpdateOpen,
     profileId,
     getDekidakaSum,
+    setIsLoading,
+    isLoading,
+    setIsFormBlank,
   } = useGetDataContext();
 
   const { setEfficiency } = useKpiContext();
@@ -85,6 +88,7 @@ export const DekidakaProvider = ({ children }: any) => {
 
   const addDekidaka = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       if (plan && actual) {
         setIsBtnDisabled(true);
@@ -101,8 +105,10 @@ export const DekidakaProvider = ({ children }: any) => {
         });
         await sumDekidaka();
         setEfficiency();
+        setIsFormBlank(false);
         setIsModalAddOpen(false);
         setIsBtnDisabled(false);
+        setIsLoading(false);
       }
     } catch (error) {
       console.error("Error adding data:", error);
@@ -216,7 +222,14 @@ export const DekidakaProvider = ({ children }: any) => {
                   type="submit"
                   className="btn btn-sm bg-blue-700 text-white mt-3 w-full"
                   disabled={isBtnDisabled}>
-                  Submit
+                  {isLoading ? (
+                    <span className="flex items-center">
+                      <span className="loading loading-spinner mr-2"></span>
+                      Loading...
+                    </span>
+                  ) : (
+                    "Submit"
+                  )}
                 </button>
               </div>
             </form>

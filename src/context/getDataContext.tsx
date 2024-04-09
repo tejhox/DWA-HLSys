@@ -52,6 +52,7 @@ type GetDataContextValue = {
   isInputFilled: boolean;
   isModalUpdateOpen: boolean;
   isLoading: boolean;
+  isFormBlank: boolean;
   switchProfileUi: boolean;
   setLine: (value: string) => void;
   setProduct: (value: string) => void;
@@ -71,6 +72,8 @@ type GetDataContextValue = {
   setProfileId: (value: string) => void;
   setKpiId: (value: string) => void;
   setIsModalUpdateOpen: (value: boolean) => void;
+  setIsLoading: (value: boolean) => void;
+  setIsFormBlank: (value: boolean) => void;
   getDekidaka: () => Promise<void>;
   getLastProfile: () => Promise<void>;
   getLastKpi: () => Promise<void>;
@@ -110,6 +113,7 @@ export const GetDataProvider = ({ children }: any) => {
   const [switchProfileUi, setSwitchProfileUi] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+  const [isFormBlank, setIsFormBlank] = useState(false);
 
   const [subDekidaka, setSubDekidaka] = useState<SubDekidaka[]>();
   const [kpiDoc, setKpiDoc] = useState<KpiDoc[]>();
@@ -119,7 +123,7 @@ export const GetDataProvider = ({ children }: any) => {
   const [itemId, setItemId] = useState<string>("");
   const [tableIndex, setTableIndex] = useState<number>(0);
 
-  const { userDataName, session } = useSessionContext();
+  const { userDataName } = useSessionContext();
 
   const getLastProfile = async () => {
     try {
@@ -222,21 +226,26 @@ export const GetDataProvider = ({ children }: any) => {
   };
 
   const newProfile = () => {
+    console.log(subDekidaka);
     try {
-      setLine("");
-      setProduct("");
-      setShift("");
-      setDate("");
-      setSubDekidaka([]);
-      setProfileId("");
-      setKpiId("");
-      setTotalPlan(0);
-      setTotalActual(0);
-      setTotalDeviasi(0);
-      setTotalLossTime(0);
-      setIsDisabled(false);
-      setIsInputFilled(false);
-      setSwitchProfileUi(false);
+      if (subDekidaka?.length === 0) {
+        setIsFormBlank(true);
+      } else {
+        setLine("");
+        setProduct("");
+        setShift("");
+        setDate("");
+        setSubDekidaka([]);
+        setProfileId("");
+        setKpiId("");
+        setTotalPlan(0);
+        setTotalActual(0);
+        setTotalDeviasi(0);
+        setTotalLossTime(0);
+        setIsDisabled(false);
+        setIsInputFilled(false);
+        setSwitchProfileUi(false);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -269,6 +278,7 @@ export const GetDataProvider = ({ children }: any) => {
     tableIndex,
     itemId,
     isLoading,
+    isFormBlank,
     switchProfileUi,
     setSwitchProfileUi,
     setProfileId,
@@ -288,6 +298,8 @@ export const GetDataProvider = ({ children }: any) => {
     setIsDisabled,
     setIsInputFilled,
     setIsModalUpdateOpen,
+    setIsLoading,
+    setIsFormBlank,
     getDekidaka,
     getLastKpi,
     getLastProfile,
