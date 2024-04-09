@@ -1,62 +1,35 @@
-import Card from "@/components/card";
-import { useGetDataContext } from "@/context/getDataContext";
-import { useSessionContext } from "@/context/sessionContext";
-import { useEffect } from "react";
+import Link from "next/link";
+import EfficiencyContent from "./content";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft, faChartLine } from "@fortawesome/free-solid-svg-icons";
 
 const DailyKpi = () => {
-  const {
-    kpiId,
-    availableTime,
-    effectiveTime,
-    efficiency,
-    getLastKpi,
-    getEfficiency,
-  } = useGetDataContext();
-
-  const { fetchSession, userDataName, session } = useSessionContext();
-
-  useEffect(() => {
-    fetchSession();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session]);
-
-  useEffect(() => {
-    if (userDataName) {
-      getLastKpi();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userDataName]);
-
-  useEffect(() => {
-    if (kpiId) {
-      getEfficiency();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [kpiId]);
-
   return (
-    <div className="container flex flex-col justify-center w-full p-2 lg:w-1/3 ">
-      <Card
-        cardBody={
-          <div>
-            <p className="font-semibold">
-              Efisiensi :
-              <span className="text-lg font-semibold text-primary ms-2">
-                {efficiency ? `${efficiency}%` : `${0}%`}
-              </span>
-            </p>
-            <hr className="border border-gray-400" />
-            <div>
-              <p className="text-sm">
-                Waktu Tersedia : {availableTime ? `${availableTime}'` : `${0}'`}
-              </p>
-              <p className="text-sm">
-                Waktu Efektif : {effectiveTime ? `${effectiveTime}'` : `${0}'`}
-              </p>
-            </div>
-          </div>
-        }
-      />
+    <div className="flex flex-col justify-center px-1.5 mt-2 h-full w-full lg:w-1/3">
+      <div className="container w-full p-2 shadow-md bg-gray-200 rounded-lg">
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-xl font-bold text-primary ms-1">KPI LINE</p>
+          <Link
+            href="/monthly-kpi"
+            className="btn btn-sm btn-ghost btn-primary">
+            <FontAwesomeIcon
+              className="text-blue-500"
+              icon={faChartLine}
+              size="xl"
+            />
+          </Link>
+        </div>
+        <hr className="border border-gray-400 my-2" />
+        <EfficiencyContent />
+        <EfficiencyContent />
+        <EfficiencyContent />
+      </div>
+      <div className="flex px-1.5 my-3 justify-end">
+        <Link href={"/production"} className="btn btn-sm btn-primary">
+          <FontAwesomeIcon icon={faArrowLeft} size="lg" className="mt-0.5" />
+          Kembali
+        </Link>
+      </div>
     </div>
   );
 };

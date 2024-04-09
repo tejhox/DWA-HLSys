@@ -7,7 +7,6 @@ const ProductionPage = () => {
   return (
     <>
       <Profile />
-      <Menu />
       <DekidakaTotal />
       <Dekidaka />
     </>

@@ -1,7 +1,8 @@
 const Card = (props: any) => {
   return (
-    <div className="card w-full bg-base-300 shadow-xl mt-1">
+    <div className="card w-full bg-white shadow-xl mt-1 mb-2">
       <div className="card-body">
+        <h2 className="card-title">{props.cardTitle}</h2>
         <div>{props.cardBody}</div>
       </div>
     </div>

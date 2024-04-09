@@ -56,7 +56,7 @@ const EfficiencyChart = () => {
         data={sortedChartData}
         margin={{
           top: 20,
-          left: -22,
+          left: -30,
           right: 5,
           bottom: 10,
         }}>

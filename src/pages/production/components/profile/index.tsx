@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
-import { faCheck, faEllipsis } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChartLine,
+  faChartSimple,
+  faCheck,
+  faEllipsis,
+} from "@fortawesome/free-solid-svg-icons";
 import { useSessionContext } from "@/context/sessionContext";
 import { useGetDataContext } from "@/context/getDataContext";
 import { useProfileContext } from "@/context/profileContext";
+import Link from "next/link";
 
 const Profile = () => {
   const [editMode, setEditMode] = useState<boolean>(false);
@@ -262,6 +268,17 @@ const Profile = () => {
               ) : (
                 ""
               )}
+            </div>
+          </div>
+          <hr className="border border-gray-400 mt-2" />
+          <div className="py-1 px-1">
+            <div className="container flex justify-end w-full">
+              <Link
+                href="/daily-kpi"
+                className="btn btn-sm btn-outline btn-primary mt-1">
+                KPI
+                <FontAwesomeIcon icon={faChartSimple} className="mb-0.5" />
+              </Link>
             </div>
           </div>
         </div>
