@@ -45,7 +45,7 @@ const EfficiencyContent = () => {
               {isLoading ? (
                 <span className="loading loading-dots loading-xs"></span>
               ) : efficiency ? (
-                `${efficiency}'`
+                `${efficiency}%`
               ) : efficiency === undefined ? (
                 "~"
               ) : efficiency === 0 ? (
