@@ -23,11 +23,11 @@ const DailyKpi = () => {
         <EfficiencyContent />
         <EfficiencyContent />
         <EfficiencyContent />
-        <div className="flex mt-3 mb-1 justify-end">
+        <div className="flex mt-2 justify-end">
           <Link
             href={"/production"}
             className="btn btn-sm btn-circle btn-neutral">
-            <FontAwesomeIcon icon={faArrowLeft} className="mt-0.5" />
+            <FontAwesomeIcon icon={faArrowLeft} size="xl" />
           </Link>
         </div>
       </div>
