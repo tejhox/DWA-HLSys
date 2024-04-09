@@ -13,7 +13,7 @@ const DailyKpi = () => {
     getEfficiency,
   } = useGetDataContext();
 
-  const { userDataName, dateNow } = useSessionContext();
+  const { userDataName, dateNow, session } = useSessionContext();
 
   useEffect(() => {
     if (userDataName) {
@@ -23,11 +23,9 @@ const DailyKpi = () => {
   }, [dateNow]);
 
   useEffect(() => {
-    if (kpiId) {
-      getEfficiency();
-    }
+    getEfficiency();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [efficiency]);
+  }, [dateNow]);
 
   return (
     <div className="container flex flex-col justify-center w-full p-2 lg:w-1/3 ">

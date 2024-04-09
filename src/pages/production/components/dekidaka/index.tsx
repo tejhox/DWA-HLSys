@@ -9,6 +9,7 @@ import { useSessionContext } from "@/context/sessionContext";
 const Dekidaka = () => {
   const { handleShowWarning } = useProfileContext();
   const {
+    profileId,
     getDekidaka,
     getDekidakaById,
     subDekidaka,
@@ -26,12 +27,12 @@ const Dekidaka = () => {
     modalUpdateData,
   } = useDekidakaContext();
 
-  const { dateNow } = useSessionContext();
+  const { session, dateNow } = useSessionContext();
 
   useEffect(() => {
     getDekidaka();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateNow]);
+  }, [session]);
 
   return (
     <div className="flex justify-center px-1.5 mt-1 h-full w-full lg:w-1/3">

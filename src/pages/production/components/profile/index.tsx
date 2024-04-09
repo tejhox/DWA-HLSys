@@ -37,22 +37,14 @@ const Profile = () => {
     newProfile,
   } = useGetDataContext();
 
-  const { userData, userDataName, userDataNik, session, dateNow } =
-    useSessionContext();
+  const { userData, userDataName, userDataNik, session } = useSessionContext();
 
   useEffect(() => {
-    if (userDataName) {
+    if (session && userDataName) {
       getLastProfile();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateNow]);
-
-  useEffect(() => {
-    if (userDataName) {
-      getLastKpi();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateNow]);
+  }, [session, userDataName]);
 
   const {
     addProfile,

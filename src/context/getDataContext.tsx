@@ -119,19 +119,19 @@ export const GetDataProvider = ({ children }: any) => {
   const [itemId, setItemId] = useState<string>("");
   const [tableIndex, setTableIndex] = useState<number>(0);
 
-  const { userDataName } = useSessionContext();
+  const { userDataName, session } = useSessionContext();
 
   const getLastProfile = async () => {
     try {
       const response = await axios.get(
         `/api/getLastProfile?name=${userDataName}`
       );
+      const { docId } = response.data;
+      setProfileId(docId);
       setLine(response.data.line);
       setProduct(response.data.product);
       setShift(response.data.shift);
       setDate(response.data.date);
-      const { docId } = response.data;
-      setProfileId(docId);
       setIsInputFilled(true);
       setIsDisabled(true);
       setSwitchProfileUi(true);
@@ -163,9 +163,20 @@ export const GetDataProvider = ({ children }: any) => {
   const getDekidaka = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(`/api/getDekidaka?docId=${profileId}`);
-      setSubDekidaka(response.data);
-      setIsLoading(false);
+      if (session && userDataName) {
+        const lastProfileResponse = await axios.get(
+          `/api/getLastProfile?name=${userDataName}`
+        );
+        const { docId } = lastProfileResponse.data;
+        setProfileId(docId);
+
+        const dekidakaResponse = await axios.get(
+          `/api/getDekidaka?docId=${docId}`
+        );
+        setSubDekidaka(dekidakaResponse.data);
+
+        setIsLoading(false);
+      }
     } catch (error) {
       setIsLoading(false);
       console.error("Error fetching data:", error);
@@ -203,10 +214,20 @@ export const GetDataProvider = ({ children }: any) => {
 
   const getEfficiency = async () => {
     try {
-      const response = await axios.get(`/api/getEfficiency?docId=${kpiId}`);
-      setAvailableTime(response.data.efficiencyDoc.availableTime);
-      setEffectiveTime(response.data.efficiencyDoc.effectiveTime);
-      setEfficiency(response.data.efficiencyDoc.efficiency);
+      if (session && userDataName) {
+        const lastKpiResponse = await axios.get(
+          `/api/getLastKpi?name=${userDataName}`
+        );
+        const { kpiDocId } = lastKpiResponse.data;
+        setKpiId(kpiDocId);
+
+        const response = await axios.get(
+          `/api/getEfficiency?docId=${kpiDocId}`
+        );
+        setAvailableTime(response.data.efficiencyDoc.availableTime);
+        setEffectiveTime(response.data.efficiencyDoc.effectiveTime);
+        setEfficiency(response.data.efficiencyDoc.efficiency);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
