@@ -103,8 +103,7 @@ export const DekidakaProvider = ({ children }: any) => {
           deviasi: deviasiValue,
           lossTime: lossTimeValue,
         });
-        await sumDekidaka();
-        setEfficiency();
+        sumDekidaka();
         setIsFormBlank(false);
         setIsModalAddOpen(false);
         setIsBtnDisabled(false);
@@ -120,6 +119,7 @@ export const DekidakaProvider = ({ children }: any) => {
       await axios.post(`/api/sumDekidaka`, {
         docId: profileId,
       });
+      setEfficiency();
       getDekidaka();
       getDekidakaSum();
     } catch (error) {
@@ -129,6 +129,7 @@ export const DekidakaProvider = ({ children }: any) => {
 
   const updateDekidaka = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       setIsBtnDisabled(true);
       const lossTimeValueById = calculateLossTimeById(
@@ -146,6 +147,7 @@ export const DekidakaProvider = ({ children }: any) => {
         lossTime: lossTimeValueById,
       });
       sumDekidaka();
+      setIsLoading(false);
       setIsModalUpdateOpen(false);
       setIsBtnDisabled(false);
     } catch (error) {
@@ -154,12 +156,13 @@ export const DekidakaProvider = ({ children }: any) => {
   };
 
   const deleteDekidaka = async () => {
+    setIsLoading(true);
     try {
       await axios.delete(
         `/api/deleteDekidaka?docId=${profileId}&subDocId=${itemId}`
       );
-      await sumDekidaka();
-      setEfficiency();
+      sumDekidaka();
+      setIsLoading(true);
       setIsDeleteConfirmOpen(false);
       setIsModalUpdateOpen(false);
     } catch (error) {
@@ -301,7 +304,14 @@ export const DekidakaProvider = ({ children }: any) => {
                   type="submit"
                   className="btn btn-sm bg-blue-700 text-white w-1/2 md:w-80"
                   disabled={isBtnDisabled}>
-                  Edit
+                  {isLoading ? (
+                    <span className="flex items-center">
+                      <span className="loading loading-spinner mr-2"></span>
+                      Loading...
+                    </span>
+                  ) : (
+                    "Edit"
+                  )}
                 </button>
               </div>
             </form>
@@ -326,7 +336,14 @@ export const DekidakaProvider = ({ children }: any) => {
               <button
                 onClick={deleteDekidaka}
                 className="btn btn-sm btn-error ms-2">
-                Ya
+                {" "}
+                {isLoading ? (
+                  <span className="flex items-center">
+                    <span className="loading loading-spinner mr-2"></span>
+                  </span>
+                ) : (
+                  "Ya"
+                )}
               </button>
             </div>
           </div>

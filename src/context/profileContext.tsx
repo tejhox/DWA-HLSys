@@ -4,6 +4,7 @@ import Modal from "@/components/modal";
 import { useSessionContext } from "./sessionContext";
 import { useDekidakaContext } from "./dekidakaContext";
 import { useGetDataContext } from "./getDataContext";
+import { getEfficiency } from "@/lib/services/firebase/dataServices/KpiService";
 
 type ProductionContextValue = {
   line: string;
@@ -47,9 +48,11 @@ export const ProfileProvider = ({ children }: any) => {
     setKpiId,
     isLoading,
     setIsLoading,
+    getLastProfile,
+    getLastKpi,
+    getEfficiency,
+    getAllEfficiency,
   } = useGetDataContext();
-
-  const { getLastProfile, getLastKpi } = useGetDataContext();
 
   const addProfile = async () => {
     if (line && product && shift && date) {
@@ -99,6 +102,7 @@ export const ProfileProvider = ({ children }: any) => {
         shift,
         date,
       });
+      await getLastProfile();
       setSwitchProfileUi(true);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -120,7 +124,10 @@ export const ProfileProvider = ({ children }: any) => {
       setProfileId("");
       setSwitchProfileUi(false);
       getLastProfile();
+      getLastKpi();
       getDekidaka();
+      getEfficiency();
+      getAllEfficiency();
     } catch (error) {
       console.error("Error fetching data:", error);
     }

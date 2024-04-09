@@ -177,19 +177,19 @@ export const GetDataProvider = ({ children }: any) => {
   };
 
   const getDekidakaById = async (itemId: string, index: number) => {
+    setIsLoading(true);
     try {
       setIsModalUpdateOpen(true);
       const response = await axios.get(
         `/api/getDekidakaById?docId=${profileId}&subDocId=${itemId}`
       );
-      if (response.data) {
-        setTableIndex(index);
-        setPlan(response.data.plan);
-        setActual(response.data.actual);
-        setDeviasi(response.data.deviasi);
-        setLossTime(response.data.lossTime);
-        setItemId(response.data.id);
-      }
+      setTableIndex(index);
+      setPlan(response.data.plan);
+      setActual(response.data.actual);
+      setDeviasi(response.data.deviasi);
+      setLossTime(response.data.lossTime);
+      setItemId(response.data.id);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -206,12 +206,15 @@ export const GetDataProvider = ({ children }: any) => {
   };
 
   const getEfficiency = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(`/api/getEfficiency?docId=${kpiId}`);
       setAvailableTime(response.data.efficiencyDoc.availableTime);
       setEffectiveTime(response.data.efficiencyDoc.effectiveTime);
       setEfficiency(response.data.efficiencyDoc.efficiency);
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       console.error("Error fetching data:", error);
     }
   };
