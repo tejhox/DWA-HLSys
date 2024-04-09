@@ -15,18 +15,19 @@ import {
 const EfficiencyChart = () => {
   const { getLastKpi, getAllEfficiency, kpiDoc, kpiId } = useGetDataContext();
 
-  const { fetchSession, session, userDataName, dateNow } = useSessionContext();
+  const { fetchSession, session, userDataName } = useSessionContext();
 
   useEffect(() => {
-    const fetchAllEfficiencyData = async () => {
-      await fetchSession();
-      if (userDataName) {
-        await getLastKpi();
-      }
-    };
-    fetchAllEfficiencyData();
+    fetchSession();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
+
+  useEffect(() => {
+    if (userDataName) {
+      getLastKpi();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userDataName]);
 
   useEffect(() => {
     if (kpiId) {

@@ -34,10 +34,8 @@ const Profile = () => {
     switchProfileUi,
     setSwitchProfileUi,
     getLastProfile,
-    getDekidaka,
     getLastKpi,
     newProfile,
-    kpiId,
   } = useGetDataContext();
 
   const { fetchSession, userData, userDataName, userDataNik, session } =
@@ -51,25 +49,23 @@ const Profile = () => {
   } = useProfileContext();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await fetchSession();
-        if (userDataName) {
-          await getLastProfile();
-          await getLastKpi();
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
+    fetchSession();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
-  // useEffect(() => {
-  //   getLastKpi();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [profileId]);
+  useEffect(() => {
+    if (userDataName) {
+      getLastProfile();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userDataName]);
+
+  useEffect(() => {
+    if (userDataName) {
+      getLastKpi();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userDataName]);
 
   const handleEdit = () => {
     setIsDisabled(false);

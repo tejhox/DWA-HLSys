@@ -28,16 +28,10 @@ const Dekidaka = () => {
     modalUpdateData,
   } = useDekidakaContext();
 
-  const { session, dateNow } = useSessionContext();
-
   useEffect(() => {
-    const fetchDekidakaData = async () => {
-      if (profileId) {
-        await getDekidaka();
-        getDekidakaSum();
-      }
-    };
-    fetchDekidakaData();
+    if (profileId) {
+      getDekidaka();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileId]);
 

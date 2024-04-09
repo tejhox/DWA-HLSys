@@ -11,6 +11,13 @@ const DekidakaTotal = () => {
     getDekidakaSum,
   } = useGetDataContext();
 
+  useEffect(() => {
+    if (profileId) {
+      getDekidakaSum();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profileId]);
+
   return (
     <div className="flex justify-center px-1.5 mt-1 h-full w-full lg:w-1/3">
       <div className="container w-full border-2 rounded-lg bg-gray-200 shadow-md shadow-gray-500/60 mb-1">
