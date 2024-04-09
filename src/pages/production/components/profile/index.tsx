@@ -23,6 +23,7 @@ const Profile = () => {
     useProfileContext();
 
   const {
+    profileId,
     isDisabled,
     isInputFilled,
     setLine,
@@ -33,18 +34,14 @@ const Profile = () => {
     switchProfileUi,
     setSwitchProfileUi,
     getLastProfile,
+    getDekidaka,
     getLastKpi,
     newProfile,
+    kpiId,
   } = useGetDataContext();
 
-  const { userData, userDataName, userDataNik, session } = useSessionContext();
-
-  useEffect(() => {
-    if (session && userDataName) {
-      getLastProfile();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session, userDataName]);
+  const { fetchSession, userData, userDataName, userDataNik, session } =
+    useSessionContext();
 
   const {
     addProfile,
@@ -52,6 +49,27 @@ const Profile = () => {
     handleDeleteModal,
     modalDeleteConfirmation,
   } = useProfileContext();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await fetchSession();
+        if (userDataName) {
+          await getLastProfile();
+          await getLastKpi();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session]);
+
+  // useEffect(() => {
+  //   getLastKpi();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [profileId]);
 
   const handleEdit = () => {
     setIsDisabled(false);

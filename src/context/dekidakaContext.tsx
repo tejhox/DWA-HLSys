@@ -83,18 +83,6 @@ export const DekidakaProvider = ({ children }: any) => {
     tableIndex
   );
 
-  const sumDekidaka = async () => {
-    try {
-      await axios.post(`/api/sumDekidaka`, {
-        docId: profileId,
-      });
-      getDekidaka();
-      getDekidakaSum();
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
   const addDekidaka = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -118,6 +106,18 @@ export const DekidakaProvider = ({ children }: any) => {
       }
     } catch (error) {
       console.error("Error adding data:", error);
+    }
+  };
+
+  const sumDekidaka = async () => {
+    try {
+      await axios.post(`/api/sumDekidaka`, {
+        docId: profileId,
+      });
+      getDekidaka();
+      getDekidakaSum();
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
   };
 

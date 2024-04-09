@@ -15,6 +15,7 @@ const Dekidaka = () => {
     subDekidaka,
     isLoading,
     isInputFilled,
+    getDekidakaSum,
   } = useGetDataContext();
 
   const {
@@ -30,9 +31,15 @@ const Dekidaka = () => {
   const { session, dateNow } = useSessionContext();
 
   useEffect(() => {
-    getDekidaka();
+    const fetchDekidakaData = async () => {
+      if (profileId) {
+        await getDekidaka();
+        getDekidakaSum();
+      }
+    };
+    fetchDekidakaData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session]);
+  }, [profileId]);
 
   return (
     <div className="flex justify-center px-1.5 mt-1 h-full w-full lg:w-1/3">

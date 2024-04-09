@@ -16,6 +16,7 @@ type SessionContextValue = {
   userLastProfileId: string;
   dateNow: any;
   session: any;
+  fetchSession: () => Promise<void>;
 };
 
 const sessionContext = createContext<SessionContextValue | undefined>(
@@ -26,11 +27,6 @@ export const SessionContextProvider = ({ children }: any) => {
   const [userData, setUserData] = useState<any>(null);
   const [dateNow, setDateNow] = useState<any>();
   const { data: session } = useSession<any>();
-
-  useEffect(() => {
-    fetchSession();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session]);
 
   const fetchSession = async () => {
     try {
@@ -51,6 +47,7 @@ export const SessionContextProvider = ({ children }: any) => {
     userLastProfileId: userData ? userData.lastProfileId : "",
     dateNow,
     session,
+    fetchSession,
   };
 
   return (

@@ -13,19 +13,25 @@ const DailyKpi = () => {
     getEfficiency,
   } = useGetDataContext();
 
-  const { userDataName, dateNow, session } = useSessionContext();
+  const { fetchSession, userDataName, dateNow, session } = useSessionContext();
 
   useEffect(() => {
-    if (userDataName) {
-      getLastKpi();
+    const fetchKpiData = async () => {
+      await fetchSession();
+      if (userDataName) {
+        await getLastKpi();
+      }
+    };
+    fetchKpiData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session]);
+
+  useEffect(() => {
+    if (kpiId) {
+      getEfficiency();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateNow]);
-
-  useEffect(() => {
-    getEfficiency();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateNow]);
+  }, [kpiId]);
 
   return (
     <div className="container flex flex-col justify-center w-full p-2 lg:w-1/3 ">

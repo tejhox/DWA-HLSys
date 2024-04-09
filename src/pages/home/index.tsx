@@ -22,30 +22,30 @@ const Home = () => {
             <div className="flex items-center md:justify-center">
               <Link
                 href="/production"
-                className="text-2xl/8 font-semibold link link-hover">
+                className="btn btn-primary text-xl font-semibold link link-hover">
                 Buat Laporan
+                <FontAwesomeIcon
+                  icon={faArrowRight}
+                  size="lg"
+                  className="ms-1 mt-1"
+                />
               </Link>
-              <FontAwesomeIcon
-                icon={faArrowRight}
-                size="lg"
-                className="ms-3 mt-1.5"
-              />
             </div>
           ) : (
             ""
           )}
           {data ? (
-            <div className="flex items-center md:justify-center mt-3">
+            <div className="flex items-center md:justify-center mt-2">
               <Link
                 href="/monthly-kpi"
-                className="text-2xl/8 font-semibold link link-hover">
+                className="btn btn-success text-xl text-white font-semibold link link-hover">
                 Lihat KPI
+                <FontAwesomeIcon
+                  icon={faArrowRight}
+                  size="lg"
+                  className="ms-1 mt-0.5"
+                />
               </Link>
-              <FontAwesomeIcon
-                icon={faArrowRight}
-                size="lg"
-                className="ms-3 mt-1.5"
-              />
             </div>
           ) : (
             <Link href={"/auth/login"} className="link mt-3">

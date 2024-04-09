@@ -13,21 +13,27 @@ import {
 } from "recharts";
 
 const EfficiencyChart = () => {
-  const { getLastKpi, getAllEfficiency, kpiDoc } = useGetDataContext();
+  const { getLastKpi, getAllEfficiency, kpiDoc, kpiId } = useGetDataContext();
 
-  const { session, userDataName, dateNow } = useSessionContext();
+  const { fetchSession, session, userDataName, dateNow } = useSessionContext();
 
   useEffect(() => {
-    if (userDataName) {
-      getLastKpi();
-    }
+    const fetchAllEfficiencyData = async () => {
+      await fetchSession();
+      if (userDataName) {
+        await getLastKpi();
+      }
+    };
+    fetchAllEfficiencyData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
   useEffect(() => {
-    getAllEfficiency();
+    if (kpiId) {
+      getAllEfficiency();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateNow]);
+  }, [kpiId]);
 
   const chartData =
     kpiDoc?.map((item: KpiDoc) => ({
