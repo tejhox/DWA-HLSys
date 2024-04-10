@@ -1,4 +1,4 @@
-import { useGetDataContext } from "@/context/getDataContext";
+import { useAppStateContext } from "@/context/appStateContext";
 
 export const calculateDeviasi = (
   plan: number | undefined,
@@ -32,7 +32,7 @@ export const calculateLossTime = (
 };
 
 export const useLossTimeCalculation = () => {
-  const { tableIndex: contextTableIndex } = useGetDataContext();
+  const { tableIndex: contextTableIndex } = useAppStateContext();
 
   const calculateLossTimeById = (
     subDekidaka: any,

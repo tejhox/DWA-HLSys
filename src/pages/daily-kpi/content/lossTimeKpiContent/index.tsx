@@ -1,20 +1,22 @@
 import Card from "@/components/card";
+import { useAppStateContext } from "@/context/appStateContext";
 import { useGetDataContext } from "@/context/getDataContext";
 import { useSessionContext } from "@/context/sessionContext";
 import { useEffect } from "react";
 
-const EfficiencyContent = () => {
+const LossTimeKpiContent = () => {
   const {
     kpiId,
     availableTime,
-    effectiveTime,
-    efficiency,
-    getLastKpi,
-    getEfficiency,
+    lossTimeKpi,
+    lossTimeRatio,
     isLoading,
-  } = useGetDataContext();
+    userDataName,
+  } = useAppStateContext();
 
-  const { fetchSession, userDataName, session } = useSessionContext();
+  const { getLastKpi, getLossTimeKpi } = useGetDataContext();
+
+  const { fetchSession, session } = useSessionContext();
 
   useEffect(() => {
     fetchSession();
@@ -30,7 +32,7 @@ const EfficiencyContent = () => {
 
   useEffect(() => {
     if (kpiId) {
-      getEfficiency();
+      getLossTimeKpi();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [kpiId]);
@@ -40,15 +42,15 @@ const EfficiencyContent = () => {
       cardTitle={
         <div className="container w-full">
           <div className="container flex w-full">
-            <p className="font-semibold ">Efisiensi :</p>
+            <p className="font-semibold ">Loss Time % :</p>
             <p className="text-lg font-semibold text-primary text-right">
               {isLoading ? (
                 <span className="loading loading-dots loading-xs"></span>
-              ) : efficiency ? (
-                `${efficiency}%`
-              ) : efficiency === undefined ? (
+              ) : lossTimeRatio ? (
+                `${lossTimeRatio}%`
+              ) : lossTimeRatio === undefined ? (
                 "~"
-              ) : efficiency === 0 ? (
+              ) : lossTimeRatio === 0 ? (
                 "0%"
               ) : (
                 ""
@@ -64,15 +66,17 @@ const EfficiencyContent = () => {
             <li>
               <div className="flex">
                 <p className="text-sm font-semibold">
-                  Waktu Tersedia<span className="ms-1">:</span>
+                  Waktu Tersedia<span className="ms-1.5">:</span>
                 </p>
                 <p className="text-sm text-success font-semibold text-right">
                   {isLoading ? (
                     <span className="loading loading-dots loading-xs"></span>
                   ) : availableTime ? (
-                    `${availableTime}'`
-                  ) : !availableTime ? (
+                    `${availableTime}%`
+                  ) : availableTime === undefined ? (
                     "~"
+                  ) : availableTime === 0 ? (
+                    "0%"
                   ) : (
                     ""
                   )}
@@ -82,16 +86,16 @@ const EfficiencyContent = () => {
             <li>
               <div className="flex">
                 <p className="text-sm font-semibold mt-1">
-                  Waktu Efektif <span className="ms-3">:</span>
+                  Loss Time <span className="ms-10">:</span>
                 </p>
-                <p className="text-sm text-yellow-600 font-semibold text-right mt-1">
+                <p className="text-sm text-error font-semibold text-right mt-1">
                   {isLoading ? (
                     <span className="loading loading-dots loading-xs"></span>
-                  ) : effectiveTime ? (
-                    `${effectiveTime}'`
-                  ) : effectiveTime === undefined ? (
+                  ) : lossTimeKpi ? (
+                    `${lossTimeKpi}'`
+                  ) : lossTimeKpi === undefined ? (
                     "~"
-                  ) : effectiveTime === 0 ? (
+                  ) : lossTimeKpi === 0 ? (
                     "0'"
                   ) : (
                     ""
@@ -106,4 +110,4 @@ const EfficiencyContent = () => {
   );
 };
 
-export default EfficiencyContent;
+export default LossTimeKpiContent;

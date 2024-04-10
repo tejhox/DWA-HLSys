@@ -1,7 +1,7 @@
 import { deleteProfile } from "@/lib/services/firebase/dataServices/ProfileDataService";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handlerDeleteProfile(
+export default async function handlerDeleteProfileData(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -19,8 +19,8 @@ export default async function handlerDeleteProfile(
       const data = await deleteProfile(docId, kpiDocId);
       res.status(200).json(data);
     } catch (error) {
-      console.error("Error fetching Dekidaka data:", error);
-      res.status(500).json({ message: "Failed to fetch Dekidaka data" });
+      console.error("Error deleting profile data:", error);
+      res.status(500).json({ message: "Failed to delete profile data" });
     }
   } else {
     res.status(405).json({ message: "Method Not Allowed" });

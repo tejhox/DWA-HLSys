@@ -14,7 +14,7 @@ import {
   YAxis,
 } from "recharts";
 
-const EfficiencyChart = () => {
+const LossTimeChart = () => {
   const { getLastKpi, getAllKpiData } = useGetDataContext();
   const { kpiData, kpiId, userDataName } = useAppStateContext();
   const { fetchSession, session } = useSessionContext();
@@ -41,7 +41,7 @@ const EfficiencyChart = () => {
   const chartData =
     kpiData?.map((item: KpiData) => ({
       time: item.date,
-      Efficiency: item.efficiencyDoc?.efficiency || 0,
+      LossTime: item.lossTimeDoc?.lossTimeRatio || 0,
     })) || [];
 
   const sortedChartData = chartData.slice().sort((a, b) => {
@@ -76,15 +76,18 @@ const EfficiencyChart = () => {
         />
         <YAxis tick={{ fontSize: 12 }} />
         <Tooltip />
-        <Legend wrapperStyle={{ fontSize: "12px" }} />
+        <Legend
+          formatter={(value, entry) => "Loss Time"}
+          wrapperStyle={{ fontSize: "12px" }}
+        />
         <Line
           type="monotone"
-          dataKey="Efficiency"
-          stroke="#8884d8"
+          dataKey="LossTime"
+          stroke="#f25738"
           strokeWidth={2}
         />
       </LineChart>
     </ResponsiveContainer>
   );
 };
-export default EfficiencyChart;
+export default LossTimeChart;

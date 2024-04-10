@@ -1,64 +1,81 @@
-import React, { createContext, useContext, useState } from "react";
 import axios from "axios";
-import Modal from "@/components/modal";
-import { useSessionContext } from "./sessionContext";
-import { useDekidakaContext } from "./dekidakaContext";
+import React, { createContext, useContext } from "react";
 import { useGetDataContext } from "./getDataContext";
-import { getEfficiency } from "@/lib/services/firebase/dataServices/KpiService";
+import { useAppStateContext } from "./appStateContext";
+import { ProfileContextValue } from "./type/dataType";
 
-type ProductionContextValue = {
-  line: string;
-  product: string;
-  shift: string;
-  date: string;
-  isDeleteConfirmOpen: boolean;
-  isButtonClicked: boolean;
-  addProfile: () => Promise<void>;
-  updateProfile: () => Promise<void>;
-  modalDeleteConfirmation: () => React.ReactNode;
-  handleDeleteModal: () => void;
-  handleShowWarning: () => void;
-};
-
-const ProfileContext = createContext<ProductionContextValue | undefined>(
+const ProfileContext = createContext<ProfileContextValue | undefined>(
   undefined
 );
 
 export const ProfileProvider = ({ children }: any) => {
-  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-  const [isButtonClicked, setIsButtonClicked] = useState(false);
-  const { userDataName } = useSessionContext();
-  const { getDekidaka } = useDekidakaContext();
+  const {
+    getDekidaka,
+    getLastProfile,
+    getLastKpi,
+    getEfficiency,
+    getLossTimeKpi,
+    getAllEfficiency,
+  } = useGetDataContext();
 
   const {
+    userDataName,
     line,
     product,
     shift,
     date,
+    setLine,
+    setProduct,
+    setShift,
+    setDate,
     setTotalPlan,
     setTotalActual,
     setTotalDeviasi,
     setTotalLossTime,
-    setIsDisabled,
     setIsInputFilled,
     setProfileId,
     profileId,
-    setSwitchProfileUi,
+    setIsSwitchProfileUi,
     kpiId,
     setKpiId,
-    isLoading,
     setIsLoading,
-    getLastProfile,
-    getLastKpi,
-    getEfficiency,
-    getAllEfficiency,
-  } = useGetDataContext();
+    setIsBtnClicked,
+    setIsModalDeleteProfileOpen,
+    isModalDeleteProfileOpen,
+    setIsEditMode,
+    isMenuOpen,
+    setIsMenuOpen,
+    setIsCheckBtnDisabled,
+    dekidakaData,
+    setIsFormBlank,
+    setDekidakaData,
+  } = useAppStateContext();
+
+  const handleShowWarning = () => {
+    setIsInputFilled(false);
+    setIsBtnClicked(true);
+  };
+
+  const handleModalDeleteProfile = () => {
+    setIsModalDeleteProfileOpen(!isModalDeleteProfileOpen);
+  };
+
+  const toggleEditProfile = () => {
+    setIsCheckBtnDisabled(false);
+    setIsSwitchProfileUi(false);
+    setIsEditMode(true);
+  };
+
+  const toggleOpenMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   const addProfile = async () => {
     if (line && product && shift && date) {
-      setIsDisabled(true);
+      setIsCheckBtnDisabled(true);
       setIsLoading(true);
     }
+
     const leaderGroups = {
       "Bowo Dwi": "1",
       "Ocza Aurellia": "2",
@@ -67,24 +84,27 @@ export const ProfileProvider = ({ children }: any) => {
     if (group) {
       try {
         if (line && product && shift && date) {
-          const response = await axios.post("/api/addProfileData", {
-            line,
-            group,
-            leader: userDataName,
-            product,
-            shift,
-            date,
-          });
+          const response = await axios.post(
+            "/api/profileDataService/addProfileData",
+            {
+              line,
+              group,
+              leader: userDataName,
+              product,
+              shift,
+              date,
+            }
+          );
           const { kpiDocId } = response.data;
           setKpiId(kpiDocId);
           setIsInputFilled(true);
           setIsLoading(false);
-          setSwitchProfileUi(true);
+          setIsSwitchProfileUi(true);
           getDekidaka();
           getLastProfile();
           getLastKpi();
         } else {
-          setIsButtonClicked(true);
+          setIsBtnClicked(true);
         }
       } catch (error) {
         console.error("Error submitting form data:", error);
@@ -93,9 +113,9 @@ export const ProfileProvider = ({ children }: any) => {
   };
 
   const updateProfile = async () => {
-    setIsDisabled(true);
+    setIsCheckBtnDisabled(true);
     try {
-      await axios.patch("/api/updateProfileData", {
+      await axios.patch("/api/profileDataService/updateProfileData", {
         docId: profileId,
         line,
         product,
@@ -103,7 +123,7 @@ export const ProfileProvider = ({ children }: any) => {
         date,
       });
       await getLastProfile();
-      setSwitchProfileUi(true);
+      setIsSwitchProfileUi(true);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -113,75 +133,66 @@ export const ProfileProvider = ({ children }: any) => {
     setIsLoading(true);
     try {
       await axios.delete(
-        `/api/deleteProfileData?docId=${profileId}&kpiDocId=${kpiId}`
+        `/api/profileDataService/deleteProfileData?docId=${profileId}&kpiDocId=${kpiId}`
       );
+      setLine("");
+      setProduct("");
+      setShift("");
+      setDate("");
       setTotalPlan(0);
       setTotalActual(0);
       setTotalDeviasi(0);
       setTotalLossTime(0);
       setIsLoading(false);
-      setIsDeleteConfirmOpen(false);
+      setIsCheckBtnDisabled(false);
+      setIsModalDeleteProfileOpen(false);
       setProfileId("");
-      setSwitchProfileUi(false);
+      setIsSwitchProfileUi(false);
       getLastProfile();
       getLastKpi();
       getDekidaka();
       getEfficiency();
+      getLossTimeKpi();
       getAllEfficiency();
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const handleShowWarning = () => {
-    setIsInputFilled(false);
-    setIsButtonClicked(true);
+  const newProfile = () => {
+    try {
+      if (dekidakaData?.length === 0) {
+        setIsFormBlank(true);
+      } else {
+        setIsSwitchProfileUi(false);
+        setDekidakaData([]);
+        setLine("");
+        setProduct("");
+        setShift("");
+        setDate("");
+        setProfileId("");
+        setKpiId("");
+        setTotalPlan(0);
+        setTotalActual(0);
+        setTotalDeviasi(0);
+        setTotalLossTime(0);
+        setIsCheckBtnDisabled(false);
+        setIsInputFilled(false);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
-  const handleDeleteModal = () => {
-    setIsDeleteConfirmOpen(!isDeleteConfirmOpen);
-  };
-
-  const modalDeleteConfirmation = () => {
-    return (
-      <Modal
-        modalBody={
-          <div className="p-2">
-            <p>Hapus laporan ?</p>
-            <div className="flex justify-end mt-4">
-              <button
-                onClick={handleDeleteModal}
-                className="btn btn-sm bg-blue-700 text-white ">
-                Tidak
-              </button>
-              <button
-                onClick={deleteProfile}
-                className="btn btn-sm btn-error ms-2">
-                {isLoading ? (
-                  <span className="loading loading-spinner"></span>
-                ) : (
-                  "Ya"
-                )}
-              </button>
-            </div>
-          </div>
-        }
-      />
-    );
-  };
-
-  const contextValue: ProductionContextValue = {
-    line,
-    product,
-    shift,
-    date,
-    isDeleteConfirmOpen,
-    isButtonClicked,
+  const contextValue: ProfileContextValue = {
     addProfile,
     updateProfile,
-    handleDeleteModal,
+    deleteProfile,
+    handleModalDeleteProfile,
+    toggleEditProfile,
+    toggleOpenMenu,
     handleShowWarning,
-    modalDeleteConfirmation,
+    newProfile,
   };
 
   return (

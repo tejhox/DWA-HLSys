@@ -1,15 +1,19 @@
 import Profile from "./components/profile";
 import Dekidaka from "./components/dekidaka";
 import DekidakaTotal from "./components/dekidakaTotal";
-import Menu from "./components/menu";
+import GeneralLayout from "@/components/layout/generalLayout";
 
 const ProductionPage = () => {
   return (
-    <>
-      <Profile />
-      <DekidakaTotal />
-      <Dekidaka />
-    </>
+    <GeneralLayout
+      content={
+        <>
+          <Profile />
+          <DekidakaTotal />
+          <Dekidaka />
+        </>
+      }
+    />
   );
 };
 

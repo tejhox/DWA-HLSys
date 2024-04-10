@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import {
-  faChartLine,
   faChartSimple,
   faCheck,
   faEllipsis,
@@ -10,52 +10,50 @@ import {
 import { useSessionContext } from "@/context/sessionContext";
 import { useGetDataContext } from "@/context/getDataContext";
 import { useProfileContext } from "@/context/profileContext";
-import Link from "next/link";
-import Modal from "@/components/modal";
+import { useAppStateContext } from "@/context/appStateContext";
+import { useModalFunctionContext } from "@/context/modalFunctionContext";
+import Container from "@/components/layout/container";
 
 const Profile = () => {
-  const [editMode, setEditMode] = useState<boolean>(false);
-  const [isMobile, setIsMobile] = useState<boolean>(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  useEffect(() => {
-    setIsMobile(window.matchMedia("(max-width: 768px)").matches);
-  }, []);
-
-  const { line, product, shift, date, isDeleteConfirmOpen, isButtonClicked } =
-    useProfileContext();
-
   const {
-    isDisabled,
+    line,
+    product,
+    shift,
+    date,
+    isModalDeleteProfileOpen,
+    isBtnClicked,
     isInputFilled,
     setLine,
     setProduct,
     setShift,
     setDate,
-    setIsDisabled,
-    switchProfileUi,
-    setSwitchProfileUi,
-    getLastProfile,
-    getLastKpi,
-    newProfile,
+    isSwitchProfileUi,
+    userData,
+    userDataName,
+    userDataNik,
     isLoading,
     isFormBlank,
-    setIsFormBlank,
-  } = useGetDataContext();
+    setIsMenuOpen,
+    isMenuOpen,
+    isEditMode,
+    isCheckBtnDisabled,
+  } = useAppStateContext();
 
-  const { fetchSession, userData, userDataName, userDataNik, session } =
-    useSessionContext();
+  const { getLastProfile, getLastKpi } = useGetDataContext();
+
+  const { fetchSession, session } = useSessionContext();
 
   const {
     addProfile,
     updateProfile,
-    handleDeleteModal,
-    modalDeleteConfirmation,
+    handleModalDeleteProfile,
+    toggleOpenMenu,
+    toggleEditProfile,
+    newProfile,
   } = useProfileContext();
+
+  const { modalDeleteProfileConfirmation, modalBlankFormWarning } =
+    useModalFunctionContext();
 
   useEffect(() => {
     fetchSession();
@@ -76,48 +74,16 @@ const Profile = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userDataName]);
 
-  const handleEdit = () => {
-    setIsDisabled(false);
-    setSwitchProfileUi(false);
-    setEditMode(true);
-  };
-
   let formattedDate: any;
   if (date) {
     const rawDate = new Date(date).toLocaleDateString("en-GB");
     formattedDate = rawDate;
   }
 
-  const formBlankModal = () => {
-    return (
-      <Modal
-        modalBody={
-          <div>
-            <div>
-              <p className="text-error font-bold underline">
-                Laporan masih kosong!
-              </p>
-              <p className="mt-2 text-sm">
-                *Silahkan isi atau hapus laporan terlebih dahulu
-              </p>
-            </div>
-            <div className="flex justify-end mt-3">
-              <button
-                onClick={() => setIsFormBlank(false)}
-                className="btn btn-sm btn-primary">
-                OK
-              </button>
-            </div>
-          </div>
-        }
-      />
-    );
-  };
-
   return (
-    <div className="flex justify-center px-1.5 mt-2 h-full w-full lg:w-1/3">
-      <div className="container w-full relative">
-        <div className="container w-full border-2 rounded-lg bg-gray-200 shadow-md shadow-gray-500/60 px-1 py-1 mb-1">
+    <Container
+      content={
+        <div>
           <div className="container flex flex-row items-center w-full ps-2 pe-2 py-1 ">
             {userData ? (
               <p className="text-sm text-blue-900">
@@ -126,7 +92,7 @@ const Profile = () => {
             ) : (
               <p className="text-sm text-primary">Loading...</p>
             )}
-            <span className="ms-auto cursor-pointer" onClick={toggleMenu}>
+            <span className="ms-auto cursor-pointer" onClick={toggleOpenMenu}>
               <FontAwesomeIcon icon={faEllipsis} size="lg" />
             </span>
             {isMenuOpen && (
@@ -147,7 +113,7 @@ const Profile = () => {
           <hr className=" border border-gray-400" />
           <div
             className={
-              !switchProfileUi ? "container flex w-full p-1 mt-1" : "hidden"
+              !isSwitchProfileUi ? "container flex w-full p-1 mt-1" : "hidden"
             }>
             <div className="container w-1/2">
               <select
@@ -188,50 +154,24 @@ const Profile = () => {
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
               />
-              {/* {typeof window !== "undefined" && isMobile ? (
-                <input
-                  placeholder="Tanggal"
-                  className="input input-bordered input-sm w-full"
-                  type="text"
-                  onMouseOver={(event) => {
-                    const target = event.target as HTMLInputElement;
-                    target.type = "date";
-                  }}
-                  onMouseOut={(event) => {
-                    const target = event.target as HTMLInputElement;
-                    target.type = "text";
-                  }}
-                  id="date"
-                  disabled={isDisabled}
-                />
-              ) : (
-                <input
-                  type="date"
-                  placeholder="Tanggal"
-                  className="input input-bordered input-sm w-full"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  disabled={isDisabled}
-                />
-              )} */}
             </div>
           </div>
           <div
             className={
-              switchProfileUi ? "container flex w-full p-1 mt-1" : "hidden"
+              isSwitchProfileUi ? "container flex w-full p-1 mt-1" : "hidden"
             }>
             <div className="container w-1/2">
               <input
                 type="text"
                 className="input input-bordered input-sm w-full max-w-xs mb-1"
                 defaultValue={line}
-                readOnly={isDisabled}
+                readOnly
               />
               <input
                 type="text"
                 className="input input-bordered input-sm w-full max-w-xs mb-1"
                 defaultValue={product}
-                readOnly={isDisabled}
+                readOnly
               />
             </div>
             <div className="container w-1/2 ms-2">
@@ -239,13 +179,13 @@ const Profile = () => {
                 type="text"
                 className="input input-bordered input-sm w-full max-w-xs mb-1"
                 defaultValue={shift}
-                readOnly={isDisabled}
+                readOnly
               />
               <input
                 type="text"
                 className="input input-bordered input-sm w-full max-w-xs mb-1"
                 defaultValue={formattedDate}
-                readOnly={isDisabled}
+                readOnly
               />
             </div>
           </div>
@@ -253,27 +193,27 @@ const Profile = () => {
             <div className="flex items-center w-full justify-between">
               <div>
                 <button
-                  onClick={() => handleDeleteModal()}
+                  onClick={() => handleModalDeleteProfile()}
                   className="btn btn-outline btn-error btn-sm"
                   disabled={!isInputFilled}>
                   <FontAwesomeIcon icon={faTrashCan} />
                 </button>
                 <button
-                  onClick={() => handleEdit()}
+                  onClick={() => toggleEditProfile()}
                   className="btn btn-outline btn-primary btn-sm ms-1.5"
                   disabled={!isInputFilled}>
                   <FontAwesomeIcon icon={faPenToSquare} />
                 </button>
               </div>
               <div>
-                {isButtonClicked && (!line || !product || !shift || !date) && (
+                {isBtnClicked && (!line || !product || !shift || !date) && (
                   <p className="text-sm text-warning">Lengkapi Profile !</p>
                 )}
               </div>
-              {!editMode ? (
+              {!isEditMode ? (
                 <button
                   onClick={addProfile}
-                  disabled={isDisabled}
+                  disabled={isCheckBtnDisabled}
                   className="btn btn-outline btn-success btn-sm w-1/5">
                   {isLoading ? (
                     <span className="loading loading-spinner"></span>
@@ -284,10 +224,10 @@ const Profile = () => {
               ) : (
                 ""
               )}
-              {editMode ? (
+              {isEditMode ? (
                 <button
                   onClick={updateProfile}
-                  disabled={isDisabled}
+                  disabled={isCheckBtnDisabled}
                   className="btn btn-outline btn-success btn-sm w-1/5">
                   <FontAwesomeIcon icon={faCheck} size="lg" />
                 </button>
@@ -307,11 +247,11 @@ const Profile = () => {
               </Link>
             </div>
           </div>
+          {isModalDeleteProfileOpen && modalDeleteProfileConfirmation()}
+          {isFormBlank && modalBlankFormWarning()}
         </div>
-      </div>
-      {isDeleteConfirmOpen && modalDeleteConfirmation()}
-      {isFormBlank && formBlankModal()}
-    </div>
+      }
+    />
   );
 };
 export default Profile;

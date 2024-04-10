@@ -42,3 +42,27 @@ export async function getLastProfile(name: string) {
     throw new Error("Failed to get data");
   }
 }
+
+export async function getLastKpi(name: string) {
+  try {
+    const q = query(
+      collection(firestore, "kpi"),
+      orderBy("time", "desc"),
+      limit(1)
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      const latestDoc = querySnapshot.docs[0];
+      const latestData = latestDoc.data();
+      const kpiDocId = latestDoc.id;
+      return { kpiDocId, ...latestData };
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching document data:", error);
+    throw new Error("Failed to fetch document data from Firestore");
+  }
+}

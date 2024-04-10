@@ -1,7 +1,7 @@
-import { getDekidaka } from "@/lib/services/firebase/dataServices/DekidakaDataServices";
+import { getLossTimeKpi } from "@/lib/services/firebase/dataServices/KpiService";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handlerSubDekidaka(
+export default async function handlerGetLossTimeKpi(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -9,12 +9,13 @@ export default async function handlerSubDekidaka(
     try {
       const { docId } = req.query;
       if (!docId || typeof docId !== "string") {
-        throw new Error("Invalid docId parameter");
+        res.status(400).json({ message: "Invalid docId parameter" });
+        return;
       }
-      const data = await getDekidaka(docId);
+      const data = await getLossTimeKpi(docId);
       res.status(200).json(data);
     } catch (error) {
-      res.status(404).json({ message: "Data not found" });
+      res.status(500).json({ message: "Data not found" });
     }
   } else {
     res.status(405).json({ message: "Method Not Allowed" });

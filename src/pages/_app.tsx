@@ -8,6 +8,8 @@ import { SessionContextProvider } from "@/context/sessionContext";
 import { GetDataProvider } from "@/context/getDataContext";
 import { KpiProvider } from "@/context/kpiContext";
 import { DekidakaProvider } from "@/context/dekidakaContext";
+import { AppStateProvider } from "@/context/appStateContext";
+import { ModalFunctionProvider } from "@/context/modalFunctionContext";
 
 const lato = Lato({
   weight: ["100", "300", "400", "700", "900"],
@@ -22,20 +24,24 @@ export default function App({
 }: AppProps) {
   return (
     <SessionProvider session={session}>
-      <SessionContextProvider>
-        <GetDataProvider>
-          <KpiProvider>
-            <DekidakaProvider>
-              <ProfileProvider>
-                <div className={lato.className}>
-                  <Navbar />
-                  <Component {...pageProps} />
-                </div>
-              </ProfileProvider>
-            </DekidakaProvider>
-          </KpiProvider>
-        </GetDataProvider>
-      </SessionContextProvider>
+      <AppStateProvider>
+        <SessionContextProvider>
+          <GetDataProvider>
+            <KpiProvider>
+              <DekidakaProvider>
+                <ProfileProvider>
+                  <ModalFunctionProvider>
+                    <div className={lato.className}>
+                      <Navbar />
+                      <Component {...pageProps} />
+                    </div>
+                  </ModalFunctionProvider>
+                </ProfileProvider>
+              </DekidakaProvider>
+            </KpiProvider>
+          </GetDataProvider>
+        </SessionContextProvider>
+      </AppStateProvider>
     </SessionProvider>
   );
 }

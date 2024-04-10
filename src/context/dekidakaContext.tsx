@@ -1,86 +1,62 @@
 import axios from "axios";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext } from "react";
 import { FormEvent } from "react";
 import { useGetDataContext } from "./getDataContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
-import Modal from "@/components/modal";
 import { useKpiContext } from "./kpiContext";
+import { useAppStateContext } from "./appStateContext";
 import {
   calculateDeviasi,
   calculateLossTime,
   useLossTimeCalculation,
 } from "@/utils/dekidakaCalculation";
-
-type DekidakaContextValue = {
-  isModalAddOpen: boolean;
-  isDeleteConfirmOpen: boolean;
-  isModalUpdateOpen: boolean;
-  setIsModalAddOpen: (value: boolean) => void;
-  setIsModalUpdateOpen: (value: boolean) => void;
-  setIsDeleteConfirmOpen: (value: boolean) => void;
-  modalAddData: () => React.ReactNode;
-  modalUpdateData: () => React.ReactNode;
-  modalDeleteConfirmation: () => React.ReactNode;
-  getDekidaka: () => Promise<void>;
-  handleAddModal: () => void;
-  handleUpdateModal: () => void;
-  handleDeleteModal: () => void;
-};
+import { DekidakaContextValue } from "./type/dataType";
 
 const DekidakaContext = createContext<DekidakaContextValue | undefined>(
   undefined
 );
 
 export const DekidakaProvider = ({ children }: any) => {
-  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-  const [isBtnDisabled, setIsBtnDisabled] = useState<boolean>(false);
-  const [isModalAddOpen, setIsModalAddOpen] = useState(false);
-
   const { calculateLossTimeById } = useLossTimeCalculation();
-
+  const { getDekidaka, getDekidakaSum } = useGetDataContext();
+  const { setEfficiency, setLossTimeKpi } = useKpiContext();
   const {
     plan,
     actual,
-    setPlan,
-    setActual,
-    setDeviasi,
-    setLossTime,
-    itemId,
+    dekidakaId,
     tableIndex,
-    subDekidaka,
-    getDekidaka,
-    isModalUpdateOpen,
-    setIsModalUpdateOpen,
+    dekidakaData,
+    isModalUpdateDekidakaOpen,
+    setIsModalUpdateDekidakaOpen,
     profileId,
-    getDekidakaSum,
     setIsLoading,
-    isLoading,
     setIsFormBlank,
-  } = useGetDataContext();
+    isModalAddDekidakaOpen,
+    setIsModalAddDekidakaOpen,
+    setIsModalDeleteDekidakaOpen,
+    isModalDeleteDekidakaOpen,
+    setIsBtnDisabled,
+  } = useAppStateContext();
 
-  const { setEfficiency } = useKpiContext();
-
-  const handleAddModal = () => {
-    setIsModalAddOpen(!isModalAddOpen);
+  const handleAddDekidakaModal = () => {
+    setIsModalAddDekidakaOpen(!isModalAddDekidakaOpen);
   };
-  const handleUpdateModal = () => {
-    setIsModalUpdateOpen(!isModalUpdateOpen);
+  const handleUpdateDekidakaModal = () => {
+    setIsModalUpdateDekidakaOpen(!isModalUpdateDekidakaOpen);
   };
-  const handleDeleteModal = () => {
-    setIsDeleteConfirmOpen(!isDeleteConfirmOpen);
+  const handleDeleteDekidakaModal = () => {
+    setIsModalDeleteDekidakaOpen(!isModalDeleteDekidakaOpen);
   };
 
   const calculatedDeviasiValue: number = calculateDeviasi(plan, actual);
 
   const calculatedlossTimeValue: number = calculateLossTime(
-    subDekidaka,
+    dekidakaData,
     plan,
     actual
   );
 
-  const calculatedlossTimeValueById = calculateLossTimeById(
-    subDekidaka,
+  const calculatedlossTimeValueById: number | undefined = calculateLossTimeById(
+    dekidakaData,
     plan,
     actual,
     tableIndex
@@ -94,8 +70,8 @@ export const DekidakaProvider = ({ children }: any) => {
         setIsBtnDisabled(true);
         const workHourValue: number = 60;
         const deviasiValue = calculateDeviasi(plan, actual);
-        const lossTimeValue = calculateLossTime(subDekidaka, plan, actual);
-        await axios.post(`/api/addDekidaka`, {
+        const lossTimeValue = calculateLossTime(dekidakaData, plan, actual);
+        await axios.post(`/api/dekidakaService/addDekidaka`, {
           docId: profileId,
           workHour: workHourValue,
           plan,
@@ -105,9 +81,9 @@ export const DekidakaProvider = ({ children }: any) => {
         });
         sumDekidaka();
         setIsFormBlank(false);
-        setIsModalAddOpen(false);
-        setIsBtnDisabled(false);
+        setIsModalAddDekidakaOpen(false);
         setIsLoading(false);
+        setIsBtnDisabled(false);
       }
     } catch (error) {
       console.error("Error adding data:", error);
@@ -116,10 +92,11 @@ export const DekidakaProvider = ({ children }: any) => {
 
   const sumDekidaka = async () => {
     try {
-      await axios.post(`/api/sumDekidaka`, {
+      await axios.post(`/api/dekidakaService/sumDekidaka`, {
         docId: profileId,
       });
       setEfficiency();
+      setLossTimeKpi();
       getDekidaka();
       getDekidakaSum();
     } catch (error) {
@@ -133,14 +110,14 @@ export const DekidakaProvider = ({ children }: any) => {
     try {
       setIsBtnDisabled(true);
       const lossTimeValueById = calculateLossTimeById(
-        subDekidaka,
+        dekidakaData,
         plan,
         actual,
         tableIndex
       );
-      await axios.patch("/api/updateDekidaka", {
+      await axios.patch("/api/dekidakaService/updateDekidaka", {
         docId: profileId,
-        subDocId: itemId,
+        subDocId: dekidakaId,
         plan: plan,
         actual: actual,
         deviasi: calculatedDeviasiValue,
@@ -148,7 +125,7 @@ export const DekidakaProvider = ({ children }: any) => {
       });
       sumDekidaka();
       setIsLoading(false);
-      setIsModalUpdateOpen(false);
+      setIsModalUpdateDekidakaOpen(false);
       setIsBtnDisabled(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -159,213 +136,28 @@ export const DekidakaProvider = ({ children }: any) => {
     setIsLoading(true);
     try {
       await axios.delete(
-        `/api/deleteDekidaka?docId=${profileId}&subDocId=${itemId}`
+        `/api/dekidakaService/deleteDekidaka?docId=${profileId}&subDocId=${dekidakaId}`
       );
       sumDekidaka();
       setIsLoading(true);
-      setIsDeleteConfirmOpen(false);
-      setIsModalUpdateOpen(false);
+      setIsModalDeleteDekidakaOpen(false);
+      setIsModalUpdateDekidakaOpen(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const modalAddData = () => {
-    return (
-      <Modal
-        modalBody={
-          <>
-            <div className="flex justify-end">
-              <button onClick={handleAddModal} className="me-1">
-                ✕
-              </button>
-            </div>
-            <form onSubmit={addDekidaka}>
-              <div className="container w-full flex flex-col justify-start lg:px-7">
-                <label htmlFor="planInput" className="label">
-                  Plan
-                </label>
-                <input
-                  id="planInput"
-                  type="number"
-                  className="input input-bordered input-sm w-full"
-                  value={plan}
-                  onChange={(e) => setPlan(parseInt(e.target.value))}
-                />
-                <label htmlFor="actualInput" className="label">
-                  Aktual
-                </label>
-                <input
-                  id="actualInput"
-                  type="number"
-                  className="input input-bordered input-sm w-full"
-                  value={actual}
-                  onChange={(e) => setActual(parseInt(e.target.value))}
-                />
-                <label className="label">Deviasi</label>
-                <input
-                  type="number"
-                  className="input input-bordered input-sm w-full"
-                  value={calculatedDeviasiValue}
-                  onChange={(e) => setDeviasi(parseInt(e.target.value))}
-                  disabled
-                />
-                <label className="label">Loss Time</label>
-                <input
-                  type="text"
-                  className="input input-bordered input-sm w-full"
-                  value={`${calculatedlossTimeValue}'`}
-                  // {`${calculatedLossTime}'` ?? ""}
-                  onChange={(e) => setLossTime(parseInt(e.target.value))}
-                  disabled
-                />
-              </div>
-              <div className="lg:px-7">
-                <button
-                  type="submit"
-                  className="btn btn-sm bg-blue-700 text-white mt-3 w-full"
-                  disabled={isBtnDisabled}>
-                  {isLoading ? (
-                    <span className="flex items-center">
-                      <span className="loading loading-spinner mr-2"></span>
-                      Loading...
-                    </span>
-                  ) : (
-                    "Submit"
-                  )}
-                </button>
-              </div>
-            </form>
-          </>
-        }
-      />
-    );
-  };
-
-  const modalUpdateData = () => {
-    return (
-      <Modal
-        modalBody={
-          <>
-            <div className="flex justify-end">
-              <button onClick={handleUpdateModal} className="me-1">
-                ✕
-              </button>
-            </div>
-            <form onSubmit={updateDekidaka}>
-              <div className="container w-full flex flex-col justify-start lg:px-7">
-                <label htmlFor="planInput" className="label">
-                  Plan
-                </label>
-                <input
-                  id="planInput"
-                  type="number"
-                  className="input input-bordered input-sm w-full"
-                  placeholder="55"
-                  value={plan}
-                  onChange={(e) => setPlan(parseInt(e.target.value))}
-                />
-                <label htmlFor="actualInput" className="label">
-                  Aktual
-                </label>
-                <input
-                  id="actualInput"
-                  type="number"
-                  className="input input-bordered input-sm w-full"
-                  placeholder="55"
-                  value={actual}
-                  onChange={(e) => setActual(parseInt(e.target.value))}
-                />
-                <label className="label">Deviasi</label>
-                <input
-                  type="number"
-                  className="input input-bordered input-sm w-full"
-                  value={calculatedDeviasiValue}
-                  onChange={(e) => setDeviasi(parseInt(e.target.value))}
-                  disabled
-                />
-                <label className="label">Loss Time</label>
-                <input
-                  type="text"
-                  className="input input-bordered input-sm w-full"
-                  value={`${calculatedlossTimeValueById}'`}
-                  onChange={(e) => setLossTime(parseInt(e.target.value))}
-                  disabled
-                />
-              </div>
-              <div className="flex justify-between mt-3 lg:px-7">
-                <button
-                  type="button"
-                  onClick={handleDeleteModal}
-                  className="btn btn-sm btn-outline btn-error">
-                  <FontAwesomeIcon icon={faTrashCan} size="lg" />
-                </button>
-                <button
-                  type="submit"
-                  className="btn btn-sm bg-blue-700 text-white w-1/2 md:w-80"
-                  disabled={isBtnDisabled}>
-                  {isLoading ? (
-                    <span className="flex items-center">
-                      <span className="loading loading-spinner mr-2"></span>
-                      Loading...
-                    </span>
-                  ) : (
-                    "Edit"
-                  )}
-                </button>
-              </div>
-            </form>
-          </>
-        }
-      />
-    );
-  };
-
-  const modalDeleteConfirmation = () => {
-    return (
-      <Modal
-        modalBody={
-          <div className="p-2">
-            <p>Anda yakin ingin menghapus data?</p>
-            <div className="flex justify-end mt-4">
-              <button
-                onClick={handleDeleteModal}
-                className="btn btn-sm bg-blue-700 text-white">
-                Tidak
-              </button>
-              <button
-                onClick={deleteDekidaka}
-                className="btn btn-sm btn-error ms-2">
-                {" "}
-                {isLoading ? (
-                  <span className="flex items-center">
-                    <span className="loading loading-spinner mr-2"></span>
-                  </span>
-                ) : (
-                  "Ya"
-                )}
-              </button>
-            </div>
-          </div>
-        }
-      />
-    );
-  };
-
   const contextValue: DekidakaContextValue = {
-    isModalAddOpen,
-    isModalUpdateOpen,
-    isDeleteConfirmOpen,
-    setIsModalAddOpen,
-    setIsModalUpdateOpen,
-    setIsDeleteConfirmOpen,
+    calculatedlossTimeValue,
+    calculatedlossTimeValueById,
+    calculatedDeviasiValue,
     getDekidaka,
-    modalAddData,
-    modalUpdateData,
-    modalDeleteConfirmation,
-    handleAddModal,
-    handleUpdateModal,
-    handleDeleteModal,
+    deleteDekidaka,
+    updateDekidaka,
+    handleAddDekidakaModal,
+    handleUpdateDekidakaModal,
+    handleDeleteDekidakaModal,
+    addDekidaka,
   };
 
   return (

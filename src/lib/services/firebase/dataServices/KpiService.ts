@@ -18,31 +18,6 @@ import app from "../init";
 
 const firestore = getFirestore(app);
 
-export async function getLastKpi(name: string) {
-  try {
-    const q = query(
-      collection(firestore, "kpi"),
-      orderBy("time", "desc"),
-      limit(1)
-    );
-
-    const querySnapshot = await getDocs(q);
-
-    if (!querySnapshot.empty) {
-      const latestDoc = querySnapshot.docs[0];
-      const latestData = latestDoc.data();
-      const kpiDocId = latestDoc.id;
-
-      return { kpiDocId, ...latestData };
-    } else {
-      return null;
-    }
-  } catch (error) {
-    console.error("Error fetching document data:", error);
-    throw new Error("Failed to fetch document data from Firestore");
-  }
-}
-
 export async function setEfficiency(docId: string, kpiDocId: string) {
   try {
     const docRef = doc(firestore, "document", docId);
@@ -79,6 +54,41 @@ export async function setEfficiency(docId: string, kpiDocId: string) {
   }
 }
 
+export async function setLossTimeRatio(docId: string, kpiDocId: string) {
+  try {
+    const docRef = doc(firestore, "document", docId);
+    const subDocRef = collection(docRef, "dekidakaTotal");
+    const querySnapshot = await getDocs(subDocRef);
+
+    let availableTime = 0;
+    let lossTimeKpi = 0;
+    let lossTimeRatio = 0;
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      availableTime = data.totalWorkHour;
+      lossTimeKpi = data.totalLossTime;
+      const lossTimeRatioRounded =
+        (data.totalLossTime / data.totalWorkHour) * 100;
+      lossTimeRatio = Math.round(lossTimeRatioRounded)
+        ? Math.round(lossTimeRatioRounded)
+        : 0;
+    });
+
+    const lossTimeDoc = {
+      availableTime,
+      lossTimeKpi,
+      lossTimeRatio,
+    };
+
+    const kpiRef = doc(firestore, "kpi", kpiDocId);
+    await updateDoc(kpiRef, { lossTimeDoc });
+  } catch (error) {
+    console.error("Error:", error);
+    throw new Error("Failed to add KPI data.");
+  }
+}
+
 export async function getEfficiency(docId: string) {
   try {
     const kpiRef = doc(firestore, "kpi", docId);
@@ -94,18 +104,31 @@ export async function getEfficiency(docId: string) {
   }
 }
 
-export async function getAllEficiency() {
+export async function getLossTimeKpi(docId: string) {
+  try {
+    const kpiRef = doc(firestore, "kpi", docId);
+    const snapshot = await getDoc(kpiRef);
+    if (snapshot.exists()) {
+      return { id: snapshot.id, ...snapshot.data() };
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching document data:", error);
+    throw new Error("Failed to fetch document data from Firestore");
+  }
+}
+
+export async function getAllKpi() {
   try {
     const docRef = collection(firestore, "kpi");
-    const q = query(docRef, orderBy("time", "desc"));
+    const snapshot = await getDocs(docRef);
 
-    const snapshot = await getDocs(q);
-
-    const subDekidakaData: any[] = [];
+    const kpiData: any[] = [];
     snapshot.forEach((doc) => {
-      subDekidakaData.push({ id: doc.id, ...doc.data() });
+      kpiData.push({ id: doc.id, ...doc.data() });
     });
-    return subDekidakaData;
+    return kpiData;
   } catch (error) {
     console.error("Error fetching document data:", error);
     throw new Error("Failed to fetch document data from Firestore");

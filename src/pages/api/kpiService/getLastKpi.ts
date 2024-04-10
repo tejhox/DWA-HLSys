@@ -1,4 +1,4 @@
-import { getLastKpi } from "@/lib/services/firebase/dataServices/KpiService";
+import { getLastKpi } from "@/lib/services/firebase/dataServices/GetLastDataServices";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handlerGetLastKpi(
