@@ -15,7 +15,7 @@ export const ProfileProvider = ({ children }: any) => {
     getLastKpi,
     getEfficiency,
     getLossTimeKpi,
-    getAllEfficiency,
+    getAllKpiData,
   } = useGetDataContext();
 
   const {
@@ -153,7 +153,7 @@ export const ProfileProvider = ({ children }: any) => {
       getDekidaka();
       getEfficiency();
       getLossTimeKpi();
-      getAllEfficiency();
+      getAllKpiData();
     } catch (error) {
       console.error("Error fetching data:", error);
     }
