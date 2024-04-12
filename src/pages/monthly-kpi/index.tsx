@@ -1,9 +1,37 @@
 import Card from "@/components/card";
-import EfficiencyChart from "@/components/charts/efficiencyChart";
-import LossTimeChart from "@/components/charts/lossTimeKpiChart";
-import GeneralLayout from "@/components/layout/generalLayout";
+import EfficiencyChart from "./components/efficiencyChart";
+import LossTimeChart from "./components/lossTimeKpiChart";
+import Container from "@/components/layout/container";
+import Wrapper from "@/components/layout/wrapper";
+import { useGetDataContext } from "@/context/getDataContext";
+import { useAllStateContext } from "@/context/allStateContext";
+import { useSessionContext } from "@/context/sessionContext";
+import { useEffect } from "react";
 
 const MonthlyKpi = () => {
+  const { getLastKpiDoc, getAllKpiData } = useGetDataContext();
+  const { kpiId, userDataName } = useAllStateContext();
+  const { fetchSession, session } = useSessionContext();
+
+  useEffect(() => {
+    fetchSession();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session]);
+
+  useEffect(() => {
+    if (userDataName) {
+      getLastKpiDoc();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userDataName]);
+
+  useEffect(() => {
+    if (kpiId) {
+      getAllKpiData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [kpiId]);
+
   const months = [
     "JANUARI",
     "FEBRUARI",
@@ -23,30 +51,36 @@ const MonthlyKpi = () => {
   const monthName = months[monthIndex];
 
   return (
-    <GeneralLayout
+    <Container
       content={
-        <div className="container w-full relative mt-2 p-2 border-2 rounded-lg bg-gray-200 shadow-md shadow-gray-500/60">
-          <p className="text-xl text-primary font-bold ms-1">KPI LINE</p>
-          <hr className="border border-gray-400 my-2" />
-          <Card
-            cardTitle={
-              <p className="text-center font-semibold">
-                <span className="text-primary">EFISIENSI </span> ({monthName})
-              </p>
-            }
-            cardBody={<EfficiencyChart />}
-          />
-          <div className="mt-3">
-            <Card
-              cardTitle={
-                <p className="text-center font-semibold">
-                  <span className="text-primary">LOSS TIME </span> ({monthName})
-                </p>
-              }
-              cardBody={<LossTimeChart />}
-            />
-          </div>
-        </div>
+        <Wrapper
+          content={
+            <div>
+              <p className="text-xl text-primary font-bold ms-1">KPI LINE</p>
+              <hr className="border border-gray-400 my-2" />
+              <Card
+                cardTitle={
+                  <p className="text-center font-semibold">
+                    <span className="text-primary">EFISIENSI </span> (
+                    {monthName})
+                  </p>
+                }
+                cardBody={<EfficiencyChart />}
+              />
+              <div className="mt-3">
+                <Card
+                  cardTitle={
+                    <p className="text-center font-semibold">
+                      <span className="text-primary">LOSS TIME </span> (
+                      {monthName})
+                    </p>
+                  }
+                  cardBody={<LossTimeChart />}
+                />
+              </div>
+            </div>
+          }
+        />
       }
     />
   );

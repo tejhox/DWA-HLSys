@@ -1,42 +1,34 @@
 import { createContext, useContext } from "react";
 import { useGetDataContext } from "./getDataContext";
 import axios from "axios";
-import { useAppStateContext } from "./appStateContext";
+import { useAllStateContext } from "./allStateContext";
 import { KpiContextValue } from "./type/dataType";
 
 const KpiContext = createContext<KpiContextValue | undefined>(undefined);
 
 export const KpiProvider = ({ children }: any) => {
-  const { profileId, kpiId } = useAppStateContext();
-  const { getLastKpi } = useGetDataContext();
+  const { profileId, kpiId } = useAllStateContext();
+  const { getLastKpiDoc } = useGetDataContext();
 
-  const setEfficiency = async () => {
+  const setKpi = async () => {
     try {
-      await axios.post("/api/kpiService/setEfficiency", {
+      await axios.post("/api/kpiDataService/setEfficiency", {
         docId: profileId,
         kpiDocId: kpiId,
       });
-      getLastKpi();
-    } catch (error) {
-      console.error("Error processing data:", error);
-    }
-  };
 
-  const setLossTimeKpi = async () => {
-    try {
-      await axios.post("/api/kpiService/setLossTimeKpi", {
+      await axios.post("/api/kpiDataService/setLossTimeKpi", {
         docId: profileId,
         kpiDocId: kpiId,
       });
-      getLastKpi();
+      getLastKpiDoc();
     } catch (error) {
       console.error("Error processing data:", error);
     }
   };
 
   const contextValue: KpiContextValue = {
-    setEfficiency,
-    setLossTimeKpi,
+    setKpi,
   };
 
   return (

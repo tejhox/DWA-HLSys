@@ -1,8 +1,5 @@
-import { useAppStateContext } from "@/context/appStateContext";
-import { useGetDataContext } from "@/context/getDataContext";
-import { useSessionContext } from "@/context/sessionContext";
+import { useAllStateContext } from "@/context/allStateContext";
 import { KpiData } from "@/context/type/dataType";
-import { useEffect } from "react";
 import {
   CartesianGrid,
   Legend,
@@ -14,34 +11,13 @@ import {
   YAxis,
 } from "recharts";
 
-const EfficiencyChart = () => {
-  const { getLastKpi, getAllKpiData } = useGetDataContext();
-  const { kpiData, kpiId, userDataName } = useAppStateContext();
-  const { fetchSession, session } = useSessionContext();
-
-  useEffect(() => {
-    fetchSession();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session]);
-
-  useEffect(() => {
-    if (userDataName) {
-      getLastKpi();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userDataName]);
-
-  useEffect(() => {
-    if (kpiId) {
-      getAllKpiData();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [kpiId]);
+const LossTimeChart = () => {
+  const { kpiData } = useAllStateContext();
 
   const chartData =
     kpiData?.map((item: KpiData) => ({
       time: item.date,
-      Efficiency: item.efficiencyDoc?.efficiency || 0,
+      LossTime: item.lossTimeDoc?.lossTimeRatio || 0,
     })) || [];
 
   const sortedChartData = chartData.slice().sort((a, b) => {
@@ -76,15 +52,18 @@ const EfficiencyChart = () => {
         />
         <YAxis tick={{ fontSize: 12 }} />
         <Tooltip />
-        <Legend wrapperStyle={{ fontSize: "12px" }} />
+        <Legend
+          formatter={() => "Loss Time"}
+          wrapperStyle={{ fontSize: "12px" }}
+        />
         <Line
           type="monotone"
-          dataKey="Efficiency"
-          stroke="#8884d8"
+          dataKey="LossTime"
+          stroke="#f27e2c"
           strokeWidth={2}
         />
       </LineChart>
     </ResponsiveContainer>
   );
 };
-export default EfficiencyChart;
+export default LossTimeChart;

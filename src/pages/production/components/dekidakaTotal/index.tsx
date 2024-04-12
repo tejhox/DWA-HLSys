@@ -1,23 +1,17 @@
-import Container from "@/components/layout/container";
-import { useAppStateContext } from "@/context/appStateContext";
-import { useGetDataContext } from "@/context/getDataContext";
-import { useEffect } from "react";
+import Wrapper from "@/components/layout/wrapper";
+import { useAllStateContext } from "@/context/allStateContext";
 
 const DekidakaTotal = () => {
-  const { getDekidakaSum } = useGetDataContext();
-
-  const { profileId, totalPlan, totalActual, totalDeviasi, totalLossTime } =
-    useAppStateContext();
-
-  useEffect(() => {
-    if (profileId) {
-      getDekidakaSum();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profileId]);
+  const {
+    dekidakaSumData,
+    totalPlan,
+    totalActual,
+    totalDeviasi,
+    totalLossTime,
+  } = useAllStateContext();
 
   return (
-    <Container
+    <Wrapper
       content={
         <div>
           <div className="flex items-center py-1">
@@ -25,7 +19,7 @@ const DekidakaTotal = () => {
           </div>
           <hr className="border border-gray-400" />
           <div className="mb-2">
-            <table className="table table-sm  text-center mt-2">
+            <table className="table table-sm shadow shadow-gray-400/40 text-center mt-2">
               <thead className="border border-2">
                 <tr className="bg-slate-500">
                   <th className="border border-2 text-white">Plan</th>
@@ -36,18 +30,29 @@ const DekidakaTotal = () => {
               </thead>
               <tbody>
                 <tr className="bg-white">
-                  <td className="border-double border-2">
-                    {totalPlan ? totalPlan : 0}
-                  </td>
-                  <td className="border-double border-2 text-blue-700">
-                    {totalActual ? totalActual : 0}
-                  </td>
-                  <td className="border-double border-2 ">
-                    {totalDeviasi ? totalDeviasi : 0}
-                  </td>
-                  <td className="border-double border-2 text-error">
-                    {totalLossTime ? `${totalLossTime}'` : `${0}'`}
-                  </td>
+                  {!dekidakaSumData || dekidakaSumData.length === 0 ? (
+                    <>
+                      <td className="border-double border-2">-</td>
+                      <td className="border-double border-2 text-blue-700">
+                        -
+                      </td>
+                      <td className="border-double border-2 ">-</td>
+                      <td className="border-double border-2 text-error">-</td>
+                    </>
+                  ) : (
+                    <>
+                      <td className="border-double border-2">{totalPlan}</td>
+                      <td className="border-double border-2 text-blue-700">
+                        {totalActual}
+                      </td>
+                      <td className="border-double border-2 ">
+                        {totalDeviasi}
+                      </td>
+                      <td className="border-double border-2 text-error">
+                        {`${totalLossTime}'`}
+                      </td>
+                    </>
+                  )}
                 </tr>
               </tbody>
             </table>

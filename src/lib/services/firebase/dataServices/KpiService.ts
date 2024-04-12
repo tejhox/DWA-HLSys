@@ -1,18 +1,10 @@
 import {
-  addDoc,
   collection,
-  deleteDoc,
   doc,
   getDoc,
   getDocs,
   getFirestore,
-  limit,
-  orderBy,
-  query,
-  serverTimestamp,
-  setDoc,
   updateDoc,
-  where,
 } from "firebase/firestore";
 import app from "../init";
 
@@ -89,7 +81,7 @@ export async function setLossTimeRatio(docId: string, kpiDocId: string) {
   }
 }
 
-export async function getEfficiency(docId: string) {
+export async function getDailyKpi(docId: string) {
   try {
     const kpiRef = doc(firestore, "kpi", docId);
     const snapshot = await getDoc(kpiRef);
@@ -104,22 +96,7 @@ export async function getEfficiency(docId: string) {
   }
 }
 
-export async function getLossTimeKpi(docId: string) {
-  try {
-    const kpiRef = doc(firestore, "kpi", docId);
-    const snapshot = await getDoc(kpiRef);
-    if (snapshot.exists()) {
-      return { id: snapshot.id, ...snapshot.data() };
-    } else {
-      return null;
-    }
-  } catch (error) {
-    console.error("Error fetching document data:", error);
-    throw new Error("Failed to fetch document data from Firestore");
-  }
-}
-
-export async function getAllKpi() {
+export async function getAllKpiData() {
   try {
     const docRef = collection(firestore, "kpi");
     const snapshot = await getDocs(docRef);

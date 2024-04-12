@@ -38,7 +38,7 @@ const LoginPage = () => {
   return (
     <div className="container flex w-screen  justify-center mt-16 sm:w-1/2 sm:mx-auto lg:w-1/3 lg:mx-auto">
       <div className="container flex flex-col border-2 rounded-lg bg-gray-200 shadow-md shadow-indigo-500/50 w-11/12 p-6 my-auto ">
-        <h1 className="text-2xl font-bold text-center text-gray-700">
+        <h1 className="text-2xl font-bold text-center text-gray-500">
           SIGN IN
         </h1>
         <div className="divider"></div>

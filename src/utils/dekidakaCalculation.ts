@@ -1,4 +1,4 @@
-import { useAppStateContext } from "@/context/appStateContext";
+import { useAllStateContext } from "@/context/allStateContext";
 
 export const calculateDeviasi = (
   plan: number | undefined,
@@ -6,7 +6,7 @@ export const calculateDeviasi = (
 ): number => {
   let deviasi = 0;
   if (plan !== undefined && actual !== undefined) {
-    deviasi = plan - actual;
+    deviasi = actual - plan;
   }
   return deviasi;
 };
@@ -32,7 +32,7 @@ export const calculateLossTime = (
 };
 
 export const useLossTimeCalculation = () => {
-  const { tableIndex: contextTableIndex } = useAppStateContext();
+  const { tableIndex: contextTableIndex } = useAllStateContext();
 
   const calculateLossTimeById = (
     subDekidaka: any,

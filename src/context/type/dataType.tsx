@@ -1,11 +1,27 @@
 import { FormEvent } from "react";
 
+export type ProfileData = {
+  id: string;
+  line: string;
+  product: string;
+  shift: string;
+  date: string;
+};
+
 export type DekidakaData = {
   id: string;
   plan: number;
   actual: number;
   deviasi: number;
   lossTime: number;
+};
+
+export type DekidakaSumData = {
+  id: string;
+  totalPlan: number;
+  totalActual: number;
+  totalDeviasi: number;
+  totalLossTime: number;
 };
 
 export type EfficiencyDoc = {
@@ -70,25 +86,24 @@ export type ModalFunctionContextValue = {
 };
 
 export type GetDataContextValue = {
-  getLastProfile: () => Promise<void>;
-  getLastKpi: () => Promise<void>;
+  getLastProfileDoc: () => Promise<void>;
+  getLastKpiDoc: () => Promise<void>;
   getDekidaka: () => Promise<void>;
   getDekidakaSum: () => Promise<void>;
   getAllKpiData: () => Promise<void>;
-  getEfficiency: () => Promise<void>;
-  getLossTimeKpi: () => Promise<void>;
+  getDailyKpi: () => Promise<void>;
   getDekidakaById: (subDocId: string, index: number) => Promise<void>;
 };
 
 export type KpiContextValue = {
-  setEfficiency: () => Promise<void>;
-  setLossTimeKpi: () => Promise<void>;
+  setKpi: () => Promise<void>;
 };
 
-export type AppStateContextValue = {
+export type AllStateContextValue = {
   dekidakaData: DekidakaData[] | undefined;
+  dekidakaSumData: DekidakaSumData[] | undefined;
   kpiData: KpiData[] | undefined;
-  userData: UserData[] | null;
+  userData: UserData[] | undefined;
   userDataId: string;
   userDataName: string;
   userDataNik: string;
@@ -117,7 +132,9 @@ export type AppStateContextValue = {
   lossTimeRatio: number | undefined;
   isInputDisabled: boolean;
   isInputFilled: boolean;
-  isLoading: boolean;
+  isProfileLoading: boolean;
+  isDekidakaLoading: boolean;
+  isModalLoading: boolean;
   isFormBlank: boolean;
   isEditMode: boolean;
   isMenuOpen: boolean;
@@ -129,7 +146,8 @@ export type AppStateContextValue = {
   isModalDeleteDekidakaOpen: boolean;
   isModalDeleteProfileOpen: boolean;
   isModalAddDekidakaOpen: boolean;
-  setDekidakaData: (value: any[]) => void;
+  setDekidakaData: (value: DekidakaData[]) => void;
+  setDekidakaSumData: (value: DekidakaSumData[]) => void;
   setKpiData: (value: KpiData[]) => void;
   setProfileId: (value: string) => void;
   setDekidakaId: (value: string) => void;
@@ -153,7 +171,9 @@ export type AppStateContextValue = {
   setIsSwitchProfileUi: (value: boolean) => void;
   setIsEditMode: (value: boolean) => void;
   setIsMenuOpen: (value: boolean) => void;
-  setIsLoading: (value: boolean) => void;
+  setIsProfileLoading: (value: boolean) => void;
+  setIsDekidakaLoading: (value: boolean) => void;
+  setIsModalLoading: (value: boolean) => void;
   setIsFormBlank: (value: boolean) => void;
   setIsBtnClicked: (value: boolean) => void;
   setIsCheckBtnDisabled: (value: boolean) => void;

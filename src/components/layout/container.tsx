@@ -1,6 +1,6 @@
 const Container = (props: any) => {
   return (
-    <div className="container w-full relative mt-2 p-2 border-2 rounded-lg bg-gray-200 shadow-md shadow-gray-500/60">
+    <div className="flex flex-col px-1.5 mb-2 w-full lg:w-1/3">
       {props.content}
     </div>
   );

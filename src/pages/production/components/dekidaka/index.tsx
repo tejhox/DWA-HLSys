@@ -1,17 +1,16 @@
 import { useProfileContext } from "@/context/profileContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { useEffect } from "react";
 import { useGetDataContext } from "@/context/getDataContext";
 import { useDekidakaContext } from "@/context/dekidakaContext";
-import { useAppStateContext } from "@/context/appStateContext";
+import { useAllStateContext } from "@/context/allStateContext";
 import { DekidakaData } from "@/context/type/dataType";
 import { useModalFunctionContext } from "@/context/modalFunctionContext";
-import Container from "@/components/layout/container";
+import Wrapper from "@/components/layout/wrapper";
 
 const Dekidaka = () => {
   const { handleShowWarning } = useProfileContext();
-  const { getDekidaka, getDekidakaById } = useGetDataContext();
+  const { getDekidakaById } = useGetDataContext();
   const { handleAddDekidakaModal } = useDekidakaContext();
 
   const {
@@ -19,10 +18,9 @@ const Dekidaka = () => {
     isModalAddDekidakaOpen,
     isModalDeleteDekidakaOpen,
     dekidakaData,
-    isLoading,
+    isDekidakaLoading,
     isInputFilled,
-    profileId,
-  } = useAppStateContext();
+  } = useAllStateContext();
 
   const {
     modalDeleteDekidakaConfirmation,
@@ -30,18 +28,11 @@ const Dekidaka = () => {
     modalUpdateDekidaka,
   } = useModalFunctionContext();
 
-  useEffect(() => {
-    if (profileId) {
-      getDekidaka();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profileId]);
-
   return (
-    <Container
+    <Wrapper
       content={
         <div>
-          <table className="table table-zebra table-sm text-center">
+          <table className="table table-zebra table-sm shadow shadow-gray-400/40 text-center">
             <thead className="border border-2">
               <tr className="bg-slate-500">
                 <th className="border border-2 text-white">Jam</th>
@@ -73,7 +64,7 @@ const Dekidaka = () => {
                 ))}
             </tbody>
           </table>
-          {isLoading ? (
+          {isDekidakaLoading ? (
             <p className="text-center text-sm my-3">
               <span className="loading loading-dots loading-sm"></span>
             </p>

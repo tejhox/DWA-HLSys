@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import { createContext, useContext } from "react";
-import { useAppStateContext } from "./appStateContext";
+import { useAllStateContext } from "./allStateContext";
 
 type SessionContextValue = {
   session: any;
@@ -14,7 +14,7 @@ const sessionContext = createContext<SessionContextValue | undefined>(
 export const SessionContextProvider = ({ children }: any) => {
   const { data: session } = useSession<any>();
 
-  const { setUserData, setDateNow } = useAppStateContext();
+  const { setUserData, setDateNow } = useAllStateContext();
 
   const fetchSession = async () => {
     try {

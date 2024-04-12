@@ -2,7 +2,7 @@ import React, { createContext, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import Modal from "@/components/modal";
-import { useAppStateContext } from "./appStateContext";
+import { useAllStateContext } from "./allStateContext";
 import { useDekidakaContext } from "./dekidakaContext";
 import { useProfileContext } from "./profileContext";
 import { ModalFunctionContextValue } from "./type/dataType";
@@ -19,10 +19,10 @@ export const ModalFunctionProvider = ({ children }: any) => {
     setActual,
     setDeviasi,
     setLossTime,
-    isLoading,
+    isModalLoading,
     isBtnDisabled,
     setIsFormBlank,
-  } = useAppStateContext();
+  } = useAllStateContext();
 
   const {
     handleAddDekidakaModal,
@@ -92,7 +92,7 @@ export const ModalFunctionProvider = ({ children }: any) => {
                   type="submit"
                   className="btn btn-sm bg-blue-700 text-white mt-3 w-full"
                   disabled={isBtnDisabled}>
-                  {isLoading ? (
+                  {isModalLoading ? (
                     <span className="flex items-center">
                       <span className="loading loading-spinner mr-2"></span>
                       Loading...
@@ -164,14 +164,19 @@ export const ModalFunctionProvider = ({ children }: any) => {
                 <button
                   type="button"
                   onClick={handleDeleteDekidakaModal}
-                  className="btn btn-sm btn-outline btn-error">
-                  <FontAwesomeIcon icon={faTrashCan} size="lg" />
+                  className="btn btn-sm btn-outline btn-error"
+                  disabled={isModalLoading}>
+                  {isModalLoading ? (
+                    <span className="loading loading-spinner mr-2"></span>
+                  ) : (
+                    <FontAwesomeIcon icon={faTrashCan} size="lg" />
+                  )}
                 </button>
                 <button
                   type="submit"
                   className="btn btn-sm bg-blue-700 text-white w-1/2 md:w-80"
-                  disabled={isBtnDisabled}>
-                  {isLoading ? (
+                  disabled={isModalLoading}>
+                  {isModalLoading ? (
                     <span className="flex items-center">
                       <span className="loading loading-spinner mr-2"></span>
                       Loading...
@@ -202,9 +207,9 @@ export const ModalFunctionProvider = ({ children }: any) => {
               </button>
               <button
                 onClick={deleteDekidaka}
-                className="btn btn-sm btn-error ms-2">
-                {" "}
-                {isLoading ? (
+                className="btn btn-sm btn-error ms-2"
+                disabled={isModalLoading}>
+                {isModalLoading ? (
                   <span className="flex items-center">
                     <span className="loading loading-spinner mr-2"></span>
                   </span>
@@ -234,7 +239,7 @@ export const ModalFunctionProvider = ({ children }: any) => {
               <button
                 onClick={deleteProfile}
                 className="btn btn-sm btn-error ms-2">
-                {isLoading ? (
+                {isModalLoading ? (
                   <span className="loading loading-spinner"></span>
                 ) : (
                   "Ya"

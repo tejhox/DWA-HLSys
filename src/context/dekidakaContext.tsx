@@ -3,13 +3,13 @@ import React, { createContext, useContext } from "react";
 import { FormEvent } from "react";
 import { useGetDataContext } from "./getDataContext";
 import { useKpiContext } from "./kpiContext";
-import { useAppStateContext } from "./appStateContext";
 import {
   calculateDeviasi,
   calculateLossTime,
   useLossTimeCalculation,
 } from "@/utils/dekidakaCalculation";
 import { DekidakaContextValue } from "./type/dataType";
+import { useAllStateContext } from "./allStateContext";
 
 const DekidakaContext = createContext<DekidakaContextValue | undefined>(
   undefined
@@ -18,7 +18,7 @@ const DekidakaContext = createContext<DekidakaContextValue | undefined>(
 export const DekidakaProvider = ({ children }: any) => {
   const { calculateLossTimeById } = useLossTimeCalculation();
   const { getDekidaka, getDekidakaSum } = useGetDataContext();
-  const { setEfficiency, setLossTimeKpi } = useKpiContext();
+  const { setKpi } = useKpiContext();
   const {
     plan,
     actual,
@@ -28,14 +28,14 @@ export const DekidakaProvider = ({ children }: any) => {
     isModalUpdateDekidakaOpen,
     setIsModalUpdateDekidakaOpen,
     profileId,
-    setIsLoading,
+    setIsModalLoading,
     setIsFormBlank,
     isModalAddDekidakaOpen,
     setIsModalAddDekidakaOpen,
     setIsModalDeleteDekidakaOpen,
     isModalDeleteDekidakaOpen,
     setIsBtnDisabled,
-  } = useAppStateContext();
+  } = useAllStateContext();
 
   const handleAddDekidakaModal = () => {
     setIsModalAddDekidakaOpen(!isModalAddDekidakaOpen);
@@ -64,14 +64,14 @@ export const DekidakaProvider = ({ children }: any) => {
 
   const addDekidaka = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsModalLoading(true);
     try {
       if (plan && actual) {
         setIsBtnDisabled(true);
         const workHourValue: number = 60;
         const deviasiValue = calculateDeviasi(plan, actual);
         const lossTimeValue = calculateLossTime(dekidakaData, plan, actual);
-        await axios.post(`/api/dekidakaService/addDekidaka`, {
+        await axios.post(`/api/dekidakaDataService/addDekidaka`, {
           docId: profileId,
           workHour: workHourValue,
           plan,
@@ -79,11 +79,11 @@ export const DekidakaProvider = ({ children }: any) => {
           deviasi: deviasiValue,
           lossTime: lossTimeValue,
         });
-        sumDekidaka();
-        setIsFormBlank(false);
+        await sumDekidaka();
+        setIsModalLoading(false);
         setIsModalAddDekidakaOpen(false);
-        setIsLoading(false);
         setIsBtnDisabled(false);
+        setIsFormBlank(false);
       }
     } catch (error) {
       console.error("Error adding data:", error);
@@ -92,13 +92,12 @@ export const DekidakaProvider = ({ children }: any) => {
 
   const sumDekidaka = async () => {
     try {
-      await axios.post(`/api/dekidakaService/sumDekidaka`, {
+      await axios.post(`/api/dekidakaDataService/sumDekidaka`, {
         docId: profileId,
       });
-      setEfficiency();
-      setLossTimeKpi();
+      await getDekidakaSum();
       getDekidaka();
-      getDekidakaSum();
+      setKpi();
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -106,7 +105,7 @@ export const DekidakaProvider = ({ children }: any) => {
 
   const updateDekidaka = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsModalLoading(true);
     try {
       setIsBtnDisabled(true);
       const lossTimeValueById = calculateLossTimeById(
@@ -115,7 +114,7 @@ export const DekidakaProvider = ({ children }: any) => {
         actual,
         tableIndex
       );
-      await axios.patch("/api/dekidakaService/updateDekidaka", {
+      await axios.patch("/api/dekidakaDataService/updateDekidaka", {
         docId: profileId,
         subDocId: dekidakaId,
         plan: plan,
@@ -123,8 +122,8 @@ export const DekidakaProvider = ({ children }: any) => {
         deviasi: calculatedDeviasiValue,
         lossTime: lossTimeValueById,
       });
-      sumDekidaka();
-      setIsLoading(false);
+      await sumDekidaka();
+      setIsModalLoading(false);
       setIsModalUpdateDekidakaOpen(false);
       setIsBtnDisabled(false);
     } catch (error) {
@@ -133,15 +132,15 @@ export const DekidakaProvider = ({ children }: any) => {
   };
 
   const deleteDekidaka = async () => {
-    setIsLoading(true);
+    setIsModalLoading(true);
     try {
       await axios.delete(
-        `/api/dekidakaService/deleteDekidaka?docId=${profileId}&subDocId=${dekidakaId}`
+        `/api/dekidakaDataService/deleteDekidaka?docId=${profileId}&subDocId=${dekidakaId}`
       );
-      sumDekidaka();
-      setIsLoading(true);
-      setIsModalDeleteDekidakaOpen(false);
+      await sumDekidaka();
+      setIsModalLoading(false);
       setIsModalUpdateDekidakaOpen(false);
+      setIsModalDeleteDekidakaOpen(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }

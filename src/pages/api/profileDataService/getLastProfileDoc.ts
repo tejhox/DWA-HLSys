@@ -1,7 +1,7 @@
-import { getLastKpi } from "@/lib/services/firebase/dataServices/GetLastDataServices";
+import { getLastProfileDoc } from "@/lib/services/firebase/dataServices/GetLastDocServices";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handlerGetLastKpi(
+export default async function handlerGetLastProfile(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -12,7 +12,7 @@ export default async function handlerGetLastKpi(
         res.status(400).json({ message: "Invalid name parameter" });
         return;
       }
-      const data = await getLastKpi(name);
+      const data = await getLastProfileDoc(name);
       res.status(200).json(data);
     } catch (error) {
       res.status(404).json({ message: "Data not found" });

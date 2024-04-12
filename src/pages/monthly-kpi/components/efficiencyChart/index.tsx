@@ -1,8 +1,5 @@
-import { useAppStateContext } from "@/context/appStateContext";
-import { useGetDataContext } from "@/context/getDataContext";
-import { useSessionContext } from "@/context/sessionContext";
+import { useAllStateContext } from "@/context/allStateContext";
 import { KpiData } from "@/context/type/dataType";
-import { useEffect } from "react";
 import {
   CartesianGrid,
   Legend,
@@ -14,34 +11,13 @@ import {
   YAxis,
 } from "recharts";
 
-const LossTimeChart = () => {
-  const { getLastKpi, getAllKpiData } = useGetDataContext();
-  const { kpiData, kpiId, userDataName } = useAppStateContext();
-  const { fetchSession, session } = useSessionContext();
-
-  useEffect(() => {
-    fetchSession();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session]);
-
-  useEffect(() => {
-    if (userDataName) {
-      getLastKpi();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userDataName]);
-
-  useEffect(() => {
-    if (kpiId) {
-      getAllKpiData();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [kpiId]);
+const EfficiencyChart = () => {
+  const { kpiData } = useAllStateContext();
 
   const chartData =
     kpiData?.map((item: KpiData) => ({
       time: item.date,
-      LossTime: item.lossTimeDoc?.lossTimeRatio || 0,
+      Efficiency: item.efficiencyDoc?.efficiency || 0,
     })) || [];
 
   const sortedChartData = chartData.slice().sort((a, b) => {
@@ -76,18 +52,15 @@ const LossTimeChart = () => {
         />
         <YAxis tick={{ fontSize: 12 }} />
         <Tooltip />
-        <Legend
-          formatter={(value, entry) => "Loss Time"}
-          wrapperStyle={{ fontSize: "12px" }}
-        />
+        <Legend wrapperStyle={{ fontSize: "12px" }} />
         <Line
           type="monotone"
-          dataKey="LossTime"
-          stroke="#f25738"
+          dataKey="Efficiency"
+          stroke="#8884d8"
           strokeWidth={2}
         />
       </LineChart>
     </ResponsiveContainer>
   );
 };
-export default LossTimeChart;
+export default EfficiencyChart;

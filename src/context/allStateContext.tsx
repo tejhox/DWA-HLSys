@@ -1,14 +1,15 @@
 import React, { createContext, useContext, useState } from "react";
 import {
-  AppStateContextValue,
+  AllStateContextValue,
   KpiData,
   DekidakaData,
+  DekidakaSumData,
 } from "@/context/type/dataType";
 
-const AppStateContext = createContext<AppStateContextValue | undefined>(
+const AllStateContext = createContext<AllStateContextValue | undefined>(
   undefined
 );
-export const AppStateProvider = ({ children }: any) => {
+export const AllStateProvider = ({ children }: any) => {
   const [userData, setUserData] = useState<any>(null);
   const [dateNow, setDateNow] = useState<any>();
 
@@ -18,6 +19,7 @@ export const AppStateProvider = ({ children }: any) => {
   const [tableIndex, setTableIndex] = useState<number>(0);
 
   const [dekidakaData, setDekidakaData] = useState<DekidakaData[]>();
+  const [dekidakaSumData, setDekidakaSumData] = useState<DekidakaSumData[]>();
   const [kpiData, setKpiData] = useState<KpiData[]>();
 
   const [line, setLine] = useState<string>("");
@@ -62,9 +64,12 @@ export const AppStateProvider = ({ children }: any) => {
   const [isModalDeleteDekidakaOpen, setIsModalDeleteDekidakaOpen] =
     useState<boolean>(false);
 
+  const [isProfileLoading, setIsProfileLoading] = useState<boolean>(false);
+  const [isDekidakaLoading, setIsDekidakaLoading] = useState<boolean>(false);
+  const [isModalLoading, setIsModalLoading] = useState<boolean>(false);
+
   const [isInputFilled, setIsInputFilled] = useState<boolean>(false);
   const [isInputDisabled, setIsInputDisabled] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isFormBlank, setIsFormBlank] = useState(false);
   const [isCheckBtnDisabled, setIsCheckBtnDisabled] = useState<boolean>(false);
   const [isBtnDisabled, setIsBtnDisabled] = useState<boolean>(false);
@@ -74,8 +79,9 @@ export const AppStateProvider = ({ children }: any) => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const contextValue: AppStateContextValue = {
+  const contextValue: AllStateContextValue = {
     dekidakaData,
+    dekidakaSumData,
     kpiData,
     userData: userData,
     userDataId: userData ? userData.id : "",
@@ -106,7 +112,9 @@ export const AppStateProvider = ({ children }: any) => {
     lossTimeRatio,
     isInputDisabled,
     isInputFilled,
-    isLoading,
+    isProfileLoading,
+    isDekidakaLoading,
+    isModalLoading,
     isFormBlank,
     isEditMode,
     isMenuOpen,
@@ -119,6 +127,7 @@ export const AppStateProvider = ({ children }: any) => {
     isModalDeleteProfileOpen,
     isModalAddDekidakaOpen,
     setDekidakaData,
+    setDekidakaSumData,
     setKpiData,
     setProfileId,
     setDekidakaId,
@@ -142,7 +151,9 @@ export const AppStateProvider = ({ children }: any) => {
     setIsSwitchProfileUi,
     setIsEditMode,
     setIsMenuOpen,
-    setIsLoading,
+    setIsProfileLoading,
+    setIsDekidakaLoading,
+    setIsModalLoading,
     setIsFormBlank,
     setIsBtnClicked,
     setIsCheckBtnDisabled,
@@ -161,16 +172,16 @@ export const AppStateProvider = ({ children }: any) => {
   };
 
   return (
-    <AppStateContext.Provider value={contextValue}>
+    <AllStateContext.Provider value={contextValue}>
       {children}
-    </AppStateContext.Provider>
+    </AllStateContext.Provider>
   );
 };
 
-export const useAppStateContext = () => {
-  const context = useContext(AppStateContext);
+export const useAllStateContext = () => {
+  const context = useContext(AllStateContext);
   if (!context) {
-    throw new Error("useGetDataContext must be used within a ProfileProvider");
+    throw new Error("Error accessing context");
   }
   return context;
 };

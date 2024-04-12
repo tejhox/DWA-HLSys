@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { createContext, useContext } from "react";
 import { useGetDataContext } from "./getDataContext";
-import { useAppStateContext } from "./appStateContext";
+import { useAllStateContext } from "./allStateContext";
 import { ProfileContextValue } from "./type/dataType";
 
 const ProfileContext = createContext<ProfileContextValue | undefined>(
@@ -11,11 +11,11 @@ const ProfileContext = createContext<ProfileContextValue | undefined>(
 export const ProfileProvider = ({ children }: any) => {
   const {
     getDekidaka,
-    getLastProfile,
-    getLastKpi,
-    getEfficiency,
-    getLossTimeKpi,
+    getDekidakaSum,
+    getLastProfileDoc,
+    getLastKpiDoc,
     getAllKpiData,
+    getDailyKpi,
   } = useGetDataContext();
 
   const {
@@ -38,7 +38,8 @@ export const ProfileProvider = ({ children }: any) => {
     setIsSwitchProfileUi,
     kpiId,
     setKpiId,
-    setIsLoading,
+    setIsProfileLoading,
+    setIsModalLoading,
     setIsBtnClicked,
     setIsModalDeleteProfileOpen,
     isModalDeleteProfileOpen,
@@ -49,7 +50,9 @@ export const ProfileProvider = ({ children }: any) => {
     dekidakaData,
     setIsFormBlank,
     setDekidakaData,
-  } = useAppStateContext();
+    setDekidakaSumData,
+    isEditMode,
+  } = useAllStateContext();
 
   const handleShowWarning = () => {
     setIsInputFilled(false);
@@ -73,7 +76,7 @@ export const ProfileProvider = ({ children }: any) => {
   const addProfile = async () => {
     if (line && product && shift && date) {
       setIsCheckBtnDisabled(true);
-      setIsLoading(true);
+      setIsProfileLoading(true);
     }
 
     const leaderGroups = {
@@ -98,11 +101,10 @@ export const ProfileProvider = ({ children }: any) => {
           const { kpiDocId } = response.data;
           setKpiId(kpiDocId);
           setIsInputFilled(true);
-          setIsLoading(false);
+          setIsProfileLoading(false);
           setIsSwitchProfileUi(true);
-          getDekidaka();
-          getLastProfile();
-          getLastKpi();
+          getLastProfileDoc();
+          getLastKpiDoc();
         } else {
           setIsBtnClicked(true);
         }
@@ -114,6 +116,7 @@ export const ProfileProvider = ({ children }: any) => {
 
   const updateProfile = async () => {
     setIsCheckBtnDisabled(true);
+    setIsProfileLoading(true);
     try {
       await axios.patch("/api/profileDataService/updateProfileData", {
         docId: profileId,
@@ -122,37 +125,30 @@ export const ProfileProvider = ({ children }: any) => {
         shift,
         date,
       });
-      await getLastProfile();
-      setIsSwitchProfileUi(true);
+      getLastProfileDoc();
+      setIsProfileLoading(false);
+      setIsEditMode(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
   const deleteProfile = async () => {
-    setIsLoading(true);
+    setIsModalLoading(true);
     try {
       await axios.delete(
         `/api/profileDataService/deleteProfileData?docId=${profileId}&kpiDocId=${kpiId}`
       );
-      setLine("");
-      setProduct("");
-      setShift("");
-      setDate("");
-      setTotalPlan(0);
-      setTotalActual(0);
-      setTotalDeviasi(0);
-      setTotalLossTime(0);
-      setIsLoading(false);
+      setIsModalLoading(false);
       setIsCheckBtnDisabled(false);
       setIsModalDeleteProfileOpen(false);
       setProfileId("");
       setIsSwitchProfileUi(false);
-      getLastProfile();
-      getLastKpi();
+      getLastProfileDoc();
       getDekidaka();
-      getEfficiency();
-      getLossTimeKpi();
+      getDekidakaSum();
+      getLastKpiDoc();
+      getDailyKpi();
       getAllKpiData();
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -160,24 +156,29 @@ export const ProfileProvider = ({ children }: any) => {
   };
 
   const newProfile = () => {
-    try {
+    const task = () => {
       if (dekidakaData?.length === 0) {
         setIsFormBlank(true);
       } else {
         setIsSwitchProfileUi(false);
         setDekidakaData([]);
+        setDekidakaSumData([]);
+        setProfileId("");
+        setKpiId("");
         setLine("");
         setProduct("");
         setShift("");
         setDate("");
-        setProfileId("");
-        setKpiId("");
-        setTotalPlan(0);
-        setTotalActual(0);
-        setTotalDeviasi(0);
-        setTotalLossTime(0);
         setIsCheckBtnDisabled(false);
         setIsInputFilled(false);
+      }
+    };
+    try {
+      if (isEditMode) {
+        setIsEditMode(false);
+        task();
+      } else {
+        task();
       }
     } catch (error) {
       console.error("Error fetching data:", error);

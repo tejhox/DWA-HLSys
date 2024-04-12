@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import {
@@ -7,14 +6,22 @@ import {
   faCheck,
   faEllipsis,
 } from "@fortawesome/free-solid-svg-icons";
-import { useSessionContext } from "@/context/sessionContext";
-import { useGetDataContext } from "@/context/getDataContext";
 import { useProfileContext } from "@/context/profileContext";
-import { useAppStateContext } from "@/context/appStateContext";
+import { useAllStateContext } from "@/context/allStateContext";
 import { useModalFunctionContext } from "@/context/modalFunctionContext";
-import Container from "@/components/layout/container";
+import Wrapper from "@/components/layout/wrapper";
+import { useEffect, useRef } from "react";
 
 const Profile = () => {
+  const {
+    addProfile,
+    updateProfile,
+    handleModalDeleteProfile,
+    toggleOpenMenu,
+    toggleEditProfile,
+    newProfile,
+  } = useProfileContext();
+
   const {
     line,
     product,
@@ -31,48 +38,37 @@ const Profile = () => {
     userData,
     userDataName,
     userDataNik,
-    isLoading,
+    isProfileLoading,
     isFormBlank,
     setIsMenuOpen,
     isMenuOpen,
     isEditMode,
     isCheckBtnDisabled,
-  } = useAppStateContext();
-
-  const { getLastProfile, getLastKpi } = useGetDataContext();
-
-  const { fetchSession, session } = useSessionContext();
-
-  const {
-    addProfile,
-    updateProfile,
-    handleModalDeleteProfile,
-    toggleOpenMenu,
-    toggleEditProfile,
-    newProfile,
-  } = useProfileContext();
+    dekidakaData,
+  } = useAllStateContext();
 
   const { modalDeleteProfileConfirmation, modalBlankFormWarning } =
     useModalFunctionContext();
 
-  useEffect(() => {
-    fetchSession();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session]);
+  const dropdownMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (userDataName) {
-      getLastProfile();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userDataName]);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownMenuRef.current &&
+        !dropdownMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
 
-  useEffect(() => {
-    if (userDataName) {
-      getLastKpi();
-    }
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userDataName]);
+  }, [dropdownMenuRef]);
 
   let formattedDate: any;
   if (date) {
@@ -81,7 +77,7 @@ const Profile = () => {
   }
 
   return (
-    <Container
+    <Wrapper
       content={
         <div>
           <div className="container flex flex-row items-center w-full ps-2 pe-2 py-1 ">
@@ -92,12 +88,16 @@ const Profile = () => {
             ) : (
               <p className="text-sm text-primary">Loading...</p>
             )}
-            <span className="ms-auto cursor-pointer" onClick={toggleOpenMenu}>
+            <span
+              className="hover:text-sky-700 ms-auto cursor-pointer"
+              onClick={toggleOpenMenu}>
               <FontAwesomeIcon icon={faEllipsis} size="lg" />
             </span>
             {isMenuOpen && (
-              <div className="absolute h-30 right-1.5 top-7 bg-gray-400 mt-2 rounded-md shadow-md border border-white-200 z-50">
-                <ul className="py-2">
+              <div
+                ref={dropdownMenuRef}
+                className="absolute h-30 right-1.5 top-7 bg-gray-50 mt-2 rounded-md shadow-lg border border-white-200 z-50">
+                <ul>
                   <li
                     onClick={() => {
                       newProfile();
@@ -129,12 +129,17 @@ const Profile = () => {
                 <option value="ER150">ER150</option>
               </select>
               <select
-                className="select select-bordered select-sm w-full max-w-xs"
+                className="select select-bordered select-sm w-full max-w-xs overflow-y-auto"
                 value={product}
                 onChange={(e) => setProduct(e.target.value)}>
                 <option>Produk</option>
                 <option value="D14N">D14N</option>
-                <option value="KS Hyundai">KS Hyundai</option>
+                <option value="D91/92L">D91/92L</option>
+                <option value="D26H">D26H</option>
+                <option value="D26L">D26L</option>
+                <option value="KS Regular">KS Regular</option>
+                <option value="KS Cross">KS Cross</option>
+                <option value="D55L">D55L</option>
               </select>
             </div>
             <div className="container w-1/2 ms-2">
@@ -160,47 +165,49 @@ const Profile = () => {
             className={
               isSwitchProfileUi ? "container flex w-full p-1 mt-1" : "hidden"
             }>
-            <div className="container w-1/2">
-              <input
-                type="text"
-                className="input input-bordered input-sm w-full max-w-xs mb-1"
-                defaultValue={line}
-                readOnly
-              />
-              <input
-                type="text"
-                className="input input-bordered input-sm w-full max-w-xs mb-1"
-                defaultValue={product}
-                readOnly
-              />
-            </div>
-            <div className="container w-1/2 ms-2">
-              <input
-                type="text"
-                className="input input-bordered input-sm w-full max-w-xs mb-1"
-                defaultValue={shift}
-                readOnly
-              />
-              <input
-                type="text"
-                className="input input-bordered input-sm w-full max-w-xs mb-1"
-                defaultValue={formattedDate}
-                readOnly
-              />
-            </div>
+            <>
+              <div className="container w-1/2">
+                <input
+                  type="text"
+                  className="input input-bordered input-sm w-full max-w-xs mb-1"
+                  value={line}
+                  readOnly
+                />
+                <input
+                  type="text"
+                  className="input input-bordered input-sm w-full max-w-xs mb-1"
+                  value={product}
+                  readOnly
+                />
+              </div>
+              <div className="container w-1/2 ms-2">
+                <input
+                  type="text"
+                  className="input input-bordered input-sm w-full max-w-xs mb-1"
+                  value={shift}
+                  readOnly
+                />
+                <input
+                  type="text"
+                  className="input input-bordered input-sm w-full max-w-xs mb-1"
+                  value={formattedDate}
+                  readOnly
+                />
+              </div>
+            </>
           </div>
           <div className="container flex justify-between items-center w-full p-1">
             <div className="flex items-center w-full justify-between">
               <div>
                 <button
                   onClick={() => handleModalDeleteProfile()}
-                  className="btn btn-outline btn-error btn-sm"
+                  className="btn btn-outline btn-error shadow-md shadow-gray-500/40 btn-sm"
                   disabled={!isInputFilled}>
                   <FontAwesomeIcon icon={faTrashCan} />
                 </button>
                 <button
                   onClick={() => toggleEditProfile()}
-                  className="btn btn-outline btn-primary btn-sm ms-1.5"
+                  className="btn btn-outline border-yellow-600 text-yellow-600 hover:bg-yellow-600 hover:border-yellow-600 shadow-md shadow-gray-500/40 btn-sm ms-1.5"
                   disabled={!isInputFilled}>
                   <FontAwesomeIcon icon={faPenToSquare} />
                 </button>
@@ -214,8 +221,8 @@ const Profile = () => {
                 <button
                   onClick={addProfile}
                   disabled={isCheckBtnDisabled}
-                  className="btn btn-outline btn-success btn-sm w-1/5">
-                  {isLoading ? (
+                  className="btn btn-outline btn-success shadow-md shadow-gray-500/40 btn-sm w-20">
+                  {isProfileLoading ? (
                     <span className="loading loading-spinner"></span>
                   ) : (
                     <FontAwesomeIcon icon={faCheck} size="lg" />
@@ -228,8 +235,12 @@ const Profile = () => {
                 <button
                   onClick={updateProfile}
                   disabled={isCheckBtnDisabled}
-                  className="btn btn-outline btn-success btn-sm w-1/5">
-                  <FontAwesomeIcon icon={faCheck} size="lg" />
+                  className="btn btn-outline btn-success shadow-md shadow-gray-500/40 btn-sm w-20">
+                  {isProfileLoading ? (
+                    <span className="loading loading-spinner"></span>
+                  ) : (
+                    <FontAwesomeIcon icon={faCheck} size="lg" />
+                  )}
                 </button>
               ) : (
                 ""
@@ -241,7 +252,11 @@ const Profile = () => {
             <div className="container flex justify-end w-full">
               <Link
                 href="/daily-kpi"
-                className="btn btn-sm btn-outline btn-primary mt-1">
+                className={
+                  !dekidakaData || dekidakaData.length === 0
+                    ? "btn-disabled btn btn-sm btn-outline border-indigo-800 text-indigo-800 hover:bg-indigo-800 hover:border-indigo-800 shadow-md shadow-gray-500/40 mt-1 w-20"
+                    : "btn btn-sm btn-outline border-indigo-800 text-indigo-800 hover:bg-indigo-800 hover:border-indigo-800 shadow-md shadow-gray-500/40 mt-1 w-20"
+                }>
                 KPI
                 <FontAwesomeIcon icon={faChartSimple} className="mb-0.5" />
               </Link>

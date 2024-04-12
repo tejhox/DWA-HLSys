@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from "react";
 import axios from "axios";
-import { useAppStateContext } from "./appStateContext";
+import { useAllStateContext } from "./allStateContext";
 import { GetDataContextValue } from "./type/dataType";
 
 const GetDataContext = createContext<GetDataContextValue | undefined>(
@@ -25,9 +25,11 @@ export const GetDataProvider = ({ children }: any) => {
     setTotalLossTime,
     setTotalWorkHour,
     setDekidakaData,
+    setDekidakaSumData,
     setTableIndex,
     setDekidakaId,
-    setIsLoading,
+    setIsDekidakaLoading,
+    setIsModalLoading,
     setIsInputFilled,
     setIsCheckBtnDisabled,
     setIsSwitchProfileUi,
@@ -41,13 +43,14 @@ export const GetDataProvider = ({ children }: any) => {
     setEfficiency,
     setLossTimeKpi,
     setLossTimeRatio,
-  } = useAppStateContext();
+  } = useAllStateContext();
 
-  const getLastProfile = async () => {
+  const getLastProfileDoc = async () => {
     try {
       const response = await axios.get(
-        `/api/profileDataService/getLastProfile?name=${userDataName}`
+        `/api/profileDataService/getLastProfileDoc?name=${userDataName}`
       );
+
       const { docId } = response.data;
       setProfileId(docId);
       setLine(response.data.line);
@@ -69,14 +72,14 @@ export const GetDataProvider = ({ children }: any) => {
 
   const getDekidaka = async () => {
     try {
-      setIsLoading(true);
+      setIsDekidakaLoading(true);
       const response = await axios.get(
-        `/api/dekidakaService/getDekidaka?docId=${profileId}`
+        `/api/dekidakaDataService/getDekidaka?docId=${profileId}`
       );
       setDekidakaData(response.data);
-      setIsLoading(false);
+      setIsDekidakaLoading(false);
     } catch (error) {
-      setIsLoading(false);
+      setIsDekidakaLoading(false);
       console.error("Error fetching data:", error);
     }
   };
@@ -84,8 +87,9 @@ export const GetDataProvider = ({ children }: any) => {
   const getDekidakaSum = async () => {
     try {
       const response = await axios.get(
-        `/api/dekidakaService/getDekidakaSum?docId=${profileId}`
+        `/api/dekidakaDataService/getDekidakaSum?docId=${profileId}`
       );
+      setDekidakaSumData(response.data);
       setTotalPlan(response.data.totalPlan);
       setTotalActual(response.data.totalActual);
       setTotalDeviasi(response.data.totalDeviasi);
@@ -97,11 +101,11 @@ export const GetDataProvider = ({ children }: any) => {
   };
 
   const getDekidakaById = async (itemId: string, index: number) => {
-    setIsLoading(true);
+    setIsModalLoading(true);
     try {
       setIsModalUpdateDekidakaOpen(true);
       const response = await axios.get(
-        `/api/dekidakaService/getDekidakaById?docId=${profileId}&subDocId=${itemId}`
+        `/api/dekidakaDataService/getDekidakaById?docId=${profileId}&subDocId=${itemId}`
       );
       setTableIndex(index);
       setPlan(response.data.plan);
@@ -109,16 +113,16 @@ export const GetDataProvider = ({ children }: any) => {
       setDeviasi(response.data.deviasi);
       setLossTime(response.data.lossTime);
       setDekidakaId(response.data.id);
-      setIsLoading(false);
+      setIsModalLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const getLastKpi = async () => {
+  const getLastKpiDoc = async () => {
     try {
       const response = await axios.get(
-        `/api/kpiService/getLastKpi?name=${userDataName}`
+        `/api/kpiDataService/getLastKpiDoc?name=${userDataName}`
       );
       if (response.data !== null) {
         const { kpiDocId } = response.data;
@@ -135,41 +139,27 @@ export const GetDataProvider = ({ children }: any) => {
     }
   };
 
-  const getEfficiency = async () => {
-    setIsLoading(true);
+  const getDailyKpi = async () => {
+    setIsDekidakaLoading(true);
     try {
       const response = await axios.get(
-        `/api/kpiService/getEfficiency?docId=${kpiId}`
+        `/api/kpiDataService/getDailyKpi?docId=${kpiId}`
       );
       setAvailableTime(response.data.efficiencyDoc.availableTime);
       setEffectiveTime(response.data.efficiencyDoc.effectiveTime);
       setEfficiency(response.data.efficiencyDoc.efficiency);
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  const getLossTimeKpi = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axios.get(
-        `/api/kpiService/getLossTimeKpi?docId=${kpiId}`
-      );
-      setAvailableTime(response.data.lossTimeDoc.availableTime);
       setLossTimeKpi(response.data.lossTimeDoc.lossTimeKpi);
       setLossTimeRatio(response.data.lossTimeDoc.lossTimeRatio);
-      setIsLoading(false);
+      setIsDekidakaLoading(false);
     } catch (error) {
-      setIsLoading(false);
+      setIsDekidakaLoading(false);
       console.error("Error fetching data:", error);
     }
   };
 
   const getAllKpiData = async () => {
     try {
-      const response = await axios.get("/api/kpiService/getAllKpi");
+      const response = await axios.get("/api/kpiDataService/getAllKpiData");
       setKpiData(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -178,13 +168,12 @@ export const GetDataProvider = ({ children }: any) => {
 
   const contextValue: GetDataContextValue = {
     getDekidaka,
-    getLastKpi,
-    getLastProfile,
+    getLastKpiDoc,
+    getLastProfileDoc,
     getDekidakaById,
     getDekidakaSum,
-    getEfficiency,
-    getLossTimeKpi,
     getAllKpiData,
+    getDailyKpi,
   };
 
   return (

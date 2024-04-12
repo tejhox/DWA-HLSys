@@ -12,7 +12,7 @@ import app from "@/lib/services/firebase/init";
 
 const firestore = getFirestore(app);
 
-export async function getLastProfile(name: string) {
+export async function getLastProfileDoc(name: string) {
   try {
     const q = query(
       collection(firestore, "document"),
@@ -43,7 +43,7 @@ export async function getLastProfile(name: string) {
   }
 }
 
-export async function getLastKpi(name: string) {
+export async function getLastKpiDoc(name: string) {
   try {
     const q = query(
       collection(firestore, "kpi"),

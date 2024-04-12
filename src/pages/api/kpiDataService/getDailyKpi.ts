@@ -1,7 +1,7 @@
-import { getEfficiency } from "@/lib/services/firebase/dataServices/KpiService";
+import { getDailyKpi } from "@/lib/services/firebase/dataServices/KpiService";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handlerGetEfficiency(
+export default async function handlerGetAllLastKpi(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -12,7 +12,7 @@ export default async function handlerGetEfficiency(
         res.status(400).json({ message: "Invalid docId parameter" });
         return;
       }
-      const data = await getEfficiency(docId);
+      const data = await getDailyKpi(docId);
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json({ message: "Data not found" });

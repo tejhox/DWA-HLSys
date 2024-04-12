@@ -8,8 +8,8 @@ import { SessionContextProvider } from "@/context/sessionContext";
 import { GetDataProvider } from "@/context/getDataContext";
 import { KpiProvider } from "@/context/kpiContext";
 import { DekidakaProvider } from "@/context/dekidakaContext";
-import { AppStateProvider } from "@/context/appStateContext";
 import { ModalFunctionProvider } from "@/context/modalFunctionContext";
+import { AllStateProvider } from "@/context/allStateContext";
 
 const lato = Lato({
   weight: ["100", "300", "400", "700", "900"],
@@ -24,7 +24,7 @@ export default function App({
 }: AppProps) {
   return (
     <SessionProvider session={session}>
-      <AppStateProvider>
+      <AllStateProvider>
         <SessionContextProvider>
           <GetDataProvider>
             <KpiProvider>
@@ -41,7 +41,7 @@ export default function App({
             </KpiProvider>
           </GetDataProvider>
         </SessionContextProvider>
-      </AppStateProvider>
+      </AllStateProvider>
     </SessionProvider>
   );
 }
