@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 import { Lato } from "next/font/google";
 import type { AppProps } from "next/app";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, useSession } from "next-auth/react";
 import Navbar from "@/components/navbar/";
 import { ProfileProvider } from "@/context/profileContext";
 import { SessionContextProvider } from "@/context/sessionContext";
@@ -10,6 +10,9 @@ import { KpiProvider } from "@/context/kpiContext";
 import { DekidakaProvider } from "@/context/dekidakaContext";
 import { ModalFunctionProvider } from "@/context/modalFunctionContext";
 import { AllStateProvider } from "@/context/allStateContext";
+import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 const lato = Lato({
   weight: ["100", "300", "400", "700", "900"],

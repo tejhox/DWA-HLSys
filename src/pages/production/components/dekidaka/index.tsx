@@ -32,7 +32,7 @@ const Dekidaka = () => {
     <Wrapper
       content={
         <div>
-          <table className="table table-zebra table-sm shadow shadow-gray-400/40 text-center">
+          <table className="table table-zebra table-sm shadow-md shadow-gray-500/60 text-center">
             <thead className="border border-2">
               <tr className="bg-slate-500">
                 <th className="border border-2 text-white">Jam</th>
@@ -82,7 +82,7 @@ const Dekidaka = () => {
                   ? handleAddDekidakaModal
                   : () => handleShowWarning()
               }
-              className="btn btn-sm text-white bg-blue-700 hover:bg-blue-900 w-full shadow-md shadow-indigo-500/50">
+              className="btn btn-sm text-white bg-blue-700 hover:bg-blue-900 w-full shadow-md shadow-indigo-500/60">
               <FontAwesomeIcon icon={faPlus} size="lg" />
             </button>
             {isModalAddDekidakaOpen && modalAddDekidaka()}

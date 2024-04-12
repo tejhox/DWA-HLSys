@@ -28,6 +28,7 @@ export const GetDataProvider = ({ children }: any) => {
     setDekidakaSumData,
     setTableIndex,
     setDekidakaId,
+    setIsProfileLoading,
     setIsDekidakaLoading,
     setIsModalLoading,
     setIsInputFilled,
@@ -47,6 +48,7 @@ export const GetDataProvider = ({ children }: any) => {
 
   const getLastProfileDoc = async () => {
     try {
+      setIsProfileLoading(true);
       const response = await axios.get(
         `/api/profileDataService/getLastProfileDoc?name=${userDataName}`
       );
@@ -57,6 +59,7 @@ export const GetDataProvider = ({ children }: any) => {
       setProduct(response.data.product);
       setShift(response.data.shift);
       setDate(response.data.date);
+      setIsProfileLoading(false);
       setIsInputFilled(true);
       setIsCheckBtnDisabled(true);
       setIsSwitchProfileUi(true);
@@ -65,6 +68,7 @@ export const GetDataProvider = ({ children }: any) => {
       setProduct("");
       setShift("");
       setDate("");
+      setIsProfileLoading(false);
       setIsCheckBtnDisabled(false);
       setIsInputFilled(false);
     }

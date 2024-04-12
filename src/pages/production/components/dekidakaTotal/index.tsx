@@ -19,7 +19,7 @@ const DekidakaTotal = () => {
           </div>
           <hr className="border border-gray-400" />
           <div className="mb-2">
-            <table className="table table-sm shadow shadow-gray-400/40 text-center mt-2">
+            <table className="table table-sm shadow-md shadow-gray-500/60 text-center mt-2">
               <thead className="border border-2">
                 <tr className="bg-slate-500">
                   <th className="border border-2 text-white">Plan</th>

@@ -98,7 +98,7 @@ export const ModalFunctionProvider = ({ children }: any) => {
                       Loading...
                     </span>
                   ) : (
-                    "Submit"
+                    "Simpan"
                   )}
                 </button>
               </div>
@@ -160,26 +160,25 @@ export const ModalFunctionProvider = ({ children }: any) => {
                   disabled
                 />
               </div>
-              <div className="flex justify-between mt-3 lg:px-7">
+              <div className="flex justify-end mt-3 lg:px-7">
                 <button
                   type="button"
                   onClick={handleDeleteDekidakaModal}
-                  className="btn btn-sm btn-outline btn-error"
+                  className="btn btn-sm btn-outline btn-error me-2"
                   disabled={isModalLoading}>
                   {isModalLoading ? (
-                    <span className="loading loading-spinner mr-2"></span>
+                    <span className="loading loading-spinner"></span>
                   ) : (
                     <FontAwesomeIcon icon={faTrashCan} size="lg" />
                   )}
                 </button>
                 <button
                   type="submit"
-                  className="btn btn-sm bg-blue-700 text-white w-1/2 md:w-80"
+                  className="btn btn-sm bg-blue-700 text-white w-1/3 md:w-80"
                   disabled={isModalLoading}>
                   {isModalLoading ? (
                     <span className="flex items-center">
-                      <span className="loading loading-spinner mr-2"></span>
-                      Loading...
+                      <span className="loading loading-spinner"></span>
                     </span>
                   ) : (
                     "Edit"

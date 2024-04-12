@@ -11,6 +11,7 @@ import { useAllStateContext } from "@/context/allStateContext";
 import { useModalFunctionContext } from "@/context/modalFunctionContext";
 import Wrapper from "@/components/layout/wrapper";
 import { useEffect, useRef } from "react";
+import { faPen } from "@fortawesome/free-solid-svg-icons/faPen";
 
 const Profile = () => {
   const {
@@ -61,9 +62,7 @@ const Profile = () => {
         setIsMenuOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -80,7 +79,7 @@ const Profile = () => {
     <Wrapper
       content={
         <div>
-          <div className="container flex flex-row items-center w-full ps-2 pe-2 py-1 ">
+          <div className="container flex flex-row items-center w-full ps-1 pe-2 py-1 ">
             {userData ? (
               <p className="text-sm text-blue-900">
                 {userDataName} - {userDataNik}
@@ -89,21 +88,21 @@ const Profile = () => {
               <p className="text-sm text-primary">Loading...</p>
             )}
             <span
-              className="hover:text-sky-700 ms-auto cursor-pointer"
+              className="hover:text-sky-700 ms-auto cursor-pointer z-10"
               onClick={toggleOpenMenu}>
               <FontAwesomeIcon icon={faEllipsis} size="lg" />
             </span>
             {isMenuOpen && (
               <div
                 ref={dropdownMenuRef}
-                className="absolute h-30 right-1.5 top-7 bg-gray-50 mt-2 rounded-md shadow-lg border border-white-200 z-50">
+                className="absolute h-30 right-1.5 top-7 bg-gray-50 mt-2 rounded-md shadow-md shadow-indigo-900/60 border border-white-200 z-50">
                 <ul>
                   <li
                     onClick={() => {
                       newProfile();
                       setIsMenuOpen(false);
                     }}
-                    className="px-4 py-2 hover:bg-gray-100 text-gray-700 font-bold cursor-pointer text-sm">
+                    className="px-4 py-2 hover:bg-gray-100 text-gray-600 font-bold cursor-pointer text-sm">
                     Laporan Baru
                   </li>
                 </ul>
@@ -163,7 +162,7 @@ const Profile = () => {
           </div>
           <div
             className={
-              isSwitchProfileUi ? "container flex w-full p-1 mt-1" : "hidden"
+              isSwitchProfileUi ? "container flex w-full px-1 mt-2" : "hidden"
             }>
             <>
               <div className="container w-1/2">
@@ -207,15 +206,12 @@ const Profile = () => {
                 </button>
                 <button
                   onClick={() => toggleEditProfile()}
-                  className="btn btn-outline border-yellow-600 text-yellow-600 hover:bg-yellow-600 hover:border-yellow-600 shadow-md shadow-gray-500/40 btn-sm ms-1.5"
+                  className={`btn btn-outline btn-warning ${
+                    isEditMode ? "focus:bg-yellow-600 focus:text-white" : ""
+                  } shadow-md shadow-gray-500/40 btn-sm ms-1.5`}
                   disabled={!isInputFilled}>
                   <FontAwesomeIcon icon={faPenToSquare} />
                 </button>
-              </div>
-              <div>
-                {isBtnClicked && (!line || !product || !shift || !date) && (
-                  <p className="text-sm text-warning">Lengkapi Profile !</p>
-                )}
               </div>
               {!isEditMode ? (
                 <button
@@ -239,7 +235,7 @@ const Profile = () => {
                   {isProfileLoading ? (
                     <span className="loading loading-spinner"></span>
                   ) : (
-                    <FontAwesomeIcon icon={faCheck} size="lg" />
+                    <FontAwesomeIcon icon={faPen} />
                   )}
                 </button>
               ) : (
@@ -248,8 +244,13 @@ const Profile = () => {
             </div>
           </div>
           <hr className="border border-slate-300 mt-2" />
-          <div className="py-1 px-1">
-            <div className="container flex justify-end w-full">
+          <div className="flex items-center py-1 px-1">
+            <div className="flex w-1/2">
+              {isBtnClicked && (!line || !product || !shift || !date) && (
+                <p className="text-sm text-orange-600">Lengkapi Profile !</p>
+              )}
+            </div>
+            <div className="flex justify-end w-1/2 ">
               <Link
                 href="/daily-kpi"
                 className={

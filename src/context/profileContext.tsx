@@ -28,10 +28,6 @@ export const ProfileProvider = ({ children }: any) => {
     setProduct,
     setShift,
     setDate,
-    setTotalPlan,
-    setTotalActual,
-    setTotalDeviasi,
-    setTotalLossTime,
     setIsInputFilled,
     setProfileId,
     profileId,
@@ -52,6 +48,8 @@ export const ProfileProvider = ({ children }: any) => {
     setDekidakaData,
     setDekidakaSumData,
     isEditMode,
+    isCheckBtnDisabled,
+    isSwitchProfileUi,
   } = useAllStateContext();
 
   const handleShowWarning = () => {
@@ -64,9 +62,9 @@ export const ProfileProvider = ({ children }: any) => {
   };
 
   const toggleEditProfile = () => {
-    setIsCheckBtnDisabled(false);
-    setIsSwitchProfileUi(false);
-    setIsEditMode(true);
+    setIsCheckBtnDisabled(!isCheckBtnDisabled);
+    setIsSwitchProfileUi(!isSwitchProfileUi);
+    setIsEditMode(!isEditMode);
   };
 
   const toggleOpenMenu = () => {
@@ -100,9 +98,9 @@ export const ProfileProvider = ({ children }: any) => {
           );
           const { kpiDocId } = response.data;
           setKpiId(kpiDocId);
-          setIsInputFilled(true);
           setIsProfileLoading(false);
           setIsSwitchProfileUi(true);
+          setIsInputFilled(true);
           getLastProfileDoc();
           getLastKpiDoc();
         } else {
