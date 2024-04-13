@@ -32,12 +32,14 @@ const Navbar = () => {
     <div>
       <div
         className={
-          showMenu ? "navbar" : "navbar shadow-lg shadow-indigo-900/30"
+          showMenu
+            ? "navbar"
+            : "navbar bg-base-100 shadow-lg shadow-gray-500/40"
         }>
         <div className="flex-1 items-center">
           <Link href={"/"} onClick={closeMenu}>
             <Image
-              className="link link-hover shadow-md shadow-indigo-800/60 rounded-lg text-xl font-bold"
+              className="shadow-md shadow-indigo-800/60 rounded-lg text-xl font-bold"
               src="/static/assets/dwa_logo.png"
               alt="logo"
               width={66}
@@ -73,7 +75,7 @@ const Navbar = () => {
       </div>
       <div className={showMenu === true ? "container w-full" : "hidden"}>
         <ul className="container rounded shadow-md shadow-gray-500/50 sm:hidden">
-          <li className="flex justify-end me-2.5">
+          <li className="flex justify-end me-4">
             <Link
               href="/production"
               onClick={closeMenu}
@@ -81,7 +83,7 @@ const Navbar = () => {
               Laporan Produksi
             </Link>
           </li>
-          <li className="flex justify-end me-2.5 pb-3">
+          <li className="flex justify-end me-4 pb-3">
             <button
               className="link link-hover mt-4 font-bold text-sm text-blue-700"
               onClick={handleSignInOut}>

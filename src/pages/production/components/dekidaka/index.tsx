@@ -75,14 +75,14 @@ const Dekidaka = () => {
           ) : (
             ""
           )}
-          <div className="w-full mt-3 mb-0.5">
+          <div className="w-full mt-3 mb-2.5">
             <button
               onClick={
                 isInputFilled
                   ? handleAddDekidakaModal
                   : () => handleShowWarning()
               }
-              className="btn btn-sm text-white bg-blue-700 hover:bg-blue-900 w-full shadow-md shadow-indigo-500/60">
+              className="btn btn-sm text-white bg-blue-700 hover:bg-blue-900 w-full shadow-lg shadow-indigo-500/60">
               <FontAwesomeIcon icon={faPlus} size="lg" />
             </button>
             {isModalAddDekidakaOpen && modalAddDekidaka()}

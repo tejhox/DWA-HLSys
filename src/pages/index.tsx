@@ -12,10 +12,12 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>DWA-PRO</title>
       </Head>
-      <div className="flex flex-col mt-24 h-screen">
+      <div className="flex flex-col justify-center h-screen">
         <div className="px-5 md:text-center">
-          <div className="container md:mx-auto w-full md:w-96 md:flex md:flex-col">
-            <h1 className="text-4xl font-bold text-primary mb-8">HL-M</h1>
+          <div className="container flex flex-col md:mx-auto w-full md:w-96 md:flex md:flex-col">
+            <h1 className="text-4xl font-bold text-primary mb-8 animate-bounce">
+              HL-M
+            </h1>
             <h1 className="text-2xl font-semibold mb-3">
               Quick Reports, Easy Checks!
             </h1>

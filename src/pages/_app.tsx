@@ -13,6 +13,7 @@ import { AllStateProvider } from "@/context/allStateContext";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import Image from "next/image";
 
 const lato = Lato({
   weight: ["100", "300", "400", "700", "900"],
@@ -34,9 +35,17 @@ export default function App({
               <DekidakaProvider>
                 <ProfileProvider>
                   <ModalFunctionProvider>
-                    <div className={lato.className}>
-                      <Navbar />
-                      <Component {...pageProps} />
+                    <Navbar />
+                    <div className="relative">
+                      <div
+                        className="absolute inset-0 overflow-hidden bg-cover bg-center -z-10"
+                        style={{
+                          backgroundImage: "url('/static/assets/17545.jpg')",
+                        }}
+                      />
+                      <div className={lato.className}>
+                        <Component {...pageProps} />
+                      </div>
                     </div>
                   </ModalFunctionProvider>
                 </ProfileProvider>
