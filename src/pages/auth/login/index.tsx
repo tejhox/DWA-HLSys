@@ -8,7 +8,7 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const { push, query } = useRouter();
 
-  const callbackUrl: any = query.callbackUrl || "/home";
+  const callbackUrl: any = query.callbackUrl || "/";
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
