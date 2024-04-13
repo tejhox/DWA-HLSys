@@ -41,7 +41,7 @@ const LoginPage = () => {
       contentClass={"h-screen"}
       content={
         <div className="flex h-full items-center justify-center">
-          <div className="flex flex-col h-96 px-6 py-2 -mt-12 bg-slate-100/60 rounded-lg shadow-lg shadow-gray-500/60 w-11/12">
+          <div className="flex flex-col h-96 px-6 py-2 -mt-20 bg-slate-100/60 rounded-lg shadow-lg shadow-gray-500/60 w-11/12">
             <div className="my-auto">
               <h1 className="text-2xl font-bold ">SIGN IN</h1>
               <div className="divider"></div>
