@@ -32,6 +32,12 @@ export const AllStateProvider = ({ children }: any) => {
   const [deviasi, setDeviasi] = useState<number | undefined>(undefined);
   const [lossTime, setLossTime] = useState<number | undefined>(undefined);
 
+  const [man, setMan] = useState<number | undefined>(undefined);
+  const [method, setMethod] = useState<number | undefined>(undefined);
+  const [machine, setMachine] = useState<number | undefined>(undefined);
+  const [material, setMaterial] = useState<number | undefined>(undefined);
+  const [lossTimeNotes, setLossTimeNotes] = useState<string>("");
+
   const [totalPlan, setTotalPlan] = useState<number | undefined>(undefined);
   const [totalActual, setTotalActual] = useState<number | undefined>(undefined);
   const [totalDeviasi, setTotalDeviasi] = useState<number | undefined>(
@@ -63,6 +69,8 @@ export const AllStateProvider = ({ children }: any) => {
     useState<boolean>(false);
   const [isModalDeleteDekidakaOpen, setIsModalDeleteDekidakaOpen] =
     useState<boolean>(false);
+  const [isModalLossTimeDetailsOpen, setIsModalLossTimeDetailsOpen] =
+    useState<boolean>(false);
 
   const [isProfileLoading, setIsProfileLoading] = useState<boolean>(false);
   const [isDekidakaLoading, setIsDekidakaLoading] = useState<boolean>(false);
@@ -78,6 +86,8 @@ export const AllStateProvider = ({ children }: any) => {
 
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const [isShowAlert, setIsShowAlert] = useState<boolean>(false);
 
   const contextValue: AllStateContextValue = {
     dekidakaData,
@@ -100,6 +110,11 @@ export const AllStateProvider = ({ children }: any) => {
     actual,
     deviasi,
     lossTime,
+    man,
+    method,
+    machine,
+    material,
+    lossTimeNotes,
     totalPlan,
     totalActual,
     totalDeviasi,
@@ -118,6 +133,7 @@ export const AllStateProvider = ({ children }: any) => {
     isFormBlank,
     isEditMode,
     isMenuOpen,
+    isShowAlert,
     isBtnClicked,
     isBtnDisabled,
     isCheckBtnDisabled,
@@ -126,6 +142,7 @@ export const AllStateProvider = ({ children }: any) => {
     isModalDeleteDekidakaOpen,
     isModalDeleteProfileOpen,
     isModalAddDekidakaOpen,
+    isModalLossTimeDetailsOpen,
     setDekidakaData,
     setDekidakaSumData,
     setKpiData,
@@ -140,6 +157,11 @@ export const AllStateProvider = ({ children }: any) => {
     setActual,
     setDeviasi,
     setLossTime,
+    setMan,
+    setMethod,
+    setMachine,
+    setMaterial,
+    setLossTimeNotes,
     setTotalPlan,
     setTotalActual,
     setTotalDeviasi,
@@ -151,6 +173,7 @@ export const AllStateProvider = ({ children }: any) => {
     setIsSwitchProfileUi,
     setIsEditMode,
     setIsMenuOpen,
+    setIsShowAlert,
     setIsProfileLoading,
     setIsDekidakaLoading,
     setIsModalLoading,
@@ -166,6 +189,7 @@ export const AllStateProvider = ({ children }: any) => {
     setLossTimeKpi,
     setLossTimeRatio,
     setIsModalAddDekidakaOpen,
+    setIsModalLossTimeDetailsOpen,
     setIsModalUpdateDekidakaOpen,
     setIsModalDeleteDekidakaOpen,
     setIsModalDeleteProfileOpen,

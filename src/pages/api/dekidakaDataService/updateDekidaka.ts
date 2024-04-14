@@ -7,9 +7,33 @@ export default async function handlerUpdateDekidaka(
 ) {
   if (req.method === "PATCH") {
     try {
-      const { docId, subDocId, plan, actual, deviasi, lossTime } = req.body;
+      const {
+        docId,
+        subDocId,
+        plan,
+        actual,
+        deviasi,
+        lossTime,
+        man,
+        method,
+        machine,
+        material,
+        notes,
+      } = req.body;
 
-      await updateDekidaka(docId, subDocId, plan, actual, deviasi, lossTime);
+      await updateDekidaka(
+        docId,
+        subDocId,
+        plan,
+        actual,
+        deviasi,
+        lossTime,
+        man,
+        method,
+        machine,
+        material,
+        notes
+      );
 
       res.status(200).json({
         message: "Form data updated in Firestore successfully",

@@ -38,7 +38,7 @@ export default function App({
                     <Navbar />
                     <div className="relative">
                       <div
-                        className="absolute inset-0 overflow-hidden bg-cover bg-center -z-10"
+                        className="absolute inset-0 overflow-hidden bg-cover bg-center -z-50"
                         style={{
                           backgroundImage: "url('/static/assets/17545.jpg')",
                         }}

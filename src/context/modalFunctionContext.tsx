@@ -6,6 +6,7 @@ import { useAllStateContext } from "./allStateContext";
 import { useDekidakaContext } from "./dekidakaContext";
 import { useProfileContext } from "./profileContext";
 import { ModalFunctionContextValue } from "./type/dataType";
+import { faNoteSticky } from "@fortawesome/free-regular-svg-icons";
 
 const ModalFunctionContext = createContext<
   ModalFunctionContextValue | undefined
@@ -15,13 +16,24 @@ export const ModalFunctionProvider = ({ children }: any) => {
   const {
     plan,
     actual,
+    man,
+    method,
+    machine,
+    material,
+    lossTimeNotes,
     setPlan,
     setActual,
     setDeviasi,
     setLossTime,
+    setMan,
+    setMethod,
+    setMachine,
+    setMaterial,
+    setLossTimeNotes,
     isModalLoading,
     isBtnDisabled,
     setIsFormBlank,
+    isShowAlert,
   } = useAllStateContext();
 
   const {
@@ -34,6 +46,7 @@ export const ModalFunctionProvider = ({ children }: any) => {
     calculatedlossTimeValue,
     calculatedDeviasiValue,
     calculatedlossTimeValueById,
+    handleLossTimeDetailsModal,
   } = useDekidakaContext();
 
   const { deleteProfile, handleModalDeleteProfile } = useProfileContext();
@@ -78,7 +91,16 @@ export const ModalFunctionProvider = ({ children }: any) => {
                   onChange={(e) => setDeviasi(parseInt(e.target.value))}
                   disabled
                 />
-                <label className="label">Loss Time</label>
+                <div className="flex items-center justify-between">
+                  <label className="label">Loss Time</label>
+                  <button
+                    type="button"
+                    onClick={handleLossTimeDetailsModal}
+                    className="btn btn-sm btn-ghost text-primary underline">
+                    <FontAwesomeIcon icon={faNoteSticky} />
+                    Notes
+                  </button>
+                </div>
                 <input
                   type="text"
                   className="input input-bordered input-sm w-full"
@@ -87,6 +109,13 @@ export const ModalFunctionProvider = ({ children }: any) => {
                   disabled
                 />
               </div>
+              {isShowAlert ? (
+                <p className="text-center text-error text-sm mt-2">
+                  Isi keterangan loss time!
+                </p>
+              ) : (
+                ""
+              )}
               <div className="lg:px-7">
                 <button
                   type="submit"
@@ -100,6 +129,86 @@ export const ModalFunctionProvider = ({ children }: any) => {
                   ) : (
                     "Simpan"
                   )}
+                </button>
+              </div>
+            </form>
+          </>
+        }
+      />
+    );
+  };
+
+  const modalLossTimeDetails = () => {
+    return (
+      <Modal
+        modalBody={
+          <>
+            <div className="flex justify-end">
+              <button onClick={handleLossTimeDetailsModal} className="me-1">
+                ✕
+              </button>
+            </div>
+            <form>
+              <div className="container w-full flex justify-between lg:px-7">
+                <div className="container flex flex-col w-1/2 pe-3">
+                  <label htmlFor="manInput" className="label text-sm">
+                    Man
+                  </label>
+                  <input
+                    id="manInput"
+                    type="number"
+                    className="input input-bordered input-sm w-full"
+                    value={man}
+                    onChange={(e) => setMan(parseInt(e.target.value))}
+                  />
+                  <label htmlFor="methodInput" className="label text-sm">
+                    Method
+                  </label>
+                  <input
+                    id="methodInput"
+                    type="number"
+                    className="input input-bordered input-sm w-full"
+                    value={method}
+                    onChange={(e) => setMethod(parseInt(e.target.value))}
+                  />
+                </div>
+                <div className="container flex flex-col w-1/2 ps-3">
+                  <label htmlFor="machineInput" className="label text-sm">
+                    Machine
+                  </label>
+                  <input
+                    id="machineInput"
+                    type="number"
+                    className="input input-bordered input-sm w-full"
+                    value={machine}
+                    onChange={(e) => setMachine(parseInt(e.target.value))}
+                  />
+                  <label htmlFor="materialInput" className="label text-sm">
+                    Material
+                  </label>
+                  <input
+                    id="materialInput"
+                    type="number"
+                    className="input input-bordered input-sm w-full"
+                    value={material}
+                    onChange={(e) => setMaterial(parseInt(e.target.value))}
+                  />
+                </div>
+              </div>
+              <label htmlFor="keteranganInput" className="label text-sm">
+                Keterangan
+              </label>
+              <textarea
+                id="keteranganInput"
+                className="textarea textarea-bordered h-24 w-full"
+                value={lossTimeNotes}
+                onChange={(e) => setLossTimeNotes(e.target.value)}></textarea>
+              <div className="lg:px-7">
+                <button
+                  type="button"
+                  onClick={handleLossTimeDetailsModal}
+                  className="btn btn-sm bg-blue-700 text-white mt-3 w-full">
+                  OK
                 </button>
               </div>
             </form>
@@ -151,7 +260,16 @@ export const ModalFunctionProvider = ({ children }: any) => {
                   onChange={(e) => setDeviasi(parseInt(e.target.value))}
                   disabled
                 />
-                <label className="label">Loss Time</label>
+                <div className="flex items-center justify-between">
+                  <label className="label">Loss Time</label>
+                  <button
+                    type="button"
+                    onClick={handleLossTimeDetailsModal}
+                    className="btn btn-sm btn-ghost text-primary underline">
+                    <FontAwesomeIcon icon={faNoteSticky} />
+                    Notes
+                  </button>
+                </div>
                 <input
                   type="text"
                   className="input input-bordered input-sm w-full"
@@ -279,6 +397,7 @@ export const ModalFunctionProvider = ({ children }: any) => {
 
   const contextValue: ModalFunctionContextValue = {
     modalAddDekidaka,
+    modalLossTimeDetails,
     modalUpdateDekidaka,
     modalDeleteProfileConfirmation,
     modalDeleteDekidakaConfirmation,
@@ -295,7 +414,7 @@ export const ModalFunctionProvider = ({ children }: any) => {
 export const useModalFunctionContext = () => {
   const context = useContext(ModalFunctionContext);
   if (!context) {
-    throw new Error("useProfile must be used within a ProfileProvider");
+    throw new Error("Error accessing context");
   }
   return context;
 };

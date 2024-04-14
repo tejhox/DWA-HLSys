@@ -10,6 +10,7 @@ import {
 } from "@/utils/dekidakaCalculation";
 import { DekidakaContextValue } from "./type/dataType";
 import { useAllStateContext } from "./allStateContext";
+import { setLossTimeRatio } from "@/lib/services/firebase/dataServices/KpiService";
 
 const DekidakaContext = createContext<DekidakaContextValue | undefined>(
   undefined
@@ -22,6 +23,11 @@ export const DekidakaProvider = ({ children }: any) => {
   const {
     plan,
     actual,
+    man,
+    method,
+    machine,
+    material,
+    lossTimeNotes,
     dekidakaId,
     tableIndex,
     dekidakaData,
@@ -35,14 +41,28 @@ export const DekidakaProvider = ({ children }: any) => {
     setIsModalDeleteDekidakaOpen,
     isModalDeleteDekidakaOpen,
     setIsBtnDisabled,
+    isModalLossTimeDetailsOpen,
+    setIsModalLossTimeDetailsOpen,
+    setIsShowAlert,
+    setMan,
+    setMethod,
+    setMachine,
+    setMaterial,
+    setLossTimeNotes,
   } = useAllStateContext();
 
   const handleAddDekidakaModal = () => {
     setIsModalAddDekidakaOpen(!isModalAddDekidakaOpen);
   };
+
+  const handleLossTimeDetailsModal = () => {
+    setIsModalLossTimeDetailsOpen(!isModalLossTimeDetailsOpen);
+  };
+
   const handleUpdateDekidakaModal = () => {
     setIsModalUpdateDekidakaOpen(!isModalUpdateDekidakaOpen);
   };
+
   const handleDeleteDekidakaModal = () => {
     setIsModalDeleteDekidakaOpen(!isModalDeleteDekidakaOpen);
   };
@@ -64,28 +84,53 @@ export const DekidakaProvider = ({ children }: any) => {
 
   const addDekidaka = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsModalLoading(true);
     try {
       if (plan && actual) {
-        setIsBtnDisabled(true);
         const workHourValue: number = 60;
         const deviasiValue = calculateDeviasi(plan, actual);
         const lossTimeValue = calculateLossTime(dekidakaData, plan, actual);
-        await axios.post(`/api/dekidakaDataService/addDekidaka`, {
-          docId: profileId,
-          workHour: workHourValue,
-          plan,
-          actual,
-          deviasi: deviasiValue,
-          lossTime: lossTimeValue,
-        });
-        await sumDekidaka();
-        setIsModalLoading(false);
-        setIsModalAddDekidakaOpen(false);
-        setIsBtnDisabled(false);
-        setIsFormBlank(false);
+        const apiTask = async () => {
+          setIsShowAlert(false);
+          setIsBtnDisabled(true);
+          setIsModalLoading(true);
+          await axios.post(`/api/dekidakaDataService/addDekidaka`, {
+            docId: profileId,
+            workHour: workHourValue,
+            plan,
+            actual,
+            deviasi: deviasiValue,
+            lossTime: lossTimeValue,
+            man: man,
+            method: method,
+            machine: machine,
+            material: material,
+            notes: lossTimeNotes,
+          });
+          await sumDekidaka();
+          setIsModalLoading(false);
+          setIsModalAddDekidakaOpen(false);
+          setIsBtnDisabled(false);
+          setIsFormBlank(false);
+          setMan(0);
+          setMethod(0);
+          setMachine(0);
+          setMaterial(0);
+          setLossTimeNotes("");
+        };
+
+        if (lossTimeValue === 0) {
+          apiTask();
+        } else {
+          if (!man && !method && !machine && !material && !lossTimeNotes) {
+            setIsShowAlert(true);
+          } else {
+            apiTask();
+          }
+        }
       }
     } catch (error) {
+      setIsModalLoading(false);
+      setIsBtnDisabled(false);
       console.error("Error adding data:", error);
     }
   };
@@ -121,6 +166,11 @@ export const DekidakaProvider = ({ children }: any) => {
         actual: actual,
         deviasi: calculatedDeviasiValue,
         lossTime: lossTimeValueById,
+        man: man,
+        method: method,
+        machine: machine,
+        material: material,
+        notes: lossTimeNotes,
       });
       await sumDekidaka();
       setIsModalLoading(false);
@@ -154,6 +204,7 @@ export const DekidakaProvider = ({ children }: any) => {
     deleteDekidaka,
     updateDekidaka,
     handleAddDekidakaModal,
+    handleLossTimeDetailsModal,
     handleUpdateDekidakaModal,
     handleDeleteDekidakaModal,
     addDekidaka,
@@ -169,7 +220,7 @@ export const DekidakaProvider = ({ children }: any) => {
 export const useDekidakaContext = () => {
   const context = useContext(DekidakaContext);
   if (!context) {
-    throw new Error("useProfile must be used within a ProfileProvider");
+    throw new Error("Error accessing context");
   }
   return context;
 };

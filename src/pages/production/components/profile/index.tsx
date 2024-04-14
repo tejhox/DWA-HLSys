@@ -207,7 +207,9 @@ const Profile = () => {
                 <button
                   onClick={() => toggleEditProfile()}
                   className={`btn btn-outline btn-warning ${
-                    isEditMode ? "focus:bg-yellow-600 focus:text-white" : ""
+                    isEditMode
+                      ? "focus:bg-yellow-600 focus:text-white focus:border-none"
+                      : ""
                   } shadow-md shadow-gray-500/40 btn-sm ms-1.5`}
                   disabled={!isInputFilled}>
                   <FontAwesomeIcon icon={faPenToSquare} />
@@ -252,7 +254,7 @@ const Profile = () => {
             </div>
             <div className="flex justify-end w-1/2 ">
               <Link
-                href="/daily-kpi"
+                href="/production/daily-kpi"
                 className={
                   !dekidakaData || dekidakaData.length === 0
                     ? "btn-disabled btn btn-sm btn-outline border-indigo-800 text-indigo-800 hover:bg-indigo-800 hover:border-indigo-800 shadow-md shadow-gray-500/40 mt-1 w-20"

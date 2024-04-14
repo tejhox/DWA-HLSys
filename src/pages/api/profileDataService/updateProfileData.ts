@@ -7,9 +7,9 @@ export default async function handlerUpdateProfileData(
 ) {
   if (req.method === "PATCH") {
     try {
-      const { docId, line, product, shift, date } = req.body;
+      const { docId, kpiDocId, line, product, shift, date } = req.body;
 
-      await updateProfileData(docId, line, product, shift, date);
+      await updateProfileData(docId, kpiDocId, line, product, shift, date);
 
       res.status(200).json({
         message: "Profile updated in Firestore successfully",

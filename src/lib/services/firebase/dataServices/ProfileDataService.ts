@@ -75,6 +75,7 @@ export async function getProfileData(docId: string) {
 
 export async function updateProfileData(
   docId: string,
+  kpiDocId: string,
   line: string,
   product: string,
   shift: string,
@@ -88,7 +89,14 @@ export async function updateProfileData(
       shift,
       date,
     });
-    return snapshot;
+
+    const kpiDocref = doc(firestore, "kpi", kpiDocId);
+    const kpiSnapshot = await updateDoc(kpiDocref, {
+      line,
+      date,
+    });
+
+    return { snapshot, kpiSnapshot };
   } catch (error) {
     console.error("Error updating profile:", error);
     throw new Error("Failed to add document subcollection to Firestore");

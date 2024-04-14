@@ -37,7 +37,7 @@ const ProductionPage = () => {
 
   return (
     <Container
-      contentClass={"min-h-screen"}
+      contentClass={"min-h-screen lg:w-1/3"}
       content={
         <>
           <Profile />

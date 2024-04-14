@@ -39,7 +39,7 @@ export const KpiProvider = ({ children }: any) => {
 export const useKpiContext = () => {
   const context = useContext(KpiContext);
   if (!context) {
-    throw new Error("useKpiContext must be used within a ProfileProvider");
+    throw new Error("Error accessing context");
   }
   return context;
 };

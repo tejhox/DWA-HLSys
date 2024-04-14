@@ -14,8 +14,9 @@ const Dekidaka = () => {
   const { handleAddDekidakaModal } = useDekidakaContext();
 
   const {
-    isModalUpdateDekidakaOpen,
     isModalAddDekidakaOpen,
+    isModalLossTimeDetailsOpen,
+    isModalUpdateDekidakaOpen,
     isModalDeleteDekidakaOpen,
     dekidakaData,
     isDekidakaLoading,
@@ -23,8 +24,9 @@ const Dekidaka = () => {
   } = useAllStateContext();
 
   const {
-    modalDeleteDekidakaConfirmation,
     modalAddDekidaka,
+    modalLossTimeDetails,
+    modalDeleteDekidakaConfirmation,
     modalUpdateDekidaka,
   } = useModalFunctionContext();
 
@@ -88,6 +90,7 @@ const Dekidaka = () => {
             {isModalAddDekidakaOpen && modalAddDekidaka()}
             {isModalUpdateDekidakaOpen && modalUpdateDekidaka()}
             {isModalDeleteDekidakaOpen && modalDeleteDekidakaConfirmation()}
+            {isModalLossTimeDetailsOpen && modalLossTimeDetails()}
           </div>
         </div>
       }

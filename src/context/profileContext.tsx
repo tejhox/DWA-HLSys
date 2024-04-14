@@ -118,6 +118,7 @@ export const ProfileProvider = ({ children }: any) => {
     try {
       await axios.patch("/api/profileDataService/updateProfileData", {
         docId: profileId,
+        kpiDocId: kpiId,
         line,
         product,
         shift,
@@ -204,7 +205,7 @@ export const ProfileProvider = ({ children }: any) => {
 export const useProfileContext = () => {
   const context = useContext(ProfileContext);
   if (!context) {
-    throw new Error("useProfile must be used within a ProfileProvider");
+    throw new Error("Error accessing context");
   }
   return context;
 };

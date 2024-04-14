@@ -73,12 +73,14 @@ export type DekidakaContextValue = {
   addDekidaka: (e: FormEvent<HTMLFormElement>) => Promise<void>;
   updateDekidaka: (e: FormEvent<HTMLFormElement>) => Promise<void>;
   handleAddDekidakaModal: () => void;
+  handleLossTimeDetailsModal: () => void;
   handleUpdateDekidakaModal: () => void;
   handleDeleteDekidakaModal: () => void;
 };
 
 export type ModalFunctionContextValue = {
   modalAddDekidaka: () => React.ReactNode;
+  modalLossTimeDetails: () => React.ReactNode;
   modalUpdateDekidaka: () => React.ReactNode;
   modalDeleteProfileConfirmation: () => React.ReactNode;
   modalDeleteDekidakaConfirmation: () => React.ReactNode;
@@ -120,6 +122,11 @@ export type AllStateContextValue = {
   actual: number | undefined;
   deviasi: number | undefined;
   lossTime: number | undefined;
+  man: number | undefined;
+  method: number | undefined;
+  machine: number | undefined;
+  material: number | undefined;
+  lossTimeNotes: string;
   totalPlan: number | undefined;
   totalActual: number | undefined;
   totalDeviasi: number | undefined;
@@ -138,14 +145,16 @@ export type AllStateContextValue = {
   isFormBlank: boolean;
   isEditMode: boolean;
   isMenuOpen: boolean;
+  isShowAlert: boolean;
   isBtnClicked: boolean;
   isBtnDisabled: boolean;
   isCheckBtnDisabled: boolean;
   isSwitchProfileUi: boolean;
+  isModalAddDekidakaOpen: boolean;
+  isModalLossTimeDetailsOpen: boolean;
   isModalUpdateDekidakaOpen: boolean;
   isModalDeleteDekidakaOpen: boolean;
   isModalDeleteProfileOpen: boolean;
-  isModalAddDekidakaOpen: boolean;
   setDekidakaData: (value: DekidakaData[]) => void;
   setDekidakaSumData: (value: DekidakaSumData[]) => void;
   setKpiData: (value: KpiData[]) => void;
@@ -160,6 +169,11 @@ export type AllStateContextValue = {
   setActual: (value: number) => void;
   setDeviasi: (value: number) => void;
   setLossTime: (value: number) => void;
+  setMan: (value: number) => void;
+  setMethod: (value: number) => void;
+  setMachine: (value: number) => void;
+  setMaterial: (value: number) => void;
+  setLossTimeNotes: (value: string) => void;
   setTotalPlan: (value: number) => void;
   setTotalActual: (value: number) => void;
   setTotalDeviasi: (value: number) => void;
@@ -171,6 +185,7 @@ export type AllStateContextValue = {
   setIsSwitchProfileUi: (value: boolean) => void;
   setIsEditMode: (value: boolean) => void;
   setIsMenuOpen: (value: boolean) => void;
+  setIsShowAlert: (value: boolean) => void;
   setIsProfileLoading: (value: boolean) => void;
   setIsDekidakaLoading: (value: boolean) => void;
   setIsModalLoading: (value: boolean) => void;
@@ -186,6 +201,7 @@ export type AllStateContextValue = {
   setLossTimeKpi: (value: number) => void;
   setLossTimeRatio: (value: number) => void;
   setIsModalAddDekidakaOpen: (value: boolean) => void;
+  setIsModalLossTimeDetailsOpen: (value: boolean) => void;
   setIsModalUpdateDekidakaOpen: (value: boolean) => void;
   setIsModalDeleteDekidakaOpen: (value: boolean) => void;
   setIsModalDeleteProfileOpen: (value: boolean) => void;

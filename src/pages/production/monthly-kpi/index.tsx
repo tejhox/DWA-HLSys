@@ -52,7 +52,7 @@ const MonthlyKpi = () => {
 
   return (
     <Container
-      contentClass={"h-full"}
+      contentClass={"h-full lg:w-1/3"}
       content={
         <Wrapper
           content={

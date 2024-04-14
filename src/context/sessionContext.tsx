@@ -42,7 +42,7 @@ export const SessionContextProvider = ({ children }: any) => {
 export const useSessionContext = () => {
   const context = useContext(sessionContext);
   if (!context) {
-    throw new Error("useSessionContext must be used within a SessionProvider");
+    throw new Error("Error accessing context");
   }
   return context;
 };

@@ -44,6 +44,11 @@ export const GetDataProvider = ({ children }: any) => {
     setEfficiency,
     setLossTimeKpi,
     setLossTimeRatio,
+    setMan,
+    setMethod,
+    setMachine,
+    setMaterial,
+    setLossTimeNotes,
   } = useAllStateContext();
 
   const getLastProfileDoc = async () => {
@@ -116,6 +121,11 @@ export const GetDataProvider = ({ children }: any) => {
       setActual(response.data.actual);
       setDeviasi(response.data.deviasi);
       setLossTime(response.data.lossTime);
+      setMan(response.data.lossTimeDetails.man);
+      setMethod(response.data.lossTimeDetails.method);
+      setMachine(response.data.lossTimeDetails.machine);
+      setMaterial(response.data.lossTimeDetails.material);
+      setLossTimeNotes(response.data.lossTimeDetails.notes);
       setDekidakaId(response.data.id);
       setIsModalLoading(false);
     } catch (error) {
@@ -190,7 +200,7 @@ export const GetDataProvider = ({ children }: any) => {
 export const useGetDataContext = () => {
   const context = useContext(GetDataContext);
   if (!context) {
-    throw new Error("useGetDataContext must be used within a ProfileProvider");
+    throw new Error("Error accessing context");
   }
   return context;
 };

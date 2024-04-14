@@ -44,7 +44,7 @@ export default function Home() {
             {data ? (
               <div className="flex items-center md:justify-center mt-3">
                 <Link
-                  href="/monthly-kpi"
+                  href="/production/monthly-kpi"
                   className="btn btn-success btn-wide text-lg text-white font-semibold shadow-md shadow-indigo-500/60 ">
                   Lihat KPI
                   <FontAwesomeIcon
@@ -57,7 +57,7 @@ export default function Home() {
             ) : (
               <Link
                 href={"/auth/login"}
-                className="link underlined mt-3 font-bold text-green-700">
+                className="link underlined mt-3 font-bold text-blue-700">
                 SIGN IN!
               </Link>
             )}

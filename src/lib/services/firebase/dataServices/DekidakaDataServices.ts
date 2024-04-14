@@ -23,7 +23,12 @@ export async function addDekidaka(
   actual: number,
   deviasi: number,
   lossTime: number,
-  workHour: number
+  workHour: number,
+  man?: number,
+  method?: number,
+  machine?: number,
+  material?: number,
+  notes?: string
 ) {
   try {
     const docRef = doc(firestore, "document", docId);
@@ -34,6 +39,13 @@ export async function addDekidaka(
       deviasi: deviasi,
       lossTime: lossTime,
       workHour: workHour,
+      lossTimeDetails: {
+        man: man !== (null || undefined) ? man : 0,
+        method: method !== (null || undefined) ? method : 0,
+        machine: machine !== (null || undefined) ? machine : 0,
+        material: material !== (null || undefined) ? material : 0,
+        notes: notes !== (null || undefined) ? notes : "-",
+      },
       time: serverTimestamp(),
     });
     return snapshot;
@@ -49,7 +61,12 @@ export async function updateDekidaka(
   plan: number,
   actual: number,
   deviasi: number,
-  lossTime: number
+  lossTime: number,
+  man: number,
+  method: number,
+  machine: number,
+  material: number,
+  notes: string
 ) {
   try {
     const docRef = doc(firestore, "document", docId);
@@ -59,8 +76,14 @@ export async function updateDekidaka(
       actual: actual,
       deviasi: deviasi,
       lossTime: lossTime,
+      lossTimeDetails: {
+        man: man,
+        method: method,
+        machine: machine,
+        material: material,
+        notes: notes,
+      },
     });
-    console.log("document subcollection updated successfully!");
     return snapshot;
   } catch (error) {
     console.error("Error updating document:", error);

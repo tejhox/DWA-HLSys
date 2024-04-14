@@ -1,5 +1,4 @@
 import Link from "next/link";
-import EfficiencyContent from "./content/efficiencyContent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faChartLine } from "@fortawesome/free-solid-svg-icons";
 import LossTimeKpiContent from "./content/lossTimeKpiContent";
@@ -9,6 +8,7 @@ import { useAllStateContext } from "@/context/allStateContext";
 import { useGetDataContext } from "@/context/getDataContext";
 import { useSessionContext } from "@/context/sessionContext";
 import { useEffect } from "react";
+import EfficiencyContent from "./content/efficiencyContent";
 
 const DailyKpi = () => {
   const { kpiId, userDataName } = useAllStateContext();
@@ -38,13 +38,16 @@ const DailyKpi = () => {
 
   return (
     <Container
+      contentClass={"lg:w-1/3"}
       content={
         <Wrapper
           content={
             <div className="h-screen">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xl font-bold text-primary ms-1">KPI LINE</p>
-                <Link href="/monthly-kpi" className="btn btn-sm btn-ghost">
+                <Link
+                  href="/production/monthly-kpi"
+                  className="btn btn-sm btn-ghost">
                   <FontAwesomeIcon
                     className="text-blue-700"
                     icon={faChartLine}
