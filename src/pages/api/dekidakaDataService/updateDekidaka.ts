@@ -18,7 +18,10 @@ export default async function handlerUpdateDekidaka(
         method,
         machine,
         material,
-        notes,
+        manNote,
+        methodNote,
+        machineNote,
+        materialNote,
       } = req.body;
 
       await updateDekidaka(
@@ -32,7 +35,10 @@ export default async function handlerUpdateDekidaka(
         method,
         machine,
         material,
-        notes
+        manNote,
+        methodNote,
+        machineNote,
+        materialNote
       );
 
       res.status(200).json({

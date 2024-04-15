@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faChartLine } from "@fortawesome/free-solid-svg-icons";
-import LossTimeKpiContent from "./content/lossTimeKpiContent";
 import Wrapper from "@/components/layout/wrapper";
 import Container from "@/components/layout/container";
 import { useAllStateContext } from "@/context/allStateContext";
 import { useGetDataContext } from "@/context/getDataContext";
 import { useSessionContext } from "@/context/sessionContext";
 import { useEffect } from "react";
-import EfficiencyContent from "./content/efficiencyContent";
+import EfficiencyContent from "./components/efficiencyContent";
+import LossTimeKpiContent from "./components/lossTimeKpiContent";
 
 const DailyKpi = () => {
   const { kpiId, userDataName } = useAllStateContext();

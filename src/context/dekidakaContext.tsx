@@ -10,7 +10,6 @@ import {
 } from "@/utils/dekidakaCalculation";
 import { DekidakaContextValue } from "./type/dataType";
 import { useAllStateContext } from "./allStateContext";
-import { setLossTimeRatio } from "@/lib/services/firebase/dataServices/KpiService";
 
 const DekidakaContext = createContext<DekidakaContextValue | undefined>(
   undefined
@@ -23,11 +22,16 @@ export const DekidakaProvider = ({ children }: any) => {
   const {
     plan,
     actual,
+    setPlan,
+    setActual,
     man,
     method,
     machine,
     material,
-    lossTimeNotes,
+    manNote,
+    methodNote,
+    machineNote,
+    materialNote,
     dekidakaId,
     tableIndex,
     dekidakaData,
@@ -48,7 +52,10 @@ export const DekidakaProvider = ({ children }: any) => {
     setMethod,
     setMachine,
     setMaterial,
-    setLossTimeNotes,
+    setManNote,
+    setMethodNote,
+    setMachineNote,
+    setMaterialNote,
   } = useAllStateContext();
 
   const handleAddDekidakaModal = () => {
@@ -60,6 +67,12 @@ export const DekidakaProvider = ({ children }: any) => {
   };
 
   const handleUpdateDekidakaModal = () => {
+    setPlan(null);
+    setActual(null);
+    setMan(null);
+    setMethod(null);
+    setMachine(null);
+    setMaterial(null);
     setIsModalUpdateDekidakaOpen(!isModalUpdateDekidakaOpen);
   };
 
@@ -67,20 +80,19 @@ export const DekidakaProvider = ({ children }: any) => {
     setIsModalDeleteDekidakaOpen(!isModalDeleteDekidakaOpen);
   };
 
-  const calculatedDeviasiValue: number = calculateDeviasi(plan, actual);
+  const calculatedDeviasiValue: number | null | undefined = calculateDeviasi(
+    plan,
+    actual
+  );
 
-  const calculatedlossTimeValue: number = calculateLossTime(
+  const calculatedlossTimeValue: number | null | undefined = calculateLossTime(
     dekidakaData,
     plan,
     actual
   );
 
-  const calculatedlossTimeValueById: number | undefined = calculateLossTimeById(
-    dekidakaData,
-    plan,
-    actual,
-    tableIndex
-  );
+  const calculatedlossTimeValueById: number | null | undefined =
+    calculateLossTimeById(dekidakaData, plan, actual, tableIndex);
 
   const addDekidaka = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -100,28 +112,45 @@ export const DekidakaProvider = ({ children }: any) => {
             actual,
             deviasi: deviasiValue,
             lossTime: lossTimeValue,
-            man: man,
-            method: method,
-            machine: machine,
-            material: material,
-            notes: lossTimeNotes,
+            man: lossTimeValue === 0 ? 0 : man,
+            method: lossTimeValue === 0 ? 0 : method,
+            machine: lossTimeValue === 0 ? 0 : machine,
+            material: lossTimeValue === 0 ? 0 : material,
+            manNote: lossTimeValue === 0 ? "" : manNote,
+            methodNote: lossTimeValue === 0 ? "" : methodNote,
+            machineNote: lossTimeValue === 0 ? "" : machineNote,
+            materialNote: lossTimeValue === 0 ? "" : materialNote,
           });
           await sumDekidaka();
           setIsModalLoading(false);
           setIsModalAddDekidakaOpen(false);
           setIsBtnDisabled(false);
           setIsFormBlank(false);
-          setMan(0);
-          setMethod(0);
-          setMachine(0);
-          setMaterial(0);
-          setLossTimeNotes("");
+          setPlan(null);
+          setActual(null);
+          setMan(null);
+          setMethod(null);
+          setMachine(null);
+          setMaterial(null);
+          setManNote("");
+          setMethodNote("");
+          setMachineNote("");
+          setMaterialNote("");
         };
 
         if (lossTimeValue === 0) {
           apiTask();
         } else {
-          if (!man && !method && !machine && !material && !lossTimeNotes) {
+          if (
+            !man &&
+            !manNote &&
+            !method &&
+            !methodNote &&
+            !machine &&
+            !machineNote &&
+            !material &&
+            !materialNote
+          ) {
             setIsShowAlert(true);
           } else {
             apiTask();
@@ -150,33 +179,69 @@ export const DekidakaProvider = ({ children }: any) => {
 
   const updateDekidaka = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsModalLoading(true);
     try {
-      setIsBtnDisabled(true);
       const lossTimeValueById = calculateLossTimeById(
         dekidakaData,
         plan,
         actual,
         tableIndex
       );
-      await axios.patch("/api/dekidakaDataService/updateDekidaka", {
-        docId: profileId,
-        subDocId: dekidakaId,
-        plan: plan,
-        actual: actual,
-        deviasi: calculatedDeviasiValue,
-        lossTime: lossTimeValueById,
-        man: man,
-        method: method,
-        machine: machine,
-        material: material,
-        notes: lossTimeNotes,
-      });
-      await sumDekidaka();
-      setIsModalLoading(false);
-      setIsModalUpdateDekidakaOpen(false);
-      setIsBtnDisabled(false);
+      const apiTask = async () => {
+        setIsModalLoading(true);
+        setIsBtnDisabled(true);
+        setIsShowAlert(false);
+        await axios.patch("/api/dekidakaDataService/updateDekidaka", {
+          docId: profileId,
+          subDocId: dekidakaId,
+          plan: plan,
+          actual: actual,
+          deviasi: calculatedDeviasiValue,
+          lossTime: lossTimeValueById,
+          man: lossTimeValueById === 0 ? 0 : man,
+          method: lossTimeValueById === 0 ? 0 : method,
+          machine: lossTimeValueById === 0 ? 0 : machine,
+          material: lossTimeValueById === 0 ? 0 : material,
+          manNote: lossTimeValueById === 0 ? "" : manNote,
+          methodNote: lossTimeValueById === 0 ? "" : methodNote,
+          machineNote: lossTimeValueById === 0 ? "" : machineNote,
+          materialNote: lossTimeValueById === 0 ? "" : materialNote,
+        });
+        await sumDekidaka();
+        setIsModalLoading(false);
+        setIsBtnDisabled(false);
+        setIsModalUpdateDekidakaOpen(false);
+        setPlan(null);
+        setActual(null);
+        setMan(null);
+        setMethod(null);
+        setMachine(null);
+        setMaterial(null);
+        setManNote("");
+        setMethodNote("");
+        setMachineNote("");
+        setMaterialNote("");
+      };
+      if (lossTimeValueById === 0) {
+        apiTask();
+      } else {
+        if (
+          !man &&
+          !manNote &&
+          !method &&
+          !methodNote &&
+          !machine &&
+          !machineNote &&
+          !material &&
+          !materialNote
+        ) {
+          setIsShowAlert(true);
+        } else {
+          apiTask();
+        }
+      }
     } catch (error) {
+      setIsModalLoading(false);
+      setIsBtnDisabled(false);
       console.error("Error fetching data:", error);
     }
   };
@@ -191,6 +256,16 @@ export const DekidakaProvider = ({ children }: any) => {
       setIsModalLoading(false);
       setIsModalUpdateDekidakaOpen(false);
       setIsModalDeleteDekidakaOpen(false);
+      setPlan(null);
+      setActual(null);
+      setMan(null);
+      setMethod(null);
+      setMachine(null);
+      setMaterial(null);
+      setManNote("");
+      setMethodNote("");
+      setMachineNote("");
+      setMaterialNote("");
     } catch (error) {
       console.error("Error fetching data:", error);
     }

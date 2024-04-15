@@ -10,30 +10,30 @@ export type ProfileData = {
 
 export type DekidakaData = {
   id: string;
-  plan: number;
-  actual: number;
-  deviasi: number;
-  lossTime: number;
+  plan: number | null | undefined;
+  actual: number | null | undefined;
+  deviasi: number | null | undefined;
+  lossTime: number | null | undefined;
 };
 
 export type DekidakaSumData = {
   id: string;
-  totalPlan: number;
-  totalActual: number;
-  totalDeviasi: number;
-  totalLossTime: number;
+  totalPlan: number | null | undefined;
+  totalActual: number | null | undefined;
+  totalDeviasi: number | null | undefined;
+  totalLossTime: number | null | undefined;
 };
 
 export type EfficiencyDoc = {
-  availableTime: number;
-  effectiveTime: number;
-  efficiency: number;
+  availableTime: number | null | undefined;
+  effectiveTime: number | null | undefined;
+  efficiency: number | null | undefined;
 };
 
 export type LossTimeDoc = {
-  availableTime: number;
-  lossTimeKpi: number;
-  lossTimeRatio: number;
+  availableTime: number | null | undefined;
+  lossTimeKpi: number | null | undefined;
+  lossTimeRatio: number | null | undefined;
 };
 
 export type KpiData = {
@@ -65,9 +65,9 @@ export type ProfileContextValue = {
 };
 
 export type DekidakaContextValue = {
-  calculatedlossTimeValue: number;
-  calculatedlossTimeValueById: number | undefined;
-  calculatedDeviasiValue: number;
+  calculatedlossTimeValue: number | null | undefined;
+  calculatedlossTimeValueById: number | null | undefined;
+  calculatedDeviasiValue: number | null | undefined;
   getDekidaka: () => Promise<void>;
   deleteDekidaka: () => Promise<void>;
   addDekidaka: (e: FormEvent<HTMLFormElement>) => Promise<void>;
@@ -118,25 +118,28 @@ export type AllStateContextValue = {
   product: string;
   shift: string;
   date: string;
-  plan: number | undefined;
-  actual: number | undefined;
-  deviasi: number | undefined;
-  lossTime: number | undefined;
-  man: number | undefined;
-  method: number | undefined;
-  machine: number | undefined;
-  material: number | undefined;
-  lossTimeNotes: string;
-  totalPlan: number | undefined;
-  totalActual: number | undefined;
-  totalDeviasi: number | undefined;
-  totalLossTime: number | undefined;
-  totalWorkHour: number | undefined;
-  availableTime: number | undefined;
-  effectiveTime: number | undefined;
-  efficiency: number | undefined;
-  lossTimeKpi: number | undefined;
-  lossTimeRatio: number | undefined;
+  plan: number | null | undefined;
+  actual: number | null | undefined;
+  deviasi: number | null | undefined;
+  lossTime: number | null | undefined;
+  man: number | null | undefined;
+  method: number | null | undefined;
+  machine: number | null | undefined;
+  material: number | null | undefined;
+  manNote: string;
+  methodNote: string;
+  machineNote: string;
+  materialNote: string;
+  totalPlan: number | null | undefined;
+  totalActual: number | null | undefined;
+  totalDeviasi: number | null | undefined;
+  totalLossTime: number | null | undefined;
+  totalWorkHour: number | null | undefined;
+  availableTime: number | null | undefined;
+  effectiveTime: number | null | undefined;
+  efficiency: number | null | undefined;
+  lossTimeKpi: number | null | undefined;
+  lossTimeRatio: number | null | undefined;
   isInputDisabled: boolean;
   isInputFilled: boolean;
   isProfileLoading: boolean;
@@ -165,20 +168,23 @@ export type AllStateContextValue = {
   setProduct: (value: string) => void;
   setShift: (value: string) => void;
   setDate: (value: string) => void;
-  setPlan: (value: number) => void;
-  setActual: (value: number) => void;
-  setDeviasi: (value: number) => void;
-  setLossTime: (value: number) => void;
-  setMan: (value: number) => void;
-  setMethod: (value: number) => void;
-  setMachine: (value: number) => void;
-  setMaterial: (value: number) => void;
-  setLossTimeNotes: (value: string) => void;
-  setTotalPlan: (value: number) => void;
-  setTotalActual: (value: number) => void;
-  setTotalDeviasi: (value: number) => void;
-  setTotalLossTime: (value: number) => void;
-  setTotalWorkHour: (value: number) => void;
+  setPlan: (value: number | null | undefined) => void;
+  setActual: (value: number | null | undefined) => void;
+  setDeviasi: (value: number | null | undefined) => void;
+  setLossTime: (value: number | null | undefined) => void;
+  setMan: (value: number | null | undefined) => void;
+  setMethod: (value: number | null | undefined) => void;
+  setMachine: (value: number | null | undefined) => void;
+  setMaterial: (value: number | null | undefined) => void;
+  setManNote: (value: string) => void;
+  setMethodNote: (value: string) => void;
+  setMachineNote: (value: string) => void;
+  setMaterialNote: (value: string) => void;
+  setTotalPlan: (value: number | null | undefined) => void;
+  setTotalActual: (value: number | null | undefined) => void;
+  setTotalDeviasi: (value: number | null | undefined) => void;
+  setTotalLossTime: (value: number | null | undefined) => void;
+  setTotalWorkHour: (value: number | null | undefined) => void;
   setTableIndex: (value: number) => void;
   setIsInputDisabled: (value: boolean) => void;
   setIsInputFilled: (value: boolean) => void;
@@ -195,11 +201,11 @@ export type AllStateContextValue = {
   setIsBtnDisabled: (value: boolean) => void;
   setUserData: (value: any) => void;
   setDateNow: (value: any) => void;
-  setAvailableTime: (value: number) => void;
-  setEffectiveTime: (value: number) => void;
-  setEfficiency: (value: number) => void;
-  setLossTimeKpi: (value: number) => void;
-  setLossTimeRatio: (value: number) => void;
+  setAvailableTime: (value: number | null | undefined) => void;
+  setEffectiveTime: (value: number | null | undefined) => void;
+  setEfficiency: (value: number | null | undefined) => void;
+  setLossTimeKpi: (value: number | null | undefined) => void;
+  setLossTimeRatio: (value: number | null | undefined) => void;
   setIsModalAddDekidakaOpen: (value: boolean) => void;
   setIsModalLossTimeDetailsOpen: (value: boolean) => void;
   setIsModalUpdateDekidakaOpen: (value: boolean) => void;

@@ -18,7 +18,10 @@ export default async function handlerAddDekidaka(
         method,
         machine,
         material,
-        notes,
+        manNote,
+        methodNote,
+        machineNote,
+        materialNote,
       } = req.body;
 
       const docRef = await addDekidaka(
@@ -32,7 +35,10 @@ export default async function handlerAddDekidaka(
         method,
         machine,
         material,
-        notes
+        manNote,
+        methodNote,
+        machineNote,
+        materialNote
       );
 
       const subDekidakaId = docRef.id;

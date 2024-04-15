@@ -27,39 +27,47 @@ export const AllStateProvider = ({ children }: any) => {
   const [shift, setShift] = useState<string>("");
   const [date, setDate] = useState<string>("");
 
-  const [plan, setPlan] = useState<number | undefined>(undefined);
-  const [actual, setActual] = useState<number | undefined>(undefined);
-  const [deviasi, setDeviasi] = useState<number | undefined>(undefined);
-  const [lossTime, setLossTime] = useState<number | undefined>(undefined);
+  const [plan, setPlan] = useState<number | null | undefined>(null);
+  const [actual, setActual] = useState<number | null | undefined>(null);
+  const [deviasi, setDeviasi] = useState<number | null | undefined>(null);
+  const [lossTime, setLossTime] = useState<number | null | undefined>(null);
 
-  const [man, setMan] = useState<number | undefined>(undefined);
-  const [method, setMethod] = useState<number | undefined>(undefined);
-  const [machine, setMachine] = useState<number | undefined>(undefined);
-  const [material, setMaterial] = useState<number | undefined>(undefined);
-  const [lossTimeNotes, setLossTimeNotes] = useState<string>("");
+  const [man, setMan] = useState<number | null | undefined>(null);
+  const [method, setMethod] = useState<number | null | undefined>(null);
+  const [machine, setMachine] = useState<number | null | undefined>(null);
+  const [material, setMaterial] = useState<number | null | undefined>(null);
+  const [manNote, setManNote] = useState<string>("");
+  const [methodNote, setMethodNote] = useState<string>("");
+  const [machineNote, setMachineNote] = useState<string>("");
+  const [materialNote, setMaterialNote] = useState<string>("");
 
-  const [totalPlan, setTotalPlan] = useState<number | undefined>(undefined);
-  const [totalActual, setTotalActual] = useState<number | undefined>(undefined);
-  const [totalDeviasi, setTotalDeviasi] = useState<number | undefined>(
-    undefined
+  const [totalPlan, setTotalPlan] = useState<number | null | undefined>(null);
+  const [totalActual, setTotalActual] = useState<number | null | undefined>(
+    null
   );
-  const [totalLossTime, setTotalLossTime] = useState<number | undefined>(
-    undefined
+  const [totalDeviasi, setTotalDeviasi] = useState<number | null | undefined>(
+    null
   );
-  const [totalWorkHour, setTotalWorkHour] = useState<number | undefined>(
-    undefined
+  const [totalLossTime, setTotalLossTime] = useState<number | null | undefined>(
+    null
+  );
+  const [totalWorkHour, setTotalWorkHour] = useState<number | null | undefined>(
+    null
   );
 
-  const [availableTime, setAvailableTime] = useState<number | undefined>(
-    undefined
+  const [availableTime, setAvailableTime] = useState<number | null | undefined>(
+    null
   );
-  const [effectiveTime, setEffectiveTime] = useState<number | undefined>(
-    undefined
+  const [effectiveTime, setEffectiveTime] = useState<number | null | undefined>(
+    null
   );
-  const [efficiency, setEfficiency] = useState<number | undefined>(undefined);
-
-  const [lossTimeKpi, setLossTimeKpi] = useState<number | undefined>();
-  const [lossTimeRatio, setLossTimeRatio] = useState<number | undefined>();
+  const [efficiency, setEfficiency] = useState<number | null | undefined>(null);
+  const [lossTimeKpi, setLossTimeKpi] = useState<number | null | undefined>(
+    null
+  );
+  const [lossTimeRatio, setLossTimeRatio] = useState<number | null | undefined>(
+    null
+  );
 
   const [isModalDeleteProfileOpen, setIsModalDeleteProfileOpen] =
     useState<boolean>(false);
@@ -114,7 +122,10 @@ export const AllStateProvider = ({ children }: any) => {
     method,
     machine,
     material,
-    lossTimeNotes,
+    manNote,
+    methodNote,
+    machineNote,
+    materialNote,
     totalPlan,
     totalActual,
     totalDeviasi,
@@ -161,7 +172,10 @@ export const AllStateProvider = ({ children }: any) => {
     setMethod,
     setMachine,
     setMaterial,
-    setLossTimeNotes,
+    setManNote,
+    setMethodNote,
+    setMachineNote,
+    setMaterialNote,
     setTotalPlan,
     setTotalActual,
     setTotalDeviasi,

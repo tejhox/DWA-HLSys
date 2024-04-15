@@ -1,34 +1,44 @@
 import { useAllStateContext } from "@/context/allStateContext";
 
 export const calculateDeviasi = (
-  plan: number | undefined,
-  actual: number | undefined
-): number => {
-  let deviasi = 0;
-  if (plan !== undefined && actual !== undefined) {
-    deviasi = actual - plan;
+  plan: number | null | undefined,
+  actual: number | null | undefined
+): number | null | undefined => {
+  if (plan === null || actual === null) {
+    return null;
   }
-  return deviasi;
+
+  if (plan !== undefined && actual !== undefined) {
+    return actual - plan;
+  }
+
+  return undefined;
 };
 
 export const calculateLossTime = (
   subDekidaka: any,
-  plan: number | undefined,
-  actual: number | undefined
-): number => {
-  let lossTime = 0;
+  plan: number | null | undefined,
+  actual: number | null | undefined
+): number | null | undefined => {
+  if (plan === null || actual === null) {
+    return null;
+  }
 
   if (subDekidaka && plan !== undefined && actual !== undefined) {
     const tableRowCount = subDekidaka.length;
+    let lossTime = 0;
     let lossTimeRatio;
+
     if (tableRowCount === 3 || tableRowCount === 7) {
       lossTimeRatio = 55 / plan;
     } else {
       lossTimeRatio = 60 / plan;
     }
+
     lossTime = Math.round((plan - actual) * lossTimeRatio);
+    return lossTime;
   }
-  return lossTime;
+  return undefined;
 };
 
 export const useLossTimeCalculation = () => {
@@ -36,10 +46,14 @@ export const useLossTimeCalculation = () => {
 
   const calculateLossTimeById = (
     subDekidaka: any,
-    plan: number | undefined,
-    actual: number | undefined,
+    plan: number | null | undefined,
+    actual: number | null | undefined,
     tableIndex: number
-  ): number | undefined => {
+  ): number | null | undefined => {
+    if (plan === null || actual === null) {
+      return null;
+    }
+
     let lossTime = 0;
 
     if (

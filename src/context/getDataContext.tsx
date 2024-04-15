@@ -48,7 +48,10 @@ export const GetDataProvider = ({ children }: any) => {
     setMethod,
     setMachine,
     setMaterial,
-    setLossTimeNotes,
+    setManNote,
+    setMethodNote,
+    setMachineNote,
+    setMaterialNote,
   } = useAllStateContext();
 
   const getLastProfileDoc = async () => {
@@ -121,11 +124,14 @@ export const GetDataProvider = ({ children }: any) => {
       setActual(response.data.actual);
       setDeviasi(response.data.deviasi);
       setLossTime(response.data.lossTime);
-      setMan(response.data.lossTimeDetails.man);
-      setMethod(response.data.lossTimeDetails.method);
-      setMachine(response.data.lossTimeDetails.machine);
-      setMaterial(response.data.lossTimeDetails.material);
-      setLossTimeNotes(response.data.lossTimeDetails.notes);
+      setMan(response.data.lossTimeDetails.manCat.man);
+      setMethod(response.data.lossTimeDetails.methodCat.method);
+      setMachine(response.data.lossTimeDetails.machineCat.machine);
+      setMaterial(response.data.lossTimeDetails.materialCat.material);
+      setManNote(response.data.lossTimeDetails.manCat.manNote);
+      setMethodNote(response.data.lossTimeDetails.methodCat.methodNote);
+      setMachineNote(response.data.lossTimeDetails.machineCat.machineNote);
+      setMaterialNote(response.data.lossTimeDetails.materialCat.materialNote);
       setDekidakaId(response.data.id);
       setIsModalLoading(false);
     } catch (error) {

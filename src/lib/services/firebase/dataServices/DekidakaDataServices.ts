@@ -24,11 +24,14 @@ export async function addDekidaka(
   deviasi: number,
   lossTime: number,
   workHour: number,
-  man?: number,
-  method?: number,
-  machine?: number,
-  material?: number,
-  notes?: string
+  man: number | null | undefined,
+  method: number | null | undefined,
+  machine: number | null | undefined,
+  material: number | null | undefined,
+  manNote: string,
+  methodNote: string,
+  machineNote: string,
+  materialNote: string
 ) {
   try {
     const docRef = doc(firestore, "document", docId);
@@ -40,11 +43,22 @@ export async function addDekidaka(
       lossTime: lossTime,
       workHour: workHour,
       lossTimeDetails: {
-        man: man !== (null || undefined) ? man : 0,
-        method: method !== (null || undefined) ? method : 0,
-        machine: machine !== (null || undefined) ? machine : 0,
-        material: material !== (null || undefined) ? material : 0,
-        notes: notes !== (null || undefined) ? notes : "-",
+        manCat: {
+          man: man !== null ? man : 0,
+          manNote: manNote !== null ? manNote : "",
+        },
+        methodCat: {
+          method: method !== null ? method : 0,
+          methodNote: manNote !== null ? methodNote : "",
+        },
+        machineCat: {
+          machine: machine !== null ? machine : 0,
+          machineNote: machineNote !== null ? machineNote : "",
+        },
+        materialCat: {
+          material: material !== null ? material : 0,
+          materialNote: materialNote !== null ? materialNote : "",
+        },
       },
       time: serverTimestamp(),
     });
@@ -62,11 +76,14 @@ export async function updateDekidaka(
   actual: number,
   deviasi: number,
   lossTime: number,
-  man: number,
-  method: number,
-  machine: number,
-  material: number,
-  notes: string
+  man: number | null | undefined,
+  method: number | null | undefined,
+  machine: number | null | undefined,
+  material: number | null | undefined,
+  manNote: string,
+  methodNote: string,
+  machineNote: string,
+  materialNote: string
 ) {
   try {
     const docRef = doc(firestore, "document", docId);
@@ -77,11 +94,22 @@ export async function updateDekidaka(
       deviasi: deviasi,
       lossTime: lossTime,
       lossTimeDetails: {
-        man: man,
-        method: method,
-        machine: machine,
-        material: material,
-        notes: notes,
+        manCat: {
+          man: man !== null ? man : 0,
+          manNote: manNote !== null ? manNote : "",
+        },
+        methodCat: {
+          method: method !== null ? method : 0,
+          methodNote: manNote !== null ? methodNote : "",
+        },
+        machineCat: {
+          machine: machine !== null ? machine : 0,
+          machineNote: machineNote !== null ? machineNote : "",
+        },
+        materialCat: {
+          material: material !== null ? material : 0,
+          materialNote: materialNote !== null ? materialNote : "",
+        },
       },
     });
     return snapshot;
@@ -190,3 +218,22 @@ export async function getDekidakaSum(docId: string) {
     throw new Error("Failed to fetch document data from Firestore");
   }
 }
+
+// export async function get(docId: string) {
+//   try {
+//     const docRef = doc(firestore, "document", docId);
+//     const subColRef = collection(docRef, "dekidaka");
+//     const q = query(subColRef, orderBy("time", "desc"));
+
+//     const snapshot = await getDocs(q);
+
+//     const subDekidakaData: any[] = [];
+//     snapshot.forEach((doc) => {
+//       subDekidakaData.push({ id: doc.id, ...doc.data() });
+//     });
+//     return subDekidakaData;
+//   } catch (error) {
+//     console.error("Error fetching document data:", error);
+//     throw new Error("Failed to fetch document data from Firestore");
+//   }
+// }

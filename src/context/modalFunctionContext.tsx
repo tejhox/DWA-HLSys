@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from "react";
+import Modal from "@/components/modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
-import Modal from "@/components/modal";
 import { useAllStateContext } from "./allStateContext";
 import { useDekidakaContext } from "./dekidakaContext";
 import { useProfileContext } from "./profileContext";
@@ -20,7 +20,10 @@ export const ModalFunctionProvider = ({ children }: any) => {
     method,
     machine,
     material,
-    lossTimeNotes,
+    manNote,
+    methodNote,
+    machineNote,
+    materialNote,
     setPlan,
     setActual,
     setDeviasi,
@@ -29,7 +32,10 @@ export const ModalFunctionProvider = ({ children }: any) => {
     setMethod,
     setMachine,
     setMaterial,
-    setLossTimeNotes,
+    setManNote,
+    setMethodNote,
+    setMachineNote,
+    setMaterialNote,
     isModalLoading,
     isBtnDisabled,
     setIsFormBlank,
@@ -64,30 +70,32 @@ export const ModalFunctionProvider = ({ children }: any) => {
             <form onSubmit={addDekidaka}>
               <div className="container w-full flex flex-col justify-start lg:px-7">
                 <label htmlFor="planInput" className="label">
-                  Plan
+                  Plan*
                 </label>
                 <input
                   id="planInput"
                   type="number"
+                  required
                   className="input input-bordered input-sm w-full"
-                  value={plan}
+                  value={plan || ""}
                   onChange={(e) => setPlan(parseInt(e.target.value))}
                 />
                 <label htmlFor="actualInput" className="label">
-                  Aktual
+                  Aktual*
                 </label>
                 <input
                   id="actualInput"
                   type="number"
+                  required
                   className="input input-bordered input-sm w-full"
-                  value={actual}
+                  value={actual || ""}
                   onChange={(e) => setActual(parseInt(e.target.value))}
                 />
                 <label className="label">Deviasi</label>
                 <input
                   type="number"
                   className="input input-bordered input-sm w-full"
-                  value={calculatedDeviasiValue}
+                  value={calculatedDeviasiValue || 0}
                   onChange={(e) => setDeviasi(parseInt(e.target.value))}
                   disabled
                 />
@@ -104,7 +112,9 @@ export const ModalFunctionProvider = ({ children }: any) => {
                 <input
                   type="text"
                   className="input input-bordered input-sm w-full"
-                  value={`${calculatedlossTimeValue}'`}
+                  value={
+                    calculatedlossTimeValue ? `${calculatedlossTimeValue}'` : 0
+                  }
                   onChange={(e) => setLossTime(parseInt(e.target.value))}
                   disabled
                 />
@@ -148,66 +158,101 @@ export const ModalFunctionProvider = ({ children }: any) => {
                 ✕
               </button>
             </div>
-            <form>
-              <div className="container w-full flex justify-between lg:px-7">
-                <div className="container flex flex-col w-1/2 pe-3">
+            <form onSubmit={handleLossTimeDetailsModal}>
+              <div className="container w-full lg:px-7">
+                <div>
                   <label htmlFor="manInput" className="label text-sm">
                     Man
                   </label>
-                  <input
-                    id="manInput"
-                    type="number"
-                    className="input input-bordered input-sm w-full"
-                    value={man}
-                    onChange={(e) => setMan(parseInt(e.target.value))}
-                  />
+                  <div className="flex">
+                    <input
+                      id="manInput"
+                      type="number"
+                      className="input input-bordered input-sm w-1/5 me-2"
+                      value={man || ""}
+                      onChange={(e) => setMan(parseInt(e.target.value))}
+                    />
+                    <input
+                      type="text"
+                      required={man ? true : false}
+                      placeholder="Keterangan"
+                      className="input input-bordered input-sm w-full"
+                      value={manNote}
+                      onChange={(e) => setManNote(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div>
                   <label htmlFor="methodInput" className="label text-sm">
                     Method
                   </label>
-                  <input
-                    id="methodInput"
-                    type="number"
-                    className="input input-bordered input-sm w-full"
-                    value={method}
-                    onChange={(e) => setMethod(parseInt(e.target.value))}
-                  />
-                </div>
-                <div className="container flex flex-col w-1/2 ps-3">
-                  <label htmlFor="machineInput" className="label text-sm">
-                    Machine
-                  </label>
-                  <input
-                    id="machineInput"
-                    type="number"
-                    className="input input-bordered input-sm w-full"
-                    value={machine}
-                    onChange={(e) => setMachine(parseInt(e.target.value))}
-                  />
-                  <label htmlFor="materialInput" className="label text-sm">
-                    Material
-                  </label>
-                  <input
-                    id="materialInput"
-                    type="number"
-                    className="input input-bordered input-sm w-full"
-                    value={material}
-                    onChange={(e) => setMaterial(parseInt(e.target.value))}
-                  />
+                  <div className="flex">
+                    <input
+                      id="methodInput"
+                      type="number"
+                      className="input input-bordered input-sm w-1/5 me-2"
+                      value={method || ""}
+                      onChange={(e) => setMethod(parseInt(e.target.value))}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Keterangan"
+                      required={method ? true : false}
+                      className="input input-bordered input-sm w-full"
+                      value={methodNote}
+                      onChange={(e) => setMethodNote(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="machineInput" className="label text-sm">
+                      Machine
+                    </label>
+                    <div className="flex">
+                      <input
+                        id="machineInput"
+                        type="number"
+                        className="input input-bordered input-sm w-1/5 me-2"
+                        value={machine || ""}
+                        onChange={(e) => setMachine(parseInt(e.target.value))}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Keterangan"
+                        required={machine ? true : false}
+                        className="input input-bordered input-sm w-full"
+                        value={machineNote}
+                        onChange={(e) => setMachineNote(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="materialInput" className="label text-sm">
+                      Material
+                    </label>
+                    <div className="flex">
+                      <input
+                        id="materialInput"
+                        type="number"
+                        className="input input-bordered input-sm w-1/5 me-2"
+                        value={material || ""}
+                        onChange={(e) => setMaterial(parseInt(e.target.value))}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Keterangan"
+                        required={material ? true : false}
+                        className="input input-bordered input-sm w-full"
+                        value={materialNote}
+                        onChange={(e) => setMaterialNote(e.target.value)}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
-              <label htmlFor="keteranganInput" className="label text-sm">
-                Keterangan
-              </label>
-              <textarea
-                id="keteranganInput"
-                className="textarea textarea-bordered h-24 w-full"
-                value={lossTimeNotes}
-                onChange={(e) => setLossTimeNotes(e.target.value)}></textarea>
-              <div className="lg:px-7">
+              <div className="flex justify-end lg:px-7">
                 <button
-                  type="button"
-                  onClick={handleLossTimeDetailsModal}
-                  className="btn btn-sm bg-blue-700 text-white mt-3 w-full">
+                  type="submit"
+                  className="btn btn-sm bg-blue-700 text-white mt-3 ">
                   OK
                 </button>
               </div>
@@ -231,32 +276,34 @@ export const ModalFunctionProvider = ({ children }: any) => {
             <form onSubmit={updateDekidaka}>
               <div className="container w-full flex flex-col justify-start lg:px-7">
                 <label htmlFor="planInput" className="label">
-                  Plan
+                  Plan*
                 </label>
                 <input
                   id="planInput"
                   type="number"
                   className="input input-bordered input-sm w-full"
                   placeholder="55"
-                  value={plan}
+                  value={plan || ""}
+                  required
                   onChange={(e) => setPlan(parseInt(e.target.value))}
                 />
                 <label htmlFor="actualInput" className="label">
-                  Aktual
+                  Aktual*
                 </label>
                 <input
                   id="actualInput"
                   type="number"
                   className="input input-bordered input-sm w-full"
                   placeholder="55"
-                  value={actual}
+                  value={actual || ""}
+                  required
                   onChange={(e) => setActual(parseInt(e.target.value))}
                 />
                 <label className="label">Deviasi</label>
                 <input
                   type="number"
                   className="input input-bordered input-sm w-full"
-                  value={calculatedDeviasiValue}
+                  value={calculatedDeviasiValue || 0}
                   onChange={(e) => setDeviasi(parseInt(e.target.value))}
                   disabled
                 />
@@ -273,11 +320,22 @@ export const ModalFunctionProvider = ({ children }: any) => {
                 <input
                   type="text"
                   className="input input-bordered input-sm w-full"
-                  value={`${calculatedlossTimeValueById}'`}
+                  value={
+                    calculatedlossTimeValue
+                      ? `${calculatedlossTimeValueById}'`
+                      : 0
+                  }
                   onChange={(e) => setLossTime(parseInt(e.target.value))}
                   disabled
                 />
               </div>
+              {isShowAlert ? (
+                <p className="text-center text-error text-sm mt-2">
+                  Isi keterangan loss time!
+                </p>
+              ) : (
+                ""
+              )}
               <div className="flex justify-end mt-3 lg:px-7">
                 <button
                   type="button"
