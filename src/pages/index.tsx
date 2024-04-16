@@ -1,17 +1,11 @@
-import { useSessionContext } from "@/context/sessionContext";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
-import { useEffect } from "react";
 
 export default function Home() {
-  const { fetchSession, session } = useSessionContext();
-
-  useEffect(() => {
-    fetchSession();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { data } = useSession();
 
   return (
     <>
@@ -22,7 +16,9 @@ export default function Home() {
       <div className="flex flex-col justify-center h-screen">
         <div className="px-5 md:text-center">
           <div className="container flex flex-col md:mx-auto w-full md:w-96 md:flex md:flex-col">
-            <h1 className="text-4xl font-bold text-primary mb-8">HL-M</h1>
+            <h1 className="text-4xl font-bold text-primary mb-8 animate-bounce">
+              HL-M
+            </h1>
             <h1 className="text-2xl font-semibold mb-3">
               Quick Reports, Easy Checks!
             </h1>
@@ -30,38 +26,42 @@ export default function Home() {
               Create in a Snap, Monitor on the Fly!
             </p>
             <div className="divider divider-primary pe-5 md:w-full md:mx-auto"></div>
-
-            <div className="flex items-center md:justify-center">
+            {data ? (
+              <div className="flex items-center md:justify-center">
+                <Link
+                  href="/production"
+                  className="btn btn-primary text-lg font-semibold shadow-md shadow-indigo-500/60">
+                  Laporan
+                  <FontAwesomeIcon
+                    icon={faArrowRight}
+                    size="lg"
+                    className="ms-1 mt-1"
+                  />
+                </Link>
+              </div>
+            ) : (
+              ""
+            )}
+            {data ? (
+              <div className="flex items-center md:justify-center mt-3">
+                <Link
+                  href="/production/monthly-kpi"
+                  className="btn btn-success btn-wide text-lg text-white font-semibold shadow-md shadow-indigo-500/60 ">
+                  KPI
+                  <FontAwesomeIcon
+                    icon={faArrowRight}
+                    size="lg"
+                    className="ms-1 mt-0.5"
+                  />
+                </Link>
+              </div>
+            ) : (
               <Link
-                href="/production"
-                className="btn btn-primary text-lg font-semibold shadow-md shadow-indigo-500/60">
-                Laporan
-                <FontAwesomeIcon
-                  icon={faArrowRight}
-                  size="lg"
-                  className="ms-1 mt-1"
-                />
-              </Link>
-            </div>
-
-            <div className="flex items-center md:justify-center mt-3">
-              <Link
-                href="/production/monthly-kpi"
-                className="btn btn-success btn-wide text-lg text-white font-semibold shadow-md shadow-indigo-500/60 ">
-                KPI
-                <FontAwesomeIcon
-                  icon={faArrowRight}
-                  size="lg"
-                  className="ms-1 mt-0.5"
-                />
-              </Link>
-            </div>
-
-            {/* <Link
                 href={"/auth/login"}
                 className="link underlined mt-3 font-bold text-blue-700">
                 SIGN IN!
-              </Link> */}
+              </Link>
+            )}
           </div>
         </div>
       </div>
