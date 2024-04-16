@@ -46,6 +46,40 @@ export async function setEfficiency(docId: string, kpiDocId: string) {
   }
 }
 
+export async function setPcsPerHour(docId: string, kpiDocId: string) {
+  try {
+    const docRef = doc(firestore, "document", docId);
+    const subDocRef = collection(docRef, "dekidakaTotal");
+    const querySnapshot = await getDocs(subDocRef);
+
+    let totalProduction = 0;
+    let effectiveHour = 0;
+    let pcsPerHour = 0;
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const roundedHour = (data.totalWorkHour - data.totalLossTime) / 60;
+      totalProduction = data.totalActual;
+      effectiveHour = Math.round(roundedHour * 10) / 10;
+      const roundedResult =
+        data.totalActual / ((data.totalWorkHour - data.totalLossTime) / 60);
+      pcsPerHour = Math.round(roundedResult) ? Math.round(roundedResult) : 0;
+    });
+
+    const pcsPerHourDoc = {
+      totalProduction,
+      effectiveHour,
+      pcsPerHour,
+    };
+
+    const kpiRef = doc(firestore, "kpi", kpiDocId);
+    await updateDoc(kpiRef, { pcsPerHourDoc });
+  } catch (error) {
+    console.error("Error:", error);
+    throw new Error("Failed to add KPI data.");
+  }
+}
+
 export async function setLossTimeRatio(docId: string, kpiDocId: string) {
   try {
     const docRef = doc(firestore, "document", docId);

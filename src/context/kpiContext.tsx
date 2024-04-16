@@ -21,6 +21,12 @@ export const KpiProvider = ({ children }: any) => {
         docId: profileId,
         kpiDocId: kpiId,
       });
+
+      await axios.post("/api/kpiDataService/setPcsPerHour", {
+        docId: profileId,
+        kpiDocId: kpiId,
+      });
+
       getLastKpiDoc();
     } catch (error) {
       console.error("Error processing data:", error);

@@ -47,7 +47,7 @@ export async function getLastKpiDoc(name: string) {
   try {
     const q = query(
       collection(firestore, "kpi"),
-      where("leader", "==", name),
+      orderBy("time", "desc"),
       limit(1)
     );
 

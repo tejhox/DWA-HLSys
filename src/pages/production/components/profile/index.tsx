@@ -249,7 +249,9 @@ const Profile = () => {
           <div className="flex items-center py-1 px-1">
             <div className="flex w-1/2">
               {isBtnClicked && (!line || !product || !shift || !date) && (
-                <p className="text-sm text-orange-600">Lengkapi Profile !</p>
+                <p className="text-sm text-orange-600 ms-1">
+                  Lengkapi Profile !
+                </p>
               )}
             </div>
             <div className="flex justify-end w-1/2 ">

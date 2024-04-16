@@ -7,6 +7,7 @@ import { useGetDataContext } from "@/context/getDataContext";
 import { useAllStateContext } from "@/context/allStateContext";
 import { useSessionContext } from "@/context/sessionContext";
 import { useEffect } from "react";
+import PcsPerHourChart from "./components/pcsPerHourChart";
 
 const MonthlyKpi = () => {
   const { getLastKpiDoc, getAllKpiData } = useGetDataContext();
@@ -77,6 +78,17 @@ const MonthlyKpi = () => {
                     </p>
                   }
                   cardBody={<LossTimeChart />}
+                />
+              </div>
+              <div className="mt-3">
+                <Card
+                  cardTitle={
+                    <p className="text-center font-semibold">
+                      <span className="text-primary">PCS PER HOUR </span> (
+                      {monthName})
+                    </p>
+                  }
+                  cardBody={<PcsPerHourChart />}
                 />
               </div>
             </div>

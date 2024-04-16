@@ -9,6 +9,7 @@ import { useSessionContext } from "@/context/sessionContext";
 import { useEffect } from "react";
 import EfficiencyContent from "./components/efficiencyContent";
 import LossTimeKpiContent from "./components/lossTimeKpiContent";
+import PcsPerHourContent from "./components/pcsPerHourContent";
 
 const DailyKpi = () => {
   const { kpiId, userDataName } = useAllStateContext();
@@ -58,6 +59,7 @@ const DailyKpi = () => {
               <hr className="border border-gray-400 my-2" />
               <EfficiencyContent />
               <LossTimeKpiContent />
+              <PcsPerHourContent />
               <div className="flex mt-4 justify-end">
                 <Link
                   href={"/production"}

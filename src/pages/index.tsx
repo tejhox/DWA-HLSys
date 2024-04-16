@@ -46,7 +46,7 @@ export default function Home() {
                 <Link
                   href="/production/monthly-kpi"
                   className="btn btn-success btn-wide text-lg text-white font-semibold shadow-md shadow-indigo-500/60 ">
-                  Lihat KPI
+                  KPI
                   <FontAwesomeIcon
                     icon={faArrowRight}
                     size="lg"

@@ -44,6 +44,9 @@ export const GetDataProvider = ({ children }: any) => {
     setEfficiency,
     setLossTimeKpi,
     setLossTimeRatio,
+    setTotalProduction,
+    setEffectiveHour,
+    setPcsPerHour,
     setMan,
     setMethod,
     setMachine,
@@ -170,6 +173,9 @@ export const GetDataProvider = ({ children }: any) => {
       setEfficiency(response.data.efficiencyDoc.efficiency);
       setLossTimeKpi(response.data.lossTimeDoc.lossTimeKpi);
       setLossTimeRatio(response.data.lossTimeDoc.lossTimeRatio);
+      setEffectiveHour(response.data.pcsPerHourDoc.effectiveHour);
+      setTotalProduction(response.data.pcsPerHourDoc.totalProduction);
+      setPcsPerHour(response.data.pcsPerHourDoc.pcsPerHour);
       setIsDekidakaLoading(false);
     } catch (error) {
       setIsDekidakaLoading(false);

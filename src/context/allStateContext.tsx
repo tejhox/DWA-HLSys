@@ -68,6 +68,13 @@ export const AllStateProvider = ({ children }: any) => {
   const [lossTimeRatio, setLossTimeRatio] = useState<number | null | undefined>(
     null
   );
+  const [effectiveHour, setEffectiveHour] = useState<number | null | undefined>(
+    null
+  );
+  const [totalProduction, setTotalProduction] = useState<
+    number | null | undefined
+  >(null);
+  const [pcsPerHour, setPcsPerHour] = useState<number | null | undefined>(null);
 
   const [isModalDeleteProfileOpen, setIsModalDeleteProfileOpen] =
     useState<boolean>(false);
@@ -136,6 +143,9 @@ export const AllStateProvider = ({ children }: any) => {
     efficiency,
     lossTimeKpi,
     lossTimeRatio,
+    totalProduction,
+    effectiveHour,
+    pcsPerHour,
     isInputDisabled,
     isInputFilled,
     isProfileLoading,
@@ -202,6 +212,9 @@ export const AllStateProvider = ({ children }: any) => {
     setEfficiency,
     setLossTimeKpi,
     setLossTimeRatio,
+    setTotalProduction,
+    setEffectiveHour,
+    setPcsPerHour,
     setIsModalAddDekidakaOpen,
     setIsModalLossTimeDetailsOpen,
     setIsModalUpdateDekidakaOpen,

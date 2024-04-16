@@ -36,11 +36,18 @@ export type LossTimeDoc = {
   lossTimeRatio: number | null | undefined;
 };
 
+export type PcsPerHourDoc = {
+  effectiveHour: number | null | undefined;
+  totalProduction: number | null | undefined;
+  pcsPerHour: number | null | undefined;
+};
+
 export type KpiData = {
   id: string;
   date: string;
   efficiencyDoc: EfficiencyDoc;
   lossTimeDoc: LossTimeDoc;
+  pcsPerHourDoc: PcsPerHourDoc;
   group: string;
   leader: string;
   line: string;
@@ -140,6 +147,9 @@ export type AllStateContextValue = {
   efficiency: number | null | undefined;
   lossTimeKpi: number | null | undefined;
   lossTimeRatio: number | null | undefined;
+  totalProduction: number | null | undefined;
+  effectiveHour: number | null | undefined;
+  pcsPerHour: number | null | undefined;
   isInputDisabled: boolean;
   isInputFilled: boolean;
   isProfileLoading: boolean;
@@ -206,6 +216,9 @@ export type AllStateContextValue = {
   setEfficiency: (value: number | null | undefined) => void;
   setLossTimeKpi: (value: number | null | undefined) => void;
   setLossTimeRatio: (value: number | null | undefined) => void;
+  setTotalProduction: (value: number | null | undefined) => void;
+  setEffectiveHour: (value: number | null | undefined) => void;
+  setPcsPerHour: (value: number | null | undefined) => void;
   setIsModalAddDekidakaOpen: (value: boolean) => void;
   setIsModalLossTimeDetailsOpen: (value: boolean) => void;
   setIsModalUpdateDekidakaOpen: (value: boolean) => void;

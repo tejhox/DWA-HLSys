@@ -34,17 +34,17 @@ const LossTimeKpiContent = () => {
             <li>
               <div className="flex">
                 <p className="text-sm font-semibold">
-                  Waktu Tersedia<span className="ms-1.5">:</span>
+                  Waktu Tersedia (Menit)<span className="ms-1.5">:</span>
                 </p>
                 <p className="text-sm text-success font-semibold text-right">
                   {isDekidakaLoading ? (
                     <span className="loading loading-dots loading-xs"></span>
                   ) : availableTime ? (
-                    `${availableTime}'`
+                    `${availableTime}`
                   ) : availableTime === undefined ? (
                     "~"
                   ) : availableTime === 0 ? (
-                    "0%"
+                    "0"
                   ) : (
                     ""
                   )}
@@ -54,17 +54,17 @@ const LossTimeKpiContent = () => {
             <li>
               <div className="flex">
                 <p className="text-sm font-semibold mt-1">
-                  Loss Time <span className="ms-10">:</span>
+                  Loss Time (Menit) <span className="ms-10">:</span>
                 </p>
                 <p className="text-sm text-error font-semibold text-right mt-1">
                   {isDekidakaLoading ? (
                     <span className="loading loading-dots loading-xs"></span>
                   ) : lossTimeKpi ? (
-                    `${lossTimeKpi}'`
+                    `${lossTimeKpi}`
                   ) : lossTimeKpi === undefined ? (
                     "~"
                   ) : lossTimeKpi === 0 ? (
-                    "0'"
+                    "0"
                   ) : (
                     ""
                   )}

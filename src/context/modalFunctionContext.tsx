@@ -16,6 +16,7 @@ export const ModalFunctionProvider = ({ children }: any) => {
   const {
     plan,
     actual,
+    lossTime,
     man,
     method,
     machine,
@@ -77,7 +78,7 @@ export const ModalFunctionProvider = ({ children }: any) => {
                   type="number"
                   required
                   className="input input-bordered input-sm w-full"
-                  value={plan || ""}
+                  value={plan === null ? "" : plan === undefined ? "" : plan}
                   onChange={(e) => setPlan(parseInt(e.target.value))}
                 />
                 <label htmlFor="actualInput" className="label">
@@ -88,7 +89,9 @@ export const ModalFunctionProvider = ({ children }: any) => {
                   type="number"
                   required
                   className="input input-bordered input-sm w-full"
-                  value={actual || ""}
+                  value={
+                    actual === null ? "" : actual === undefined ? "" : actual
+                  }
                   onChange={(e) => setActual(parseInt(e.target.value))}
                 />
                 <label className="label">Deviasi</label>

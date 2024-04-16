@@ -43,6 +43,7 @@ export async function addProfileData(
         group: group,
         leader: leader,
         date: date,
+        product: product,
         time: serverTimestamp(),
       });
 

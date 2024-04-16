@@ -59,6 +59,16 @@ export const DekidakaProvider = ({ children }: any) => {
   } = useAllStateContext();
 
   const handleAddDekidakaModal = () => {
+    setPlan(null);
+    setActual(null);
+    setMan(null);
+    setMethod(null);
+    setMachine(null);
+    setMaterial(null);
+    setManNote("");
+    setMethodNote("");
+    setMachineNote("");
+    setMaterialNote("");
     setIsModalAddDekidakaOpen(!isModalAddDekidakaOpen);
   };
 
@@ -73,6 +83,10 @@ export const DekidakaProvider = ({ children }: any) => {
     setMethod(null);
     setMachine(null);
     setMaterial(null);
+    setManNote("");
+    setMethodNote("");
+    setMachineNote("");
+    setMaterialNote("");
     setIsModalUpdateDekidakaOpen(!isModalUpdateDekidakaOpen);
   };
 
@@ -97,7 +111,11 @@ export const DekidakaProvider = ({ children }: any) => {
   const addDekidaka = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      if (plan && actual) {
+      if (
+        (plan !== undefined && actual !== undefined) ||
+        plan === 0 ||
+        actual === 0
+      ) {
         const workHourValue: number = 60;
         const deviasiValue = calculateDeviasi(plan, actual);
         const lossTimeValue = calculateLossTime(dekidakaData, plan, actual);
@@ -126,16 +144,6 @@ export const DekidakaProvider = ({ children }: any) => {
           setIsModalAddDekidakaOpen(false);
           setIsBtnDisabled(false);
           setIsFormBlank(false);
-          setPlan(null);
-          setActual(null);
-          setMan(null);
-          setMethod(null);
-          setMachine(null);
-          setMaterial(null);
-          setManNote("");
-          setMethodNote("");
-          setMachineNote("");
-          setMaterialNote("");
         };
 
         if (lossTimeValue === 0) {
