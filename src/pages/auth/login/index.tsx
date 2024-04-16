@@ -85,7 +85,7 @@ const LoginPage = () => {
                   <button
                     type="submit"
                     className="btn btn-outline btn-primary btn-sm w-32">
-                    {isLoading ? "Loading..." : "LOGIN"}
+                    {isLoading ? "Loading..." : "SIGN IN"}
                   </button>
                 </div>
               </form>
