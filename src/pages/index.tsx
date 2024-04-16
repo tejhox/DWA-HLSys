@@ -30,42 +30,38 @@ export default function Home() {
               Create in a Snap, Monitor on the Fly!
             </p>
             <div className="divider divider-primary pe-5 md:w-full md:mx-auto"></div>
-            {session ? (
-              <div className="flex items-center md:justify-center">
-                <Link
-                  href="/production"
-                  className="btn btn-primary text-lg font-semibold shadow-md shadow-indigo-500/60">
-                  Laporan
-                  <FontAwesomeIcon
-                    icon={faArrowRight}
-                    size="lg"
-                    className="ms-1 mt-1"
-                  />
-                </Link>
-              </div>
-            ) : (
-              ""
-            )}
-            {session ? (
-              <div className="flex items-center md:justify-center mt-3">
-                <Link
-                  href="/production/monthly-kpi"
-                  className="btn btn-success btn-wide text-lg text-white font-semibold shadow-md shadow-indigo-500/60 ">
-                  KPI
-                  <FontAwesomeIcon
-                    icon={faArrowRight}
-                    size="lg"
-                    className="ms-1 mt-0.5"
-                  />
-                </Link>
-              </div>
-            ) : (
+
+            <div className="flex items-center md:justify-center">
               <Link
+                href="/production"
+                className="btn btn-primary text-lg font-semibold shadow-md shadow-indigo-500/60">
+                Laporan
+                <FontAwesomeIcon
+                  icon={faArrowRight}
+                  size="lg"
+                  className="ms-1 mt-1"
+                />
+              </Link>
+            </div>
+
+            <div className="flex items-center md:justify-center mt-3">
+              <Link
+                href="/production/monthly-kpi"
+                className="btn btn-success btn-wide text-lg text-white font-semibold shadow-md shadow-indigo-500/60 ">
+                KPI
+                <FontAwesomeIcon
+                  icon={faArrowRight}
+                  size="lg"
+                  className="ms-1 mt-0.5"
+                />
+              </Link>
+            </div>
+
+            {/* <Link
                 href={"/auth/login"}
                 className="link underlined mt-3 font-bold text-blue-700">
                 SIGN IN!
-              </Link>
-            )}
+              </Link> */}
           </div>
         </div>
       </div>
