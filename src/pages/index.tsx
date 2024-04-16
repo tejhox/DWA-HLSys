@@ -10,7 +10,8 @@ export default function Home() {
 
   useEffect(() => {
     fetchSession();
-  }, [fetchSession, session]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
