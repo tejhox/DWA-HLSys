@@ -1,11 +1,17 @@
+import { useSessionContext } from "@/context/sessionContext";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function Home() {
-  const { data } = useSession();
+  const { fetchSession, session } = useSessionContext();
+
+  useEffect(() => {
+    fetchSession();
+  }, [fetchSession, session]);
+
   return (
     <>
       <Head>
@@ -15,9 +21,7 @@ export default function Home() {
       <div className="flex flex-col justify-center h-screen">
         <div className="px-5 md:text-center">
           <div className="container flex flex-col md:mx-auto w-full md:w-96 md:flex md:flex-col">
-            <h1 className="text-4xl font-bold text-primary mb-8 animate-bounce">
-              HL-M
-            </h1>
+            <h1 className="text-4xl font-bold text-primary mb-8">HL-M</h1>
             <h1 className="text-2xl font-semibold mb-3">
               Quick Reports, Easy Checks!
             </h1>
@@ -25,7 +29,7 @@ export default function Home() {
               Create in a Snap, Monitor on the Fly!
             </p>
             <div className="divider divider-primary pe-5 md:w-full md:mx-auto"></div>
-            {data ? (
+            {session ? (
               <div className="flex items-center md:justify-center">
                 <Link
                   href="/production"
@@ -41,7 +45,7 @@ export default function Home() {
             ) : (
               ""
             )}
-            {data ? (
+            {session ? (
               <div className="flex items-center md:justify-center mt-3">
                 <Link
                   href="/production/monthly-kpi"

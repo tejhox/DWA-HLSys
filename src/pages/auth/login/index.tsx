@@ -2,13 +2,11 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 import Container from "@/components/layout/container";
-import { useSessionContext } from "@/context/sessionContext";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const { push, query } = useRouter();
-  const { session } = useSessionContext();
 
   const callbackUrl: any = query.callbackUrl || "/";
 
@@ -37,11 +35,6 @@ const LoginPage = () => {
       setError("NIK atau password salah");
     }
   };
-
-  if (session) {
-    push("/");
-    return null;
-  }
 
   return (
     <Container
