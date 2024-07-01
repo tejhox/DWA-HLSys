@@ -109,7 +109,7 @@ const Profile = () => {
               </div>
             )}
           </div>
-          <hr className=" border border-gray-400" />
+          <hr className="border border-gray-400" />
           <div
             className={
               !isSwitchProfileUi ? "container flex w-full p-1 mt-1" : "hidden"
@@ -245,7 +245,7 @@ const Profile = () => {
               )}
             </div>
           </div>
-          <hr className="border border-slate-300 mt-2" />
+          <hr className="lg:hidden border border-slate-300 mt-2" />
           <div className="flex items-center py-1 px-1">
             <div className="flex w-1/2">
               {isBtnClicked && (!line || !product || !shift || !date) && (
@@ -254,7 +254,7 @@ const Profile = () => {
                 </p>
               )}
             </div>
-            <div className="flex justify-end w-1/2 ">
+            <div className="lg:hidden flex justify-end w-1/2 ">
               <Link
                 href="/production/daily-kpi"
                 className={

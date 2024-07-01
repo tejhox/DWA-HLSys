@@ -7,6 +7,7 @@ const PcsPerHourContent = () => {
 
   return (
     <Card
+      cardClass={"bg-white"}
       cardTitle={
         <div className="container w-full">
           <div className="container flex w-full">

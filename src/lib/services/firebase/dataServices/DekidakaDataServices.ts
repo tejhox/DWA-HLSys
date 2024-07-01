@@ -125,8 +125,8 @@ export async function deleteDekidaka(docId: string, subDocId: string) {
     const subDocRef = doc(docRef, "dekidaka", subDocId);
     await deleteDoc(subDocRef);
   } catch (error) {
-    console.error("Error updating profile:", error);
-    throw new Error("Failed to add document subcollection to Firestore");
+    console.error("Error deleting data:", error);
+    throw new Error("Failed to delete data");
   }
 }
 
@@ -218,22 +218,3 @@ export async function getDekidakaSum(docId: string) {
     throw new Error("Failed to fetch document data from Firestore");
   }
 }
-
-// export async function get(docId: string) {
-//   try {
-//     const docRef = doc(firestore, "document", docId);
-//     const subColRef = collection(docRef, "dekidaka");
-//     const q = query(subColRef, orderBy("time", "desc"));
-
-//     const snapshot = await getDocs(q);
-
-//     const subDekidakaData: any[] = [];
-//     snapshot.forEach((doc) => {
-//       subDekidakaData.push({ id: doc.id, ...doc.data() });
-//     });
-//     return subDekidakaData;
-//   } catch (error) {
-//     console.error("Error fetching document data:", error);
-//     throw new Error("Failed to fetch document data from Firestore");
-//   }
-// }

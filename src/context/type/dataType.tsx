@@ -14,6 +14,24 @@ export type DekidakaData = {
   actual: number | null | undefined;
   deviasi: number | null | undefined;
   lossTime: number | null | undefined;
+  lossTimeDetails: {
+    manCat: {
+      man: number | null | undefined;
+      manNote: string | null | undefined;
+    };
+    machineCat: {
+      machine: number | null | undefined;
+      machineNote: string | null | undefined;
+    };
+    methodCat: {
+      method: number | null | undefined;
+      methodNote: string | null | undefined;
+    };
+    materialCat: {
+      material: number | null | undefined;
+      materialNote: string | null | undefined;
+    };
+  };
 };
 
 export type DekidakaSumData = {

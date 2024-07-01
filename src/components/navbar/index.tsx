@@ -37,14 +37,24 @@ const Navbar = () => {
             : "navbar bg-base-100 shadow-lg shadow-gray-500/40"
         }>
         <div className="flex-1 items-center">
-          <Link href={"/"} onClick={closeMenu}>
+          <Link href={"/"} onClick={closeMenu} className="flex items-center">
             <Image
-              className="shadow-md shadow-indigo-800/60 rounded-lg text-xl font-bold"
+              className="hidden lg:block shadow-md shadow-indigo-800/60 rounded-lg text-xl font-bold"
+              src="/static/assets/dwa_logo.png"
+              alt="logo"
+              width={80}
+              height={66}
+            />
+            <Image
+              className="lg:hidden shadow-md shadow-indigo-800/60 rounded-lg text-xl font-bold"
               src="/static/assets/dwa_logo.png"
               alt="logo"
               width={66}
               height={66}
             />
+            <span className="hidden lg:block text-2xl font-extrabold text-blue-900 font-rajdhani ms-3">
+              HL MONITORING SYSTEM
+            </span>
           </Link>
         </div>
         <div className="hidden sm:block">

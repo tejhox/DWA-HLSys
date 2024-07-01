@@ -9,7 +9,14 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        protest: ["Protest Guerrilla"],
+        inconsolata: ["Inconsolata"],
+        bitter: ["Bitter"],
+        rajdhani: ["Rajdhani"],
+      },
+    },
   },
   plugins: [require("daisyui")],
   daisyui: {

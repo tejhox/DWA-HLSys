@@ -60,7 +60,7 @@ const DailyKpi = () => {
               <EfficiencyContent />
               <LossTimeKpiContent />
               <PcsPerHourContent />
-              <div className="flex mt-4 justify-end">
+              <div className="flex mt-2 justify-end">
                 <Link
                   href={"/production"}
                   className="btn btn-sm btn-circle btn-neutral">

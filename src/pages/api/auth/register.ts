@@ -1,7 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { signUp } from "@/lib/services/auth/services";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handlerRegister(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method === "POST") {
     await signUp(req.body, (status: boolean) => {
       if (status) {

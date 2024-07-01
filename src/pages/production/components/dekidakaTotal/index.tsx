@@ -21,7 +21,7 @@ const DekidakaTotal = () => {
           <div className="mb-2">
             <table className="table table-sm shadow-md shadow-gray-500/60 text-center mt-2">
               <thead className="border border-2">
-                <tr className="bg-slate-500">
+                <tr className="bg-indigo-600">
                   <th className="border border-2 text-white">Plan</th>
                   <th className="border border-2 text-white">Aktual</th>
                   <th className="border border-2 text-white">Deviasi</th>

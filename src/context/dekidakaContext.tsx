@@ -17,7 +17,7 @@ const DekidakaContext = createContext<DekidakaContextValue | undefined>(
 
 export const DekidakaProvider = ({ children }: any) => {
   const { calculateLossTimeById } = useLossTimeCalculation();
-  const { getDekidaka, getDekidakaSum } = useGetDataContext();
+  const { getDekidaka, getDekidakaSum, getDailyKpi } = useGetDataContext();
   const { setKpi } = useKpiContext();
   const {
     plan,
@@ -139,11 +139,11 @@ export const DekidakaProvider = ({ children }: any) => {
             machineNote: lossTimeValue === 0 ? "" : machineNote,
             materialNote: lossTimeValue === 0 ? "" : materialNote,
           });
-          await sumDekidaka();
           setIsModalLoading(false);
           setIsModalAddDekidakaOpen(false);
           setIsBtnDisabled(false);
           setIsFormBlank(false);
+          await sumDekidaka();
         };
 
         if (lossTimeValue === 0) {
@@ -178,8 +178,9 @@ export const DekidakaProvider = ({ children }: any) => {
         docId: profileId,
       });
       await getDekidakaSum();
-      getDekidaka();
-      setKpi();
+      await getDekidaka();
+      await setKpi();
+      await getDailyKpi();
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -214,10 +215,10 @@ export const DekidakaProvider = ({ children }: any) => {
           machineNote: lossTimeValueById === 0 ? "" : machineNote,
           materialNote: lossTimeValueById === 0 ? "" : materialNote,
         });
-        await sumDekidaka();
         setIsModalLoading(false);
         setIsBtnDisabled(false);
         setIsModalUpdateDekidakaOpen(false);
+        await sumDekidaka();
         setPlan(null);
         setActual(null);
         setMan(null);
@@ -260,7 +261,6 @@ export const DekidakaProvider = ({ children }: any) => {
       await axios.delete(
         `/api/dekidakaDataService/deleteDekidaka?docId=${profileId}&subDocId=${dekidakaId}`
       );
-      await sumDekidaka();
       setIsModalLoading(false);
       setIsModalUpdateDekidakaOpen(false);
       setIsModalDeleteDekidakaOpen(false);
@@ -274,6 +274,7 @@ export const DekidakaProvider = ({ children }: any) => {
       setMethodNote("");
       setMachineNote("");
       setMaterialNote("");
+      await sumDekidaka();
     } catch (error) {
       console.error("Error fetching data:", error);
     }

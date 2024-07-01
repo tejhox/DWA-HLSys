@@ -16,7 +16,6 @@ export const ModalFunctionProvider = ({ children }: any) => {
   const {
     plan,
     actual,
-    lossTime,
     man,
     method,
     machine,
@@ -339,7 +338,7 @@ export const ModalFunctionProvider = ({ children }: any) => {
               ) : (
                 ""
               )}
-              <div className="flex justify-end mt-3 lg:px-7">
+              <div className="flex justify-end mt-3 lg:px-7 lg:justify-between">
                 <button
                   type="button"
                   onClick={handleDeleteDekidakaModal}
