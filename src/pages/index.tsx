@@ -11,16 +11,18 @@ export default function Home() {
     <>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>DWA-PRO</title>
+        <title>HL Reporting System</title>
       </Head>
       <div className="flex flex-col justify-center h-screen">
         <div className="px-5 md:text-center">
           <div className="container flex flex-col md:mx-auto w-full md:w-96 md:flex md:flex-col">
-            <h1 className="text-4xl font-bold text-primary mb-8">HL-M</h1>
+            <h1 className="text-4xl font-bold text-primary font-rajdhani mb-6">
+              HL REPORTING SYSTEM
+            </h1>
             <h1 className="text-2xl font-semibold mb-3">
               Quick Reports, Easy Checks!
             </h1>
-            <p className="text-lg text-gray-400">
+            <p className="text-lg text-gray-600">
               Create in a Snap, Monitor on the Fly!
             </p>
             <div className="divider divider-primary pe-5 md:w-full md:mx-auto"></div>
@@ -29,7 +31,7 @@ export default function Home() {
                 <Link
                   href="/production"
                   className="btn btn-primary text-lg font-semibold shadow-md shadow-indigo-500/60">
-                  Laporan
+                  Production
                   <FontAwesomeIcon
                     icon={faArrowRight}
                     size="lg"

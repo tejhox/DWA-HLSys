@@ -1,26 +1,26 @@
 import Card from "@/components/card";
 import { useAllStateContext } from "@/context/allStateContext";
 
-const EfficiencyContent = () => {
-  const { availableTime, effectiveTime, efficiency, isDekidakaLoading } =
+const PcsPerHourStats = () => {
+  const { totalProduction, effectiveHour, pcsPerHour, isDekidakaLoading } =
     useAllStateContext();
 
   return (
     <Card
-      cardClass={"bg-white mb-2.5 lg:me-2"}
+      cardClass={"bg-white"}
       cardTitle={
         <div className="container w-full">
           <div className="container flex w-full">
-            <p className="font-semibold ">Efisiensi :</p>
+            <p className="font-semibold ">Pcs Per Hour :</p>
             <p className="text-lg font-semibold text-primary text-right">
               {isDekidakaLoading ? (
                 <span className="loading loading-dots loading-xs"></span>
-              ) : efficiency ? (
-                `${efficiency}%`
-              ) : efficiency === undefined ? (
+              ) : pcsPerHour ? (
+                `${pcsPerHour}`
+              ) : pcsPerHour === undefined ? (
                 "~"
-              ) : efficiency === 0 ? (
-                "0%"
+              ) : pcsPerHour === 0 ? (
+                "0"
               ) : (
                 ""
               )}
@@ -35,16 +35,16 @@ const EfficiencyContent = () => {
             <li>
               <div className="flex">
                 <p className="text-sm font-semibold">
-                  Waktu Tersedia (Menit)<span className="ms-1">:</span>
+                  Total Produksi<span className="ms-1">:</span>
                 </p>
                 <p className="text-sm text-success font-semibold text-right">
                   {isDekidakaLoading ? (
                     <span className="loading loading-dots loading-xs"></span>
-                  ) : availableTime ? (
-                    `${availableTime}`
-                  ) : availableTime === undefined ? (
+                  ) : totalProduction ? (
+                    `${totalProduction}`
+                  ) : totalProduction === undefined ? (
                     "~"
-                  ) : availableTime === 0 ? (
+                  ) : totalProduction === 0 ? (
                     "0"
                   ) : (
                     ""
@@ -55,17 +55,17 @@ const EfficiencyContent = () => {
             <li>
               <div className="flex">
                 <p className="text-sm font-semibold mt-1">
-                  Waktu Efektif (Menit) <span className="ms-3">:</span>
+                  Waktu Efektif (Jam) <span className="ms-3">:</span>
                 </p>
                 <p className="text-sm text-yellow-600 font-semibold text-right mt-1">
                   {isDekidakaLoading ? (
                     <span className="loading loading-dots loading-xs"></span>
-                  ) : effectiveTime ? (
-                    `${effectiveTime}`
-                  ) : effectiveTime === undefined ? (
+                  ) : effectiveHour ? (
+                    `${effectiveHour}`
+                  ) : effectiveHour === undefined ? (
                     "~"
-                  ) : effectiveTime === 0 ? (
-                    "0"
+                  ) : effectiveHour === 0 ? (
+                    `0`
                   ) : (
                     ""
                   )}
@@ -79,4 +79,4 @@ const EfficiencyContent = () => {
   );
 };
 
-export default EfficiencyContent;
+export default PcsPerHourStats;

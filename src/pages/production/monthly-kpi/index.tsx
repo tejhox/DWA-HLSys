@@ -1,13 +1,13 @@
 import Card from "@/components/card";
-import EfficiencyChart from "./components/efficiencyChart";
-import LossTimeChart from "./components/lossTimeKpiChart";
+import EfficiencyChart from "../../../views/chartsViews/efficiencyChart";
+import LossTimeChart from "../../../views/chartsViews/lossTimeKpiChart";
 import Container from "@/components/layout/container";
 import Wrapper from "@/components/layout/wrapper";
 import { useGetDataContext } from "@/context/getDataContext";
 import { useAllStateContext } from "@/context/allStateContext";
 import { useSessionContext } from "@/context/sessionContext";
 import { useEffect } from "react";
-import PcsPerHourChart from "./components/pcsPerHourChart";
+import PcsPerHourChart from "../../../views/chartsViews/pcsPerHourChart";
 
 const MonthlyKpi = () => {
   const { getLastKpiDoc, getAllKpiData } = useGetDataContext();

@@ -1,13 +1,13 @@
-import Profile from "./components/profile";
-import Dekidaka from "./components/dekidaka";
-import DekidakaTotal from "./components/dekidakaTotal";
+import Profile from "../../views/profile";
+import Dekidaka from "../../views/dekidaka";
+import DekidakaTotal from "../../views/dekidakaTotal";
 import Container from "@/components/layout/container";
 import { useEffect } from "react";
 import { useAllStateContext } from "@/context/allStateContext";
 import { useSessionContext } from "@/context/sessionContext";
 import { useGetDataContext } from "@/context/getDataContext";
-import KpiStats from "./components/kpiStats";
-import LossTimeDetailTable from "./components/lossTimeDetailTable";
+import KpiStats from "../../views/kpiStats";
+import LossTimeDetailTable from "../../views/lossTimeDetailTable";
 import Wrapper from "@/components/layout/wrapper";
 
 const ProductionPage = () => {

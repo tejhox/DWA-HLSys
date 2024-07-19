@@ -1,7 +1,7 @@
 import Card from "@/components/card";
 import { useAllStateContext } from "@/context/allStateContext";
 
-const LossTimeKpiContent = () => {
+const LossTimeKpiStats = () => {
   const { availableTime, lossTimeKpi, lossTimeRatio, isDekidakaLoading } =
     useAllStateContext();
 
@@ -79,4 +79,4 @@ const LossTimeKpiContent = () => {
   );
 };
 
-export default LossTimeKpiContent;
+export default LossTimeKpiStats;

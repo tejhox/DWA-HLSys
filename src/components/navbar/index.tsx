@@ -34,7 +34,7 @@ const Navbar = () => {
         className={
           showMenu
             ? "navbar"
-            : "navbar bg-base-100 shadow-lg shadow-gray-500/40"
+            : "navbar bg-base-100 shadow-lg shadow-gray-500/40 relative"
         }>
         <div className="flex-1 items-center">
           <Link href={"/"} onClick={closeMenu} className="flex items-center">
@@ -53,7 +53,7 @@ const Navbar = () => {
               height={66}
             />
             <span className="hidden lg:block text-2xl font-extrabold text-blue-900 font-rajdhani ms-3">
-              HL MONITORING SYSTEM
+              HL REPORTING SYSTEM
             </span>
           </Link>
         </div>
@@ -61,16 +61,25 @@ const Navbar = () => {
           <ul className="menu px-1 align-middle sm:flex sm:flex-row">
             <li>
               <Link
+                href={"/monitoring"}
+                className="link font-semibold text-blue-700">
+                MONITORING
+              </Link>
+            </li>
+            <li className="me-2">
+              <Link
                 href={"/production"}
-                className="font-semibold text-blue-700">
+                className="link font-semibold text-blue-700">
                 LAPORAN PRODUKSI
               </Link>
             </li>
             <li>
               <button
-                className="btn btn-ghost btn-sm mt-0.5 text-blue-700"
+                className={`btn ${
+                  data ? "bg-yellow-500" : "bg-emerald-500"
+                } btn-sm mt-0.5 text-white`}
                 onClick={() => (data ? signOut() : signIn())}>
-                {data ? "SIGN OUT" : "SIGN IN"}
+                {data ? "LOGOUT" : "LOGIN"}
               </button>
             </li>
           </ul>
@@ -97,7 +106,7 @@ const Navbar = () => {
             <button
               className="link link-hover mt-4 font-bold text-sm text-blue-700"
               onClick={handleSignInOut}>
-              {data ? "Sign Out" : "Sign In"}
+              {data ? "Logout" : "Login"}
             </button>
           </li>
         </ul>

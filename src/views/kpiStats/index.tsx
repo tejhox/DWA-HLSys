@@ -1,8 +1,4 @@
 import React from "react";
-import EfficiencyContent from "../../daily-kpi/components/efficiencyContent";
-import LossTimeKpiContent from "../../daily-kpi/components/lossTimeKpiContent";
-import Profile from "../profile";
-import Wrapper from "@/components/layout/wrapper";
 import Card from "@/components/card";
 import { useAllStateContext } from "@/context/allStateContext";
 

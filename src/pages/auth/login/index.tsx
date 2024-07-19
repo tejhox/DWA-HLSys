@@ -2,6 +2,7 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 import Container from "@/components/layout/container";
+import Link from "next/link";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +44,7 @@ const LoginPage = () => {
         <div className="flex h-full justify-center mt-20 sm:w-1/3 sm:mx-auto">
           <div className="flex flex-col h-96 px-6 py-2 bg-slate-100/60 rounded-lg shadow-lg shadow-gray-500/60 w-11/12">
             <div className="my-auto">
-              <h1 className="text-2xl font-bold ">SIGN IN</h1>
+              <h1 className="text-2xl font-bold ">LOGIN</h1>
               <div className="divider"></div>
               {error && <p className="text-center mb-3 text-error">{error}</p>}
               <form onSubmit={handleSubmit} className="form-control">
@@ -85,10 +86,15 @@ const LoginPage = () => {
                   <button
                     type="submit"
                     className="btn btn-outline btn-primary btn-sm w-32">
-                    {isLoading ? "Loading..." : "SIGN IN"}
+                    {isLoading ? "Loading..." : "LOGIN"}
                   </button>
                 </div>
               </form>
+              <div className="flex justify-center pt-4">
+                <Link href={"/auth/register"} className="link text-primary">
+                  Buat Akun!
+                </Link>
+              </div>
             </div>
           </div>
         </div>
