@@ -8,6 +8,8 @@ import { useAllStateContext } from "@/context/allStateContext";
 import { useSessionContext } from "@/context/sessionContext";
 import { useEffect } from "react";
 import PcsPerHourChart from "../../../views/chartsViews/pcsPerHourChart";
+import ProductivityChart from "@/views/chartsViews/productivityChart";
+import CycleTimeActualChart from "@/views/chartsViews/cycleTimeActualChart";
 
 const MonthlyKpi = () => {
   const { getLastKpiDoc, getAllKpiData } = useGetDataContext();
@@ -67,7 +69,7 @@ const MonthlyKpi = () => {
                     {monthName})
                   </p>
                 }
-                cardBody={<EfficiencyChart />}
+                cardBody={<EfficiencyChart marBot={10} />}
               />
               <div className="mt-3">
                 <Card
@@ -77,7 +79,7 @@ const MonthlyKpi = () => {
                       {monthName})
                     </p>
                   }
-                  cardBody={<LossTimeChart />}
+                  cardBody={<LossTimeChart marBot={10} />}
                 />
               </div>
               <div className="mt-3">
@@ -88,7 +90,29 @@ const MonthlyKpi = () => {
                       {monthName})
                     </p>
                   }
-                  cardBody={<PcsPerHourChart />}
+                  cardBody={<PcsPerHourChart marBot={10} />}
+                />
+              </div>
+              <div className="mt-3">
+                <Card
+                  cardTitle={
+                    <p className="text-center font-semibold">
+                      <span className="text-primary">PRODUCTIVITY</span> (
+                      {monthName})
+                    </p>
+                  }
+                  cardBody={<ProductivityChart marBot={10} />}
+                />
+              </div>
+              <div className="mt-3">
+                <Card
+                  cardTitle={
+                    <p className="text-center font-semibold">
+                      <span className="text-primary">CYCLE TIME ACTUAL</span> (
+                      {monthName})
+                    </p>
+                  }
+                  cardBody={<CycleTimeActualChart marBot={10} />}
                 />
               </div>
             </div>

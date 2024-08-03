@@ -4,25 +4,35 @@ import {
   KpiData,
   DekidakaData,
   DekidakaSumData,
+  ProfileData,
+  UserData,
 } from "@/context/type/dataType";
 
 const AllStateContext = createContext<AllStateContextValue | undefined>(
   undefined
 );
 export const AllStateProvider = ({ children }: any) => {
-  const [userData, setUserData] = useState<any>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
+
   const [dateNow, setDateNow] = useState<any>();
 
-  const [profileId, setProfileId] = useState<string>("");
+  const [profileId, setProfileId] = useState<string | undefined>("");
   const [kpiId, setKpiId] = useState<string>("");
   const [dekidakaId, setDekidakaId] = useState<string>("");
   const [tableIndex, setTableIndex] = useState<number>(0);
 
-  const [dekidakaData, setDekidakaData] = useState<DekidakaData[]>();
-  const [dekidakaSumData, setDekidakaSumData] = useState<DekidakaSumData[]>();
-  const [kpiData, setKpiData] = useState<KpiData[]>();
+  const [dekidakaData, setDekidakaData] = useState<DekidakaData[] | null>([]);
+  const [kpiData, setKpiData] = useState<KpiData[] | null>([]);
+  const [filteredKpiData, setFilteredKpiData] = useState<KpiData[] | null>([]);
+  const [profileData, setProfileData] = useState<ProfileData[] | null>([]);
+  const [dekidakaSumData, setDekidakaSumData] =
+    useState<DekidakaSumData | null>(null);
+
+  const [lineName, setLineName] = useState<string>("");
+  const [groupName, setGroupName] = useState<string>("");
 
   const [line, setLine] = useState<string>("");
+  const [leader, setLeader] = useState<string>("");
   const [product, setProduct] = useState<string>("");
   const [shift, setShift] = useState<string>("");
   const [date, setDate] = useState<string>("");
@@ -104,10 +114,24 @@ export const AllStateProvider = ({ children }: any) => {
 
   const [isShowAlert, setIsShowAlert] = useState<boolean>(false);
 
+  const [isKpiBtnActive, setIsKpiBtnActive] = useState<boolean>(false);
+  const [isPlanRecordBtnActive, setIsPlanRecordBtnActive] =
+    useState<boolean>(false);
+  const [isMonitoringBtnActive, setIsMonitoringBtnActive] =
+    useState<boolean>(false);
+  const [isMonitoringSubBtnActive, setIsMonitoringSubBtnActive] =
+    useState<boolean>(false);
+  const [isEr01BtnActive, setIsEr01BtnActive] = useState<boolean>(false);
+  const [isEr02BtnActive, setIsEr02BtnActive] = useState<boolean>(false);
+  const [isEr03BtnActive, setIsEr03BtnActive] = useState<boolean>(false);
+  const [isEr150BtnActive, setIsEr150BtnActive] = useState<boolean>(false);
+
   const contextValue: AllStateContextValue = {
     dekidakaData,
     dekidakaSumData,
+    profileData,
     kpiData,
+    filteredKpiData,
     userData: userData,
     userDataId: userData ? userData.id : "",
     userDataName: userData ? userData.nama : "",
@@ -117,10 +141,13 @@ export const AllStateProvider = ({ children }: any) => {
     kpiId,
     dekidakaId,
     dateNow,
+    lineName,
+    groupName,
     line,
     product,
     shift,
     date,
+    leader,
     plan,
     actual,
     deviasi,
@@ -164,16 +191,27 @@ export const AllStateProvider = ({ children }: any) => {
     isModalDeleteProfileOpen,
     isModalAddDekidakaOpen,
     isModalLossTimeDetailsOpen,
+    isKpiBtnActive,
+    isPlanRecordBtnActive,
+    isEr01BtnActive,
+    isEr02BtnActive,
+    isEr03BtnActive,
+    isEr150BtnActive,
     setDekidakaData,
     setDekidakaSumData,
+    setProfileData,
     setKpiData,
+    setFilteredKpiData,
     setProfileId,
     setDekidakaId,
     setKpiId,
+    setLineName,
+    setGroupName,
     setLine,
     setProduct,
     setShift,
     setDate,
+    setLeader,
     setPlan,
     setActual,
     setDeviasi,
@@ -220,6 +258,16 @@ export const AllStateProvider = ({ children }: any) => {
     setIsModalUpdateDekidakaOpen,
     setIsModalDeleteDekidakaOpen,
     setIsModalDeleteProfileOpen,
+    isMonitoringBtnActive,
+    setIsMonitoringBtnActive,
+    setIsKpiBtnActive,
+    setIsPlanRecordBtnActive,
+    setIsEr01BtnActive,
+    setIsEr02BtnActive,
+    setIsEr03BtnActive,
+    setIsEr150BtnActive,
+    isMonitoringSubBtnActive,
+    setIsMonitoringSubBtnActive,
   };
 
   return (

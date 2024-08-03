@@ -7,7 +7,7 @@ const PcsPerHourStats = () => {
 
   return (
     <Card
-      cardClass={"bg-white"}
+      cardClass={"bg-white mb-2.5 lg:me-2"}
       cardTitle={
         <div className="container w-full">
           <div className="container flex w-full">

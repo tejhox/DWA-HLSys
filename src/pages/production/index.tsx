@@ -50,28 +50,6 @@ const ProductionPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileId]);
 
-  const customStyles = {
-    height: "636px",
-  };
-
-  // const months = [
-  //   "JANUARI",
-  //   "FEBRUARI",
-  //   "MARET",
-  //   "APRIL",
-  //   "MEI",
-  //   "JUNI",
-  //   "JULI",
-  //   "AGUSTUS",
-  //   "SEPTEMBER",
-  //   "OKTOBER",
-  //   "NOVEMBER",
-  //   "DESEMBER",
-  // ];
-
-  // const monthIndex = new Date().getMonth();
-  // const monthName = months[monthIndex];
-
   return (
     <div className="flex max-h-screen">
       <Container

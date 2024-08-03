@@ -256,7 +256,7 @@ const Profile = () => {
             </div>
             <div className="lg:hidden flex justify-end w-1/2 ">
               <Link
-                href="/production/daily-kpi"
+                href="/production/kpi-details"
                 className={
                   !dekidakaData || dekidakaData.length === 0
                     ? "btn-disabled btn btn-sm btn-outline border-indigo-800 text-indigo-800 hover:bg-indigo-800 hover:border-indigo-800 shadow-md shadow-gray-500/40 mt-1 w-20"

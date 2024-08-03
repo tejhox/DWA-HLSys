@@ -10,6 +10,7 @@ import { KpiProvider } from "@/context/kpiContext";
 import { DekidakaProvider } from "@/context/dekidakaContext";
 import { ModalFunctionProvider } from "@/context/modalFunctionContext";
 import { AllStateProvider } from "@/context/allStateContext";
+import { useRouter } from "next/router";
 
 const lato = Lato({
   weight: ["100", "300", "400", "700", "900"],
@@ -22,6 +23,9 @@ export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps) {
+  const router = useRouter();
+  const showNavbar = router.pathname !== "/dashboard";
+
   return (
     <SessionProvider session={session}>
       <AllStateProvider>
@@ -31,14 +35,13 @@ export default function App({
               <DekidakaProvider>
                 <ProfileProvider>
                   <ModalFunctionProvider>
-                    <Navbar />
+                    {showNavbar && <Navbar />}
                     <div>
                       <div
                         className="absolute inset-0 overflow-hidden bg-cover bg-center -z-50"
                         style={{
                           backgroundImage: "url('/static/assets/17545.jpg')",
-                          height: "720px",
-                          maxHeight: "720px",
+                          height: "100vh",
                           overflow: "hidden",
                         }}
                       />

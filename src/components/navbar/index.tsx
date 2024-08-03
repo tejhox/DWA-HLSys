@@ -59,18 +59,11 @@ const Navbar = () => {
         </div>
         <div className="hidden sm:block">
           <ul className="menu px-1 align-middle sm:flex sm:flex-row">
-            <li>
+            <li className="me-4">
               <Link
-                href={"/monitoring"}
+                href={"/dashboard"}
                 className="link font-semibold text-blue-700">
-                MONITORING
-              </Link>
-            </li>
-            <li className="me-2">
-              <Link
-                href={"/production"}
-                className="link font-semibold text-blue-700">
-                LAPORAN PRODUKSI
+                DASHBOARD
               </Link>
             </li>
             <li>

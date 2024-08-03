@@ -1,6 +1,6 @@
 const Container = (props: any) => {
   return (
-    <div className={` ${props.contentClass} flex flex-col px-1.5`}>
+    <div className={` ${props.contentClass} flex flex-col px-1`}>
       {props.content}
     </div>
   );

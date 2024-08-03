@@ -130,3 +130,15 @@ export async function deleteProfile(docId: string, kpiDocId: string) {
     throw new Error("Failed to delete document collection");
   }
 }
+
+export async function getAllProfileData() {
+  try {
+    const docRef = collection(firestore, "document");
+    const snapshot = await getDocs(docRef);
+    const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    return data;
+  } catch (error) {
+    console.error("Error fetching document data:", error);
+    throw new Error("Failed to fetch document data from Firestore");
+  }
+}

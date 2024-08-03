@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from "react";
 import axios from "axios";
 import { useAllStateContext } from "./allStateContext";
-import { GetDataContextValue } from "./type/dataType";
+import { GetDataContextValue, KpiData, ProfileData } from "./type/dataType";
 
 const GetDataContext = createContext<GetDataContextValue | undefined>(
   undefined
@@ -10,7 +10,11 @@ const GetDataContext = createContext<GetDataContextValue | undefined>(
 export const GetDataProvider = ({ children }: any) => {
   const {
     profileId,
+    kpiData,
+    filteredKpiData,
+    setProfileData,
     setProfileId,
+    setLineName,
     setLine,
     setProduct,
     setShift,
@@ -19,11 +23,6 @@ export const GetDataProvider = ({ children }: any) => {
     setActual,
     setDeviasi,
     setLossTime,
-    setTotalPlan,
-    setTotalActual,
-    setTotalDeviasi,
-    setTotalLossTime,
-    setTotalWorkHour,
     setDekidakaData,
     setDekidakaSumData,
     setTableIndex,
@@ -38,6 +37,7 @@ export const GetDataProvider = ({ children }: any) => {
     userDataName,
     setKpiId,
     setKpiData,
+    setFilteredKpiData,
     kpiId,
     setAvailableTime,
     setEffectiveTime,
@@ -89,7 +89,7 @@ export const GetDataProvider = ({ children }: any) => {
     try {
       setIsDekidakaLoading(true);
       const response = await axios.get(
-        `/api/dekidakaDataService/getDekidaka?docId=${profileId}`
+        `/api/dekidakaDataService/getDekidaka?profileId=${profileId}`
       );
       setDekidakaData(response.data);
       setIsDekidakaLoading(false);
@@ -102,14 +102,9 @@ export const GetDataProvider = ({ children }: any) => {
   const getDekidakaSum = async () => {
     try {
       const response = await axios.get(
-        `/api/dekidakaDataService/getDekidakaSum?docId=${profileId}`
+        `/api/dekidakaDataService/getDekidakaSum?profileId=${profileId}`
       );
       setDekidakaSumData(response.data);
-      setTotalPlan(response.data.totalPlan);
-      setTotalActual(response.data.totalActual);
-      setTotalDeviasi(response.data.totalDeviasi);
-      setTotalLossTime(response.data.totalLossTime);
-      setTotalWorkHour(response.data.totalWorkHour);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -192,6 +187,91 @@ export const GetDataProvider = ({ children }: any) => {
     }
   };
 
+  const getFilteredMonitoringData = async (lineName: string) => {
+    try {
+      setIsDekidakaLoading(true);
+      const filteredDataResponse = await axios.get(
+        "/api/profileDataService/getAllProfileData"
+      );
+      const filteredAndSortedData: ProfileData[] = filteredDataResponse.data
+        .filter((item: ProfileData) => item.line === lineName)
+        .sort((a: any, b: any) => {
+          const timeA = a.time.seconds ?? 0;
+          const timeB = b.time.seconds ?? 0;
+          return timeB - timeA;
+        });
+      const id = filteredAndSortedData[0]?.id;
+      setProfileData(filteredAndSortedData);
+      try {
+        const getDekidakaResponse = await axios.get(
+          `/api/dekidakaDataService/getDekidaka?profileId=${id}`
+        );
+        setDekidakaData(getDekidakaResponse.data);
+
+        const getDekidakaSumResponse = await axios.get(
+          `/api/dekidakaDataService/getDekidakaSum?profileId=${id}`
+        );
+        setDekidakaSumData(getDekidakaSumResponse.data);
+      } catch (error) {
+        console.log(error);
+      }
+      setIsDekidakaLoading(false);
+    } catch (error) {
+      setIsDekidakaLoading(false);
+      console.error("Error fetching profile data:", error);
+    }
+  };
+
+  const getFilteredMonitoringKpiData = async (lineName: string) => {
+    try {
+      setLineName(lineName);
+      setIsDekidakaLoading(true);
+      const response = await axios.get("/api/kpiDataService/getAllKpiData");
+      const filteredAndSortedKpi: KpiData[] = response.data
+        .filter((item: KpiData) => item.line === lineName)
+        .sort((a: any, b: any) => {
+          const timeA = a.time.seconds ?? 0;
+          const timeB = b.time.seconds ?? 0;
+          return timeB - timeA;
+        });
+      if (filteredAndSortedKpi.length > 0) {
+        setKpiData(filteredAndSortedKpi);
+      } else {
+        setKpiData(null);
+      }
+      setIsDekidakaLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getKpiDataByLine = async (lineName: string) => {
+    try {
+      const response = await axios.get("/api/kpiDataService/getAllKpiData");
+      const kpiDataByLine: KpiData[] = response.data.filter(
+        (item: KpiData) => item.line === lineName
+      );
+      setKpiData(kpiDataByLine);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const getKpiDataByGroup = async (lineName: string, groupName: string) => {
+    try {
+      const response = await axios.get("/api/kpiDataService/getAllKpiData");
+      const kpiDataByLine: KpiData[] = response.data.filter(
+        (item: KpiData) => item.line === lineName
+      );
+      const kpiDataByGroup: KpiData[] = kpiDataByLine.filter(
+        (item: KpiData) => item.group === groupName
+      );
+      setKpiData(kpiDataByGroup);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   const contextValue: GetDataContextValue = {
     getDekidaka,
     getLastKpiDoc,
@@ -200,6 +280,10 @@ export const GetDataProvider = ({ children }: any) => {
     getDekidakaSum,
     getAllKpiData,
     getDailyKpi,
+    getFilteredMonitoringData,
+    getFilteredMonitoringKpiData,
+    getKpiDataByLine,
+    getKpiDataByGroup,
   };
 
   return (

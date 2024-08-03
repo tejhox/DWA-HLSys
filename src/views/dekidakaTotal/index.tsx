@@ -2,13 +2,7 @@ import Wrapper from "@/components/layout/wrapper";
 import { useAllStateContext } from "@/context/allStateContext";
 
 const DekidakaTotal = () => {
-  const {
-    dekidakaSumData,
-    totalPlan,
-    totalActual,
-    totalDeviasi,
-    totalLossTime,
-  } = useAllStateContext();
+  const { dekidakaSumData } = useAllStateContext();
 
   return (
     <Wrapper
@@ -30,7 +24,7 @@ const DekidakaTotal = () => {
               </thead>
               <tbody>
                 <tr className="bg-white">
-                  {!dekidakaSumData || dekidakaSumData.length === 0 ? (
+                  {!dekidakaSumData ? (
                     <>
                       <td className="border-double border-2">-</td>
                       <td className="border-double border-2 text-blue-700">
@@ -41,15 +35,17 @@ const DekidakaTotal = () => {
                     </>
                   ) : (
                     <>
-                      <td className="border-double border-2">{totalPlan}</td>
+                      <td className="border-double border-2">
+                        {dekidakaSumData?.totalPlan}
+                      </td>
                       <td className="border-double border-2 text-blue-700">
-                        {totalActual}
+                        {dekidakaSumData?.totalActual}
                       </td>
                       <td className="border-double border-2 ">
-                        {totalDeviasi}
+                        {dekidakaSumData?.totalDeviasi}
                       </td>
                       <td className="border-double border-2 text-error">
-                        {`${totalLossTime}'`}
+                        {`${dekidakaSumData?.totalLossTime}'`}
                       </td>
                     </>
                   )}

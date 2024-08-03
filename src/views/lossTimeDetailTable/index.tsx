@@ -12,7 +12,7 @@ const LossTimeDetailTable = () => {
 
   return (
     <div
-      className="bg-gray-50/80 shadow shadow-lg rounded-lg py-2 px-3 mt-1.5"
+      className="bg-gray-50/90 shadow shadow-lg shadow-gray-400/80 rounded-xl py-2 px-3 mt-1.5"
       style={{ height: "451px" }}>
       <h1 className="font-semibold">Loss Time Detail</h1>
       <hr className="border border-gray-400 mt-1" />
@@ -169,28 +169,5 @@ const LossTimeDetailTable = () => {
     </div>
   );
 };
-
-{
-  /* {dekidakaData
-            ?.slice()
-            .reverse()
-            .map((item: DekidakaData, index: number) => (
-              <tr className="hover" key={item.id}>
-                <td className="text-center">{index + 1}</td>
-                <td className="text-center">
-                  {`${item.lossTimeDetails?.manCat?.man}'`}
-                </td>
-                <td className="text-center">
-                  {`${item.lossTimeDetails?.machineCat?.machine}'`}
-                </td>
-                <td className="text-center">
-                  {`${item.lossTimeDetails?.methodCat?.method}'`}
-                </td>
-                <td className="text-center">
-                  {`${item.lossTimeDetails?.materialCat?.material}'`}
-                </td>
-              </tr>
-            ))} */
-}
 
 export default LossTimeDetailTable;

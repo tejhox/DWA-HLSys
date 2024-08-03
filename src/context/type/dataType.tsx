@@ -1,11 +1,14 @@
 import { FormEvent } from "react";
 
 export type ProfileData = {
-  id: string;
-  line: string;
-  product: string;
-  shift: string;
-  date: string;
+  id: string | undefined;
+  group: string | undefined;
+  line: string | undefined;
+  leader: string | undefined;
+  product: string | undefined;
+  time: { seconds: number | undefined; nanoseconds: number | undefined };
+  shift: string | undefined;
+  date: string | undefined;
 };
 
 export type DekidakaData = {
@@ -42,40 +45,46 @@ export type DekidakaSumData = {
   totalLossTime: number | null | undefined;
 };
 
-export type EfficiencyDoc = {
-  availableTime: number | null | undefined;
-  effectiveTime: number | null | undefined;
-  efficiency: number | null | undefined;
-};
-
-export type LossTimeDoc = {
-  availableTime: number | null | undefined;
-  lossTimeKpi: number | null | undefined;
-  lossTimeRatio: number | null | undefined;
-};
-
-export type PcsPerHourDoc = {
-  effectiveHour: number | null | undefined;
-  totalProduction: number | null | undefined;
-  pcsPerHour: number | null | undefined;
-};
-
 export type KpiData = {
   id: string;
   date: string;
-  efficiencyDoc: EfficiencyDoc;
-  lossTimeDoc: LossTimeDoc;
-  pcsPerHourDoc: PcsPerHourDoc;
+  efficiencyDoc: {
+    availableTime: number | null | undefined;
+    effectiveTime: number | null | undefined;
+    efficiency: number | null | undefined;
+  };
+  lossTimeDoc: {
+    availableTime: number | null | undefined;
+    lossTimeKpi: number | null | undefined;
+    lossTimeRatio: number | null | undefined;
+  };
+  pcsPerHourDoc: {
+    effectiveHour: number | null | undefined;
+    totalProduction: number | null | undefined;
+    pcsPerHour: number | null | undefined;
+  };
+  productivityDoc: {
+    actualPrd: number | null | undefined;
+    hour: number | null | undefined;
+    man: number | null | undefined;
+    manHour: number | null | undefined;
+    unitPerManHrAct: number | null | undefined;
+  };
+  cycleTimeActualDoc: {
+    cycleTimeAct: number | null | undefined;
+    effectiveTime: number | null | undefined;
+    totalProduction: number | null | undefined;
+  };
   group: string;
   leader: string;
   line: string;
 };
 
 export type UserData = {
-  id: string;
-  nama: string;
-  nik: string;
-  lastProfileId: string;
+  id: string | null;
+  nama: string | null;
+  nik: string | null;
+  lastProfileId: string | null;
 };
 
 export type ProfileContextValue = {
@@ -119,6 +128,10 @@ export type GetDataContextValue = {
   getDekidakaSum: () => Promise<void>;
   getAllKpiData: () => Promise<void>;
   getDailyKpi: () => Promise<void>;
+  getFilteredMonitoringData: (lineName: string) => Promise<void>;
+  getFilteredMonitoringKpiData: (lineName: string) => Promise<void>;
+  getKpiDataByLine: (lineName: string) => Promise<void>;
+  getKpiDataByGroup: (lineName: string, groupName: string) => Promise<void>;
   getDekidakaById: (subDocId: string, index: number) => Promise<void>;
 };
 
@@ -127,22 +140,27 @@ export type KpiContextValue = {
 };
 
 export type AllStateContextValue = {
-  dekidakaData: DekidakaData[] | undefined;
-  dekidakaSumData: DekidakaSumData[] | undefined;
-  kpiData: KpiData[] | undefined;
-  userData: UserData[] | undefined;
-  userDataId: string;
-  userDataName: string;
-  userDataNik: string;
+  userData: UserData | null;
+  profileData: ProfileData[] | null;
+  dekidakaData: DekidakaData[] | null;
+  kpiData: KpiData[] | null;
+  filteredKpiData: KpiData[] | null;
+  dekidakaSumData: DekidakaSumData | null;
+  userDataId: string | null;
+  userDataName: string | null;
+  userDataNik: string | null;
   tableIndex: number;
-  profileId: string;
+  profileId: string | undefined;
   kpiId: string;
   dekidakaId: string;
   dateNow: any;
+  lineName: string;
+  groupName: string;
   line: string;
   product: string;
   shift: string;
   date: string;
+  leader: string;
   plan: number | null | undefined;
   actual: number | null | undefined;
   deviasi: number | null | undefined;
@@ -186,16 +204,31 @@ export type AllStateContextValue = {
   isModalUpdateDekidakaOpen: boolean;
   isModalDeleteDekidakaOpen: boolean;
   isModalDeleteProfileOpen: boolean;
-  setDekidakaData: (value: DekidakaData[]) => void;
-  setDekidakaSumData: (value: DekidakaSumData[]) => void;
-  setKpiData: (value: KpiData[]) => void;
-  setProfileId: (value: string) => void;
+  isMonitoringBtnActive: boolean;
+  isPlanRecordBtnActive: boolean;
+  isKpiBtnActive: boolean;
+  isEr01BtnActive: boolean;
+  isEr02BtnActive: boolean;
+  isEr03BtnActive: boolean;
+  isEr150BtnActive: boolean;
+  isMonitoringSubBtnActive: boolean;
+  setUserData: (value: UserData | null) => void;
+  setProfileData: (value: ProfileData[] | null) => void;
+  setKpiData: (value: KpiData[] | null) => void;
+  setFilteredKpiData: (value: KpiData[] | null) => void;
+  setDekidakaData: (value: DekidakaData[] | null) => void;
+  setDekidakaSumData: (value: DekidakaSumData | null) => void;
+  setIsMonitoringBtnActive: (value: boolean) => void;
+  setProfileId: (value: string | undefined) => void;
   setDekidakaId: (value: string) => void;
   setKpiId: (value: string) => void;
+  setLineName: (value: string) => void;
+  setGroupName: (value: string) => void;
   setLine: (value: string) => void;
   setProduct: (value: string) => void;
   setShift: (value: string) => void;
   setDate: (value: string) => void;
+  setLeader: (value: string) => void;
   setPlan: (value: number | null | undefined) => void;
   setActual: (value: number | null | undefined) => void;
   setDeviasi: (value: number | null | undefined) => void;
@@ -227,7 +260,6 @@ export type AllStateContextValue = {
   setIsBtnClicked: (value: boolean) => void;
   setIsCheckBtnDisabled: (value: boolean) => void;
   setIsBtnDisabled: (value: boolean) => void;
-  setUserData: (value: any) => void;
   setDateNow: (value: any) => void;
   setAvailableTime: (value: number | null | undefined) => void;
   setEffectiveTime: (value: number | null | undefined) => void;
@@ -242,4 +274,11 @@ export type AllStateContextValue = {
   setIsModalUpdateDekidakaOpen: (value: boolean) => void;
   setIsModalDeleteDekidakaOpen: (value: boolean) => void;
   setIsModalDeleteProfileOpen: (value: boolean) => void;
+  setIsPlanRecordBtnActive: (value: boolean) => void;
+  setIsKpiBtnActive: (value: boolean) => void;
+  setIsEr01BtnActive: (value: boolean) => void;
+  setIsEr02BtnActive: (value: boolean) => void;
+  setIsEr03BtnActive: (value: boolean) => void;
+  setIsEr150BtnActive: (value: boolean) => void;
+  setIsMonitoringSubBtnActive: (value: boolean) => void;
 };

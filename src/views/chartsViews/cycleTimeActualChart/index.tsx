@@ -11,13 +11,13 @@ import {
   YAxis,
 } from "recharts";
 
-const PcsPerHourChart = (props: any) => {
+const CycleTimeActualChart = (props: any) => {
   const { kpiData } = useAllStateContext();
 
   const chartData =
     kpiData?.map((item: KpiData) => ({
       time: item.date,
-      pcsPerHour: item.pcsPerHourDoc?.pcsPerHour || 0,
+      CycleTimeActual: item.cycleTimeActualDoc?.cycleTimeAct || 0,
     })) || [];
 
   const sortedChartData = chartData.slice().sort((a, b) => {
@@ -52,18 +52,15 @@ const PcsPerHourChart = (props: any) => {
         />
         <YAxis tick={{ fontSize: 12 }} />
         <Tooltip />
-        <Legend
-          formatter={() => "Pcs Per Hour"}
-          wrapperStyle={{ fontSize: "12px" }}
-        />
+        <Legend wrapperStyle={{ fontSize: "12px" }} />
         <Line
           type="monotone"
-          dataKey="pcsPerHour"
-          stroke="#00158f"
+          dataKey="CycleTimeActual"
+          stroke="#8884d8"
           strokeWidth={2}
         />
       </LineChart>
     </ResponsiveContainer>
   );
 };
-export default PcsPerHourChart;
+export default CycleTimeActualChart;

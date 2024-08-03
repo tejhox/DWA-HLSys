@@ -168,9 +168,9 @@ export async function sumDekidaka(docId: string) {
   }
 }
 
-export async function getDekidaka(docId: string) {
+export async function getDekidaka(profileId: string) {
   try {
-    const docRef = doc(firestore, "document", docId);
+    const docRef = doc(firestore, "document", profileId);
     const subColRef = collection(docRef, "dekidaka");
     const q = query(subColRef, orderBy("time", "desc"));
 
@@ -203,9 +203,9 @@ export async function getDekidakaById(docId: string, subDocId: string) {
   }
 }
 
-export async function getDekidakaSum(docId: string) {
+export async function getDekidakaSum(profileId: string) {
   try {
-    const docRef = doc(firestore, "document", docId);
+    const docRef = doc(firestore, "document", profileId);
     const subDocRef = doc(docRef, "dekidakaTotal", "1");
     const snapshot = await getDoc(subDocRef);
     if (snapshot.exists()) {

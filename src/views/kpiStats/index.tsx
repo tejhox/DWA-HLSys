@@ -15,7 +15,7 @@ const KpiStats = () => {
   return (
     <div className="flex mt-1.5">
       <Card
-        cardClass={"bg-gray-50/70 lg:me-2"}
+        cardClass={"bg-gray-50/90 lg:me-2"}
         cardTitle={
           <div className="container w-full">
             <div className="container flex w-full">
@@ -85,7 +85,7 @@ const KpiStats = () => {
         }
       />
       <Card
-        cardClass={"bg-gray-50/70"}
+        cardClass={"bg-gray-50/90"}
         cardTitle={
           <div className="container w-full">
             <div className="flex w-full">

@@ -11,7 +11,7 @@ import {
   YAxis,
 } from "recharts";
 
-const LossTimeChart = () => {
+const LossTimeChart = (props: any) => {
   const { kpiData } = useAllStateContext();
 
   const chartData =
@@ -36,7 +36,7 @@ const LossTimeChart = () => {
           top: 20,
           left: -30,
           right: 5,
-          bottom: 10,
+          bottom: props.marBot,
         }}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis

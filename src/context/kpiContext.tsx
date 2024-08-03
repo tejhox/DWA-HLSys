@@ -12,17 +12,7 @@ export const KpiProvider = ({ children }: any) => {
 
   const setKpi = async () => {
     try {
-      await axios.post("/api/kpiDataService/setEfficiency", {
-        docId: profileId,
-        kpiDocId: kpiId,
-      });
-
-      await axios.post("/api/kpiDataService/setLossTimeKpi", {
-        docId: profileId,
-        kpiDocId: kpiId,
-      });
-
-      await axios.post("/api/kpiDataService/setPcsPerHour", {
+      await axios.post("/api/kpiDataService/setKpiValues", {
         docId: profileId,
         kpiDocId: kpiId,
       });

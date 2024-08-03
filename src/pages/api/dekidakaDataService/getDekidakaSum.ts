@@ -7,11 +7,11 @@ export default async function handlerDekidakaTotal(
 ) {
   if (req.method === "GET") {
     try {
-      const { docId } = req.query;
-      if (!docId || typeof docId !== "string") {
-        throw new Error("Invalid docId parameter");
+      const { profileId } = req.query;
+      if (!profileId || typeof profileId !== "string") {
+        throw new Error("Invalid profileId parameter");
       }
-      const data = await getDekidakaSum(docId);
+      const data = await getDekidakaSum(profileId);
       res.status(200).json(data);
     } catch (error) {
       res.status(404).json({ message: "Data not found" });

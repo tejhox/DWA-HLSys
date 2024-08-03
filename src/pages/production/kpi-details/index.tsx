@@ -47,7 +47,7 @@ const DailyKpi = () => {
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xl font-bold text-primary ms-1">KPI LINE</p>
                 <Link
-                  href="/production/monthly-kpi"
+                  href="/production/kpi-charts"
                   className="btn btn-sm btn-ghost">
                   <FontAwesomeIcon
                     className="text-blue-700"
