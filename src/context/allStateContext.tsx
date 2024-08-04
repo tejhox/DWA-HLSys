@@ -6,13 +6,14 @@ import {
   DekidakaSumData,
   ProfileData,
   UserData,
+  AllDekidakaSumData,
 } from "@/context/type/dataType";
 
 const AllStateContext = createContext<AllStateContextValue | undefined>(
   undefined
 );
 export const AllStateProvider = ({ children }: any) => {
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [userData, setUserData] = useState<UserData | null | undefined>(null);
 
   const [dateNow, setDateNow] = useState<any>();
 
@@ -27,6 +28,9 @@ export const AllStateProvider = ({ children }: any) => {
   const [profileData, setProfileData] = useState<ProfileData[] | null>([]);
   const [dekidakaSumData, setDekidakaSumData] =
     useState<DekidakaSumData | null>(null);
+  const [allDekidakaSumData, setAllDekidakaSumData] = useState<
+    AllDekidakaSumData[] | null
+  >(null);
 
   const [lineName, setLineName] = useState<string>("");
   const [groupName, setGroupName] = useState<string>("");
@@ -129,6 +133,7 @@ export const AllStateProvider = ({ children }: any) => {
   const contextValue: AllStateContextValue = {
     dekidakaData,
     dekidakaSumData,
+    allDekidakaSumData,
     profileData,
     kpiData,
     filteredKpiData,
@@ -198,6 +203,7 @@ export const AllStateProvider = ({ children }: any) => {
     isEr03BtnActive,
     isEr150BtnActive,
     setDekidakaData,
+    setAllDekidakaSumData,
     setDekidakaSumData,
     setProfileData,
     setKpiData,

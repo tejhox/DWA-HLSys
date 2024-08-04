@@ -1,6 +1,17 @@
-import React from "react";
+import { useAllStateContext } from "@/context/allStateContext";
+import { useGetDataContext } from "@/context/getDataContext";
+import { AllDekidakaSumData } from "@/context/type/dataType";
+import React, { useEffect } from "react";
 
 const PlanRecord = () => {
+  const { allDekidakaSumData } = useAllStateContext();
+  const { getAllDekidakaSumData } = useGetDataContext();
+
+  useEffect(() => {
+    getAllDekidakaSumData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="w-full ">
       <div className="flex flex-1 justify-between bg-blue-700 shadow shadow-gray-400 rounded py-2 px-3">
@@ -35,6 +46,18 @@ const PlanRecord = () => {
               <th>Cycle Time Actual</th>
             </tr>
           </thead>
+          <tbody>
+            {allDekidakaSumData?.map(
+              (item: AllDekidakaSumData, index: number) => (
+                <tr key={item.id}>
+                  <td>{index + 1}</td>
+                  <td>{item.totalPlan}</td>
+                  <td>{item.totalActual}</td>
+                  <td>{item.totalLossTime}</td>
+                </tr>
+              )
+            )}
+          </tbody>
         </table>
       </div>
     </div>

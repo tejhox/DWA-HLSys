@@ -24,6 +24,11 @@ export const ProfileProvider = ({ children }: any) => {
     product,
     shift,
     date,
+    totalPlan,
+    totalActual,
+    totalDeviasi,
+    totalLossTime,
+    totalWorkHour,
     setLine,
     setProduct,
     setShift,
@@ -50,6 +55,7 @@ export const ProfileProvider = ({ children }: any) => {
     isEditMode,
     isCheckBtnDisabled,
     isSwitchProfileUi,
+    dekidakaSumData,
   } = useAllStateContext();
 
   const handleShowWarning = () => {
@@ -155,13 +161,20 @@ export const ProfileProvider = ({ children }: any) => {
   };
 
   const newProfile = () => {
-    const task = () => {
+    const task = async () => {
+      await axios.post("/api/dekidakaDataService/addDekidakaTotal", {
+        totalPlan: totalPlan,
+        totalActual: totalActual,
+        totalDeviasi: totalDeviasi,
+        totalLossTime: totalLossTime,
+        totalWorkHour: totalWorkHour,
+      });
       if (dekidakaData?.length === 0) {
         setIsFormBlank(true);
       } else {
         setIsSwitchProfileUi(false);
         setDekidakaData([]);
-        setDekidakaSumData([]);
+        setDekidakaSumData(null);
         setProfileId("");
         setKpiId("");
         setLine("");

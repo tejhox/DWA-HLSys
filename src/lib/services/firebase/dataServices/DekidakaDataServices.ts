@@ -17,6 +17,14 @@ import app from "../init";
 
 const firestore = getFirestore(app);
 
+type DekidakaSumData = {
+  id: string;
+  totalPlan: number | null | undefined;
+  totalActual: number | null | undefined;
+  totalDeviasi: number | null | undefined;
+  totalLossTime: number | null | undefined;
+};
+
 export async function addDekidaka(
   docId: string,
   plan: number,
@@ -60,6 +68,30 @@ export async function addDekidaka(
           materialNote: materialNote !== null ? materialNote : "",
         },
       },
+      time: serverTimestamp(),
+    });
+    return snapshot;
+  } catch (error) {
+    console.error("Error adding document subcollection to Firestore:", error);
+    throw new Error("Failed to add document subcollection to Firestore");
+  }
+}
+
+export async function addDekidakaTotal(
+  totalPlan: number,
+  totalActual: number,
+  totalDeviasi: number,
+  totalLossTime: number,
+  totalWorkHour: number
+) {
+  try {
+    const docRef = collection(firestore, "dekidakaTotal");
+    const snapshot = await addDoc(docRef, {
+      totalPlan,
+      totalActual,
+      totalDeviasi,
+      totalLossTime,
+      totalWorkHour,
       time: serverTimestamp(),
     });
     return snapshot;
@@ -181,6 +213,23 @@ export async function getDekidaka(profileId: string) {
       subDekidakaData.push({ id: doc.id, ...doc.data() });
     });
     return subDekidakaData;
+  } catch (error) {
+    console.error("Error fetching document data:", error);
+    throw new Error("Failed to fetch document data from Firestore");
+  }
+}
+
+export async function getAllDekidakaSumData() {
+  try {
+    const colRef = collection(firestore, "dekidakaTotal");
+    const q = query(colRef, orderBy("time", "desc"));
+    const snapshot = await getDocs(q);
+
+    const allDekidakaSum: any[] = [];
+    snapshot.forEach((doc) => {
+      allDekidakaSum.push({ id: doc.id, ...doc.data() });
+    });
+    return allDekidakaSum;
   } catch (error) {
     console.error("Error fetching document data:", error);
     throw new Error("Failed to fetch document data from Firestore");

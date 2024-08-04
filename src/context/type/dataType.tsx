@@ -38,11 +38,20 @@ export type DekidakaData = {
 };
 
 export type DekidakaSumData = {
+  id?: string;
+  totalPlan: number | null | undefined;
+  totalActual: number | null | undefined;
+  totalDeviasi: number | null | undefined;
+  totalLossTime: number | null | undefined;
+};
+
+export type AllDekidakaSumData = {
   id: string;
   totalPlan: number | null | undefined;
   totalActual: number | null | undefined;
   totalDeviasi: number | null | undefined;
   totalLossTime: number | null | undefined;
+  totalWorkHour: number | null | undefined;
 };
 
 export type KpiData = {
@@ -81,10 +90,12 @@ export type KpiData = {
 };
 
 export type UserData = {
-  id: string | null;
-  nama: string | null;
-  nik: string | null;
-  lastProfileId: string | null;
+  id: string | null | undefined;
+  nama: string | null | undefined;
+  nik: string | null | undefined;
+  name?: string | null | undefined;
+  email?: string | null | undefined;
+  image?: string | null | undefined;
 };
 
 export type ProfileContextValue = {
@@ -126,6 +137,7 @@ export type GetDataContextValue = {
   getLastKpiDoc: () => Promise<void>;
   getDekidaka: () => Promise<void>;
   getDekidakaSum: () => Promise<void>;
+  getAllDekidakaSumData: () => Promise<void>;
   getAllKpiData: () => Promise<void>;
   getDailyKpi: () => Promise<void>;
   getFilteredMonitoringData: (lineName: string) => Promise<void>;
@@ -140,15 +152,16 @@ export type KpiContextValue = {
 };
 
 export type AllStateContextValue = {
-  userData: UserData | null;
+  userData: UserData | null | undefined;
   profileData: ProfileData[] | null;
   dekidakaData: DekidakaData[] | null;
   kpiData: KpiData[] | null;
   filteredKpiData: KpiData[] | null;
   dekidakaSumData: DekidakaSumData | null;
-  userDataId: string | null;
-  userDataName: string | null;
-  userDataNik: string | null;
+  allDekidakaSumData: AllDekidakaSumData[] | null;
+  userDataId: string | null | undefined;
+  userDataName: string | null | undefined;
+  userDataNik: string | null | undefined;
   tableIndex: number;
   profileId: string | undefined;
   kpiId: string;
@@ -212,12 +225,13 @@ export type AllStateContextValue = {
   isEr03BtnActive: boolean;
   isEr150BtnActive: boolean;
   isMonitoringSubBtnActive: boolean;
-  setUserData: (value: UserData | null) => void;
+  setUserData: (value: UserData | null | undefined) => void;
   setProfileData: (value: ProfileData[] | null) => void;
   setKpiData: (value: KpiData[] | null) => void;
   setFilteredKpiData: (value: KpiData[] | null) => void;
   setDekidakaData: (value: DekidakaData[] | null) => void;
   setDekidakaSumData: (value: DekidakaSumData | null) => void;
+  setAllDekidakaSumData: (value: AllDekidakaSumData[] | null) => void;
   setIsMonitoringBtnActive: (value: boolean) => void;
   setProfileId: (value: string | undefined) => void;
   setDekidakaId: (value: string) => void;

@@ -10,8 +10,6 @@ const GetDataContext = createContext<GetDataContextValue | undefined>(
 export const GetDataProvider = ({ children }: any) => {
   const {
     profileId,
-    kpiData,
-    filteredKpiData,
     setProfileData,
     setProfileId,
     setLineName,
@@ -37,8 +35,12 @@ export const GetDataProvider = ({ children }: any) => {
     userDataName,
     setKpiId,
     setKpiData,
-    setFilteredKpiData,
     kpiId,
+    setTotalPlan,
+    setTotalActual,
+    setTotalDeviasi,
+    setTotalLossTime,
+    setTotalWorkHour,
     setAvailableTime,
     setEffectiveTime,
     setEfficiency,
@@ -55,6 +57,7 @@ export const GetDataProvider = ({ children }: any) => {
     setMethodNote,
     setMachineNote,
     setMaterialNote,
+    setAllDekidakaSumData,
   } = useAllStateContext();
 
   const getLastProfileDoc = async () => {
@@ -105,6 +108,17 @@ export const GetDataProvider = ({ children }: any) => {
         `/api/dekidakaDataService/getDekidakaSum?profileId=${profileId}`
       );
       setDekidakaSumData(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const getAllDekidakaSumData = async () => {
+    try {
+      const response = await axios.get(
+        "/api/dekidakaDataService/getAllDekidakaSumData"
+      );
+      setAllDekidakaSumData(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -278,6 +292,7 @@ export const GetDataProvider = ({ children }: any) => {
     getLastProfileDoc,
     getDekidakaById,
     getDekidakaSum,
+    getAllDekidakaSumData,
     getAllKpiData,
     getDailyKpi,
     getFilteredMonitoringData,
