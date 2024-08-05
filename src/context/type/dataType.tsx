@@ -152,7 +152,7 @@ export type KpiContextValue = {
 };
 
 export type AllStateContextValue = {
-  userData: UserData | null | undefined;
+  userData: any;
   profileData: ProfileData[] | null;
   dekidakaData: DekidakaData[] | null;
   kpiData: KpiData[] | null;
@@ -225,7 +225,7 @@ export type AllStateContextValue = {
   isEr03BtnActive: boolean;
   isEr150BtnActive: boolean;
   isMonitoringSubBtnActive: boolean;
-  setUserData: (value: UserData | null | undefined) => void;
+  setUserData: (value: any) => void;
   setProfileData: (value: ProfileData[] | null) => void;
   setKpiData: (value: KpiData[] | null) => void;
   setFilteredKpiData: (value: KpiData[] | null) => void;

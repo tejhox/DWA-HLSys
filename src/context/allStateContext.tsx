@@ -13,7 +13,7 @@ const AllStateContext = createContext<AllStateContextValue | undefined>(
   undefined
 );
 export const AllStateProvider = ({ children }: any) => {
-  const [userData, setUserData] = useState<UserData | null | undefined>(null);
+  const [userData, setUserData] = useState<any>(null);
 
   const [dateNow, setDateNow] = useState<any>();
 

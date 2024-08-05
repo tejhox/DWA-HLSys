@@ -62,7 +62,7 @@ const Navbar = () => {
             <li className="me-4">
               <Link
                 href={"/dashboard"}
-                className="link font-semibold text-blue-700">
+                className="link link-hover font-semibold text-blue-700">
                 DASHBOARD
               </Link>
             </li>
