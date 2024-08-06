@@ -45,9 +45,9 @@ export default function Home() {
             {data ? (
               <div className="flex items-center md:justify-center mt-3">
                 <Link
-                  href="/production/kpi-charts"
+                  href="/dashboard"
                   className="btn btn-success btn-wide text-lg text-white font-semibold shadow-md shadow-indigo-500/60 ">
-                  KPI
+                  Dashboard
                   <FontAwesomeIcon
                     icon={faArrowRight}
                     size="lg"

@@ -15,11 +15,19 @@ export default function WithAuth(
 ) {
   return async (req: NextRequest, next: NextFetchEvent) => {
     const pathname = req.nextUrl.pathname.split("/")[1];
+    const token = await getToken({
+      req,
+      secret: process.env.NEXTAUTH_SECRET,
+    });
+
+    // Check for dashboard access
+    if (pathname === "dashboard" && !token) {
+      const url = new URL("/auth/login", req.url);
+      url.searchParams.set("callbackUrl", encodeURI(req.url));
+      return NextResponse.redirect(url);
+    }
+
     if (requireAuth.includes(pathname)) {
-      const token = await getToken({
-        req,
-        secret: process.env.NEXTAUTH_SECRET,
-      });
       if (!token && !authPage.includes(pathname)) {
         const url = new URL("/auth/login", req.url);
         url.searchParams.set("callbackUrl", encodeURI(req.url));
@@ -34,6 +42,7 @@ export default function WithAuth(
         }
       }
     }
+
     return middleware(req, next);
   };
 }

@@ -8,7 +8,6 @@ import { useSessionContext } from "@/context/sessionContext";
 import { useGetDataContext } from "@/context/getDataContext";
 import KpiStats from "../../views/kpiStats";
 import LossTimeDetailTable from "../../views/lossTimeDetailTable";
-import Wrapper from "@/components/layout/wrapper";
 
 const ProductionPage = () => {
   const { fetchSession, session } = useSessionContext();
